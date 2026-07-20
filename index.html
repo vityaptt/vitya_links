@@ -36,13 +36,30 @@
       justify-content: center;
       align-items: center;
       padding-bottom: 40px; /* Leave room for taskbar */
+      position: relative;
+      gap: 20px;
+      flex-wrap: wrap;
     }
 
-    /* Main Window */
+    /* Main Windows */
     .window {
       width: 360px;
       max-width: 95vw;
       box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Donate Window Specifics */
+    #donateWindow {
+      display: none; /* Hidden by default */
+      width: 380px;
+      position: absolute;
+      z-index: 20;
+    }
+
+    #donateWindow.open {
+      display: block;
     }
 
     .title-bar {
@@ -171,6 +188,79 @@
       padding: 2px 6px;
       font-size: 11px;
       color: #404040;
+    }
+
+    /* Donate Form Styling */
+    .donate-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      text-align: left;
+      width: 100%;
+    }
+
+    .field-group label {
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .field-group input, .field-group textarea, .field-group select {
+      width: 100%;
+      padding: 4px;
+      font-family: "MS Sans Serif", Arial, sans-serif;
+      font-size: 12px;
+      border: 2px solid;
+      border-color: #808080 #fff #fff #808080;
+      background: #fff;
+      outline: none;
+    }
+
+    .amount-presets {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .preset-btn {
+      flex: 1;
+      padding: 3px 0;
+      font-size: 11px;
+      font-weight: bold;
+      background: #c0c0c0;
+      box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
+      border: none;
+      cursor: pointer;
+    }
+
+    .preset-btn:active {
+      box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+    }
+
+    .donate-action-btn {
+      margin-top: 6px;
+      padding: 8px;
+      background: #c0c0c0;
+      font-weight: bold;
+      font-size: 12px;
+      color: #000;
+      box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .donate-action-btn:active {
+      box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
     }
 
     /* Windows Taskbar */
@@ -305,6 +395,13 @@
       background: #c0c0c0;
       box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
       font-weight: bold;
+      cursor: pointer;
+      border: none;
+    }
+
+    .task-item.active {
+      box-shadow: inset 1px 1px #0a0a0a, inset -1px -1px #fff, inset 2px 2px #808080, inset -2px -2px #dfdfdf;
+      background: #e0e0e0;
     }
 
     .tray {
@@ -323,7 +420,7 @@
 
   <div class="desktop">
     <!-- Main Windows 95 Window -->
-    <div class="window">
+    <div class="window" id="mainWindow">
       <div class="title-bar">
         <div class="title-bar-text">
           <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="14" height="14" alt="icon">
@@ -378,6 +475,73 @@
         </div>
       </div>
     </div>
+
+    <!-- Donate / Help Window (Win95 Payment Wizard) -->
+    <div class="window" id="donateWindow">
+      <div class="title-bar">
+        <div class="title-bar-text">
+          <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="14" height="14" alt="Donate">
+          C:\WINDOWS\System\DonateWizard.exe
+        </div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" id="closeDonateBtn"></button>
+        </div>
+      </div>
+
+      <div class="window-body">
+        <!-- Status Card -->
+        <div class="status-field">
+          <img src="https://win98icons.alexmeub.com/icons/png/game_card_hearts-0.png" width="32" height="32" alt="Heart">
+          <div class="status-text">
+            <strong>Поддержка автора: vityaptt</strong><br/>
+            <span>DonationAlerts Wizard v1.0</span>
+          </div>
+        </div>
+
+        <!-- Donate Interactive Form -->
+        <div class="donate-form">
+          <div class="field-group">
+            <label for="donorName">Ваше имя / Никнейм:</label>
+            <input type="text" id="donorName" placeholder="Введите имя..." />
+          </div>
+
+          <div class="field-group">
+            <label for="donorAmount">Сумма доната:</label>
+            <div style="display: flex; gap: 6px;">
+              <input type="number" id="donorAmount" value="100" min="1" style="flex: 1;" />
+              <select id="donorCurrency" style="width: 70px;">
+                <option value="RUB">RUB</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+              </select>
+            </div>
+            <!-- Quick Presets -->
+            <div class="amount-presets">
+              <button class="preset-btn" onclick="setAmount(50)">50 ₽</button>
+              <button class="preset-btn" onclick="setAmount(100)">100 ₽</button>
+              <button class="preset-btn" onclick="setAmount(500)">500 ₽</button>
+              <button class="preset-btn" onclick="setAmount(1000)">1000 ₽</button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="donorMessage">Сообщение стримеру:</label>
+            <textarea id="donorMessage" rows="3" placeholder="Текст сообщения..."></textarea>
+          </div>
+
+          <button class="donate-action-btn" id="sendDonateBtn">
+            <img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" width="16" height="16" alt="Send">
+            Задонатить (DonationAlerts)
+          </button>
+        </div>
+
+        <!-- Bottom status bar -->
+        <div class="status-bar">
+          <div class="status-bar-field" style="flex: 1;">Защищенное соединение</div>
+          <div class="status-bar-field">vityaptt</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Windows 95 Taskbar -->
@@ -412,11 +576,18 @@
       </div>
 
       <div class="taskbar-divider"></div>
+      
+      <!-- Taskbar Window Buttons -->
       <div class="taskbar-tasks">
-        <div class="task-item">
+        <button class="task-item active" id="taskMain">
           <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="12" height="12" alt="App">
           ВИТЯ - Links
-        </div>
+        </button>
+
+        <button class="task-item" id="taskHelp">
+          <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="12" height="12" alt="Help">
+          Помощь
+        </button>
       </div>
     </div>
     <div class="tray" id="clock">12:00</div>
@@ -447,6 +618,45 @@
     document.addEventListener('click', () => {
       startMenu.classList.remove('open');
       startButton.classList.remove('active');
+    });
+
+    // Donate Window Toggle Logic
+    const taskHelp = document.getElementById('taskHelp');
+    const donateWindow = document.getElementById('donateWindow');
+    const closeDonateBtn = document.getElementById('closeDonateBtn');
+
+    function toggleDonateWindow() {
+      const isOpen = donateWindow.classList.contains('open');
+      if (isOpen) {
+        donateWindow.classList.remove('open');
+        taskHelp.classList.remove('active');
+      } else {
+        donateWindow.classList.add('open');
+        taskHelp.classList.add('active');
+      }
+    }
+
+    taskHelp.addEventListener('click', toggleDonateWindow);
+    closeDonateBtn.addEventListener('click', toggleDonateWindow);
+
+    // Preset Amount Helper
+    function setAmount(val) {
+      document.getElementById('donorAmount').value = val;
+    }
+
+    // Send Donate Redirect with form arguments
+    document.getElementById('sendDonateBtn').addEventListener('click', () => {
+      const name = encodeURIComponent(document.getElementById('donorName').value.trim());
+      const amount = encodeURIComponent(document.getElementById('donorAmount').value || 100);
+      const currency = encodeURIComponent(document.getElementById('donorCurrency').value);
+      const message = encodeURIComponent(document.getElementById('donorMessage').value.trim());
+
+      // Donationalerts user URL with query params
+      let targetUrl = `https://www.donationalerts.com/r/vityaptt?amount=${amount}&currency=${currency}`;
+      if (name) targetUrl += `&name=${name}`;
+      if (message) targetUrl += `&comment=${message}`;
+
+      window.open(targetUrl, '_blank');
     });
   </script>
 </body>
