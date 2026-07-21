@@ -744,12 +744,12 @@
   <div class="desktop" id="desktop">
     <div class="desktop-wallpaper">ВИТЯ 02</div>
 
-    <!-- Classic Audio Player Window (track.mp3) -->
+    <!-- Classic Audio Player Window (Playlist from muzlo) -->
     <div class="window top-right-player" id="playerWindow">
       <div class="title-bar">
         <div class="title-bar-text">
           <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" width="14" height="14" alt="Media Player">
-          Media Player - track.mp3
+          Media Player - Плейлист
         </div>
         <div class="title-bar-controls">
           <button aria-label="Close" onclick="closeWindow('playerWindow')"></button>
@@ -758,12 +758,12 @@
       <div class="window-body" style="padding: 10px; gap: 8px;">
         
         <!-- Аудио элемент -->
-        <audio id="audioTrack" src="track.mp3" preload="auto" loop></audio>
+        <audio id="audioTrack" preload="auto"></audio>
 
-        <!-- Зеленый экран дисплея трека -->
+        <!-- Экран дисплея трека -->
         <div style="width: 100%; background: #000; color: #00ff00; font-family: 'Courier New', monospace; font-size: 11px; padding: 6px; border: 2px solid; border-color: #808080 #fff #fff #808080; min-height: 42px; display: flex; flex-direction: column; justify-content: center;">
-          <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;">track.mp3</div>
-          <div style="color: #00aa00; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10px;">Аудиодорожка ВИТЯ 02</div>
+          <div id="currentTrackTitle" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;">Загрузка...</div>
+          <div id="currentTrackSub" style="color: #00aa00; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10px;">Папка /muzlo/</div>
         </div>
 
         <!-- Таймлайн -->
@@ -777,8 +777,17 @@
 
         <!-- Кнопки управления -->
         <div style="display: flex; gap: 4px; width: 100%; justify-content: center;">
+          <button class="win-button" style="width: auto; padding: 4px 8px; justify-content: center;" onclick="playClickSound(); prevTrack()" title="Предыдущий">⏮</button>
           <button class="win-button" id="audioPlayBtn" style="flex: 1; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); toggleAudioPlay()">▶ Play</button>
-          <button class="win-button" style="width: auto; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); stopAudio()">⏹ Stop</button>
+          <button class="win-button" style="width: auto; padding: 4px 8px; justify-content: center;" onclick="playClickSound(); nextTrack()" title="Следующий">⏭</button>
+          <button class="win-button" style="width: auto; padding: 4px 10px; justify-content: center;" onclick="playClickSound(); stopAudio()" title="Стоп">⏹</button>
+        </div>
+
+        <!-- Выпадающий список треков -->
+        <div style="width: 100%; display: flex; gap: 4px; align-items: center;">
+          <select id="playlistSelect" style="width: 100%; font-family: 'MS Sans Serif', Arial; font-size: 11px; background: #fff; border: 2px solid; border-color: #808080 #fff #fff #808080; padding: 2px;" onchange="selectTrackFromDropdown(this.value)">
+            <!-- Заполняется автоматически через JS -->
+          </select>
         </div>
 
         <!-- Громкость -->
@@ -1006,17 +1015,48 @@
     </div>
   </div>
 
-  <!-- Логика классического аудио плеера (track.mp3) -->
+  <!-- Логика плейлиста из папки muzlo -->
   <script>
+    const playlist = [
+      { title: "track.mp3", src: "muzlo/track.mp3" },
+      { title: "track1.mp3", src: "muzlo/track1.mp3" },
+      { title: "track2.mp3", src: "muzlo/track2.mp3" }
+      // Добавляй новые треки сюда по аналогии:
+      // { title: "имя.mp3", src: "muzlo/имя.mp3" }
+    ];
+
+    let currentTrackIndex = 0;
     const audio = document.getElementById('audioTrack');
     const playBtn = document.getElementById('audioPlayBtn');
     const timeline = document.getElementById('trackTimeline');
     const currentTimeEl = document.getElementById('currentTime');
     const totalTimeEl = document.getElementById('totalTime');
     const statusText = document.getElementById('audioStatusText');
+    const titleEl = document.getElementById('currentTrackTitle');
+    const playlistSelect = document.getElementById('playlistSelect');
     let isSeeking = false;
 
     audio.volume = 0.8;
+
+    function initPlaylist() {
+      playlistSelect.innerHTML = '';
+      playlist.forEach((track, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = `${index + 1}. ${track.title}`;
+        playlistSelect.appendChild(option);
+      });
+      loadTrack(currentTrackIndex);
+    }
+
+    function loadTrack(index) {
+      currentTrackIndex = index;
+      audio.src = playlist[currentTrackIndex].src;
+      titleEl.textContent = playlist[currentTrackIndex].title;
+      playlistSelect.value = currentTrackIndex;
+      timeline.value = 0;
+      currentTimeEl.textContent = "0:00";
+    }
 
     audio.addEventListener('loadedmetadata', () => {
       totalTimeEl.textContent = formatTime(audio.duration);
@@ -1031,8 +1071,8 @@
     });
 
     audio.addEventListener('ended', () => {
-      playBtn.textContent = "▶ Play";
-      statusText.textContent = "Воспроизведение завершено";
+      nextTrack();
+      audio.play().catch(e => console.log("Автоплей заблокирован браузером"));
     });
 
     function toggleAudioPlay() {
@@ -1058,6 +1098,23 @@
       timeline.value = 0;
       currentTimeEl.textContent = "0:00";
       statusText.textContent = "Остановлено";
+    }
+
+    function nextTrack() {
+      currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+      loadTrack(currentTrackIndex);
+      if (!audio.paused) audio.play();
+    }
+
+    function prevTrack() {
+      currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+      loadTrack(currentTrackIndex);
+      if (!audio.paused) audio.play();
+    }
+
+    function selectTrackFromDropdown(index) {
+      loadTrack(parseInt(index));
+      if (!audio.paused) audio.play();
     }
 
     function onTimelineInput(val) {
@@ -1093,6 +1150,8 @@
       const s = Math.floor(secNum % 60);
       return m + ':' + (s < 10 ? '0' : '') + s;
     }
+
+    initPlaylist();
   </script>
 
   <!-- Firebase & Twitch Script -->
