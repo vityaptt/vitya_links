@@ -7,6 +7,7 @@
   
   <link rel="icon" href="https://win98icons.alexmeub.com/icons/png/windows-0.png" type="image/png">
 
+  <!-- 98.css -->
   <link rel="stylesheet" href="https://unpkg.com/98.css" />
   <style>
     * {
@@ -96,7 +97,7 @@
       padding-top: 2px;
     }
 
-    /* Твой файл cursor.png, летающий вокруг кнопки */
+    /* Твой файл cursor.png с дерганой 14fps анимацией */
     .orbiting-cursor {
       position: absolute;
       width: 24px;
@@ -105,7 +106,7 @@
       background-size: contain;
       background-repeat: no-repeat;
       pointer-events: none;
-      animation: orbit 4s linear infinite;
+      animation: orbit 4s steps(56, end) infinite;
       z-index: 10;
       transition: opacity 0.3s ease;
     }
@@ -284,13 +285,19 @@
       visibility: visible;
     }
 
+    /* Заголовок окна по умолчанию (неактивное) */
     .title-bar {
-      background: linear-gradient(90deg, #000080, #1084d0);
+      background: linear-gradient(90deg, #7a7a7a, #b5b5b5);
       padding: 3px 2px 3px 3px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: grab;
+    }
+
+    /* Активное окно: яркий синий градиент */
+    .window.active .title-bar {
+      background: linear-gradient(90deg, #000080, #1084d0);
     }
 
     .title-bar:active {
@@ -599,6 +606,7 @@
       overflow-x: auto;
     }
 
+    /* Элементы панели задач (по умолчанию как кнопка Пуск — не нажатые) */
     .task-item {
       display: none;
       align-items: center;
@@ -619,9 +627,10 @@
       display: flex;
     }
 
+    /* Активное окно в панели задач — показывается как нажатая кнопка */
     .task-item.active {
       box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
-      background: #e0e0e0;
+      background: #d4d4d4;
     }
 
     .tray {
@@ -654,6 +663,7 @@
 </head>
 <body>
 
+  <!-- Стартовый экран с кнопкой и вашим курсором cursor.png -->
   <div id="startOverlay">
     <div class="start-prompt-window">
       <div class="title-bar">
@@ -675,8 +685,10 @@
     </div>
   </div>
 
+  <!-- Аудио файл -->
   <audio id="startupSound" src="window-open.mp3" preload="auto"></audio>
 
+  <!-- Boot Screen Overlay -->
   <div id="bootScreen">
     <div class="boot-logo-container">
       <div class="boot-title">ВИТЯ 02</div>
@@ -688,8 +700,10 @@
   </div>
 
   <div class="desktop" id="desktop">
+    <!-- Centered Background Text -->
     <div class="desktop-wallpaper">ВИТЯ 02</div>
 
+    <!-- Media Player Window -->
     <div class="window top-right-player" id="playerWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -706,6 +720,7 @@
       </div>
     </div>
 
+    <!-- Desktop Shortcuts -->
     <div class="desktop-icons">
       <div class="desktop-icon" onclick="playClickSound(); openWindow('mainWindow')">
         <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" alt="VITYA.exe">
@@ -721,6 +736,7 @@
       </div>
     </div>
 
+    <!-- Main Window -->
     <div class="window open" id="mainWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -767,6 +783,7 @@
       </div>
     </div>
 
+    <!-- Donate Window -->
     <div class="window" id="donateWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -813,6 +830,7 @@
     </div>
   </div>
 
+  <!-- Start Menu -->
   <div class="start-menu" id="startMenu">
     <div class="start-menu-side">прив чд</div>
     <div class="start-menu-items">
@@ -832,6 +850,7 @@
     </div>
   </div>
 
+  <!-- Windows Taskbar -->
   <div class="taskbar" id="taskbar">
     <div style="display: flex; align-items: center; overflow: hidden; flex: 1;">
       <div class="start-container">
@@ -929,7 +948,6 @@
     const desktop = document.getElementById('desktop');
     const taskbar = document.getElementById('taskbar');
 
-    // Если наводят мышь на блок кнопки — курсор прячется
     launcherWrapper.addEventListener('mouseenter', () => {
       orbitCursor.style.opacity = '0';
     });
@@ -941,10 +959,8 @@
       initAudio();
       playClickSound();
 
-      // Гасим кастомный курсор сразу при клике
       orbitCursor.style.opacity = '0';
 
-      // Скрываем окно с кнопкой и запускаем загрузку
       startOverlay.style.opacity = '0';
       setTimeout(() => {
         startOverlay.style.display = 'none';
@@ -1051,11 +1067,6 @@
 
     let highestZ = 100;
 
-    function bringToFront(win) {
-      highestZ++;
-      win.style.zIndex = highestZ;
-    }
-
     function getTaskBtn(id) {
       if (id === 'mainWindow') return document.getElementById('taskMain');
       if (id === 'donateWindow') return document.getElementById('taskHelp');
@@ -1063,14 +1074,34 @@
       return null;
     }
 
+    // Функция обновления активного состояния окон и кнопок в панели задач
+    function bringToFront(winId) {
+      highestZ++;
+      const win = document.getElementById(winId);
+      win.style.zIndex = highestZ;
+
+      // Убираем класс active у всех окон и кнопок задач
+      document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
+      document.querySelectorAll('.task-item').forEach(t => t.classList.remove('active'));
+
+      // Добавляем класс active выбранному окну
+      win.classList.add('active');
+
+      // Добавляем класс active соответствующей кнопке в панели задач (чтобы она выглядела нажатой)
+      const taskBtn = getTaskBtn(winId);
+      if (taskBtn) {
+        taskBtn.classList.add('active');
+      }
+    }
+
     function openWindow(id) {
       const win = document.getElementById(id);
       win.classList.add('open');
-      bringToFront(win);
+      bringToFront(id);
 
       const taskBtn = getTaskBtn(id);
       if (taskBtn) {
-        taskBtn.classList.add('visible', 'active');
+        taskBtn.classList.add('visible');
       }
     }
 
@@ -1078,10 +1109,24 @@
       playCloseSound();
       const win = document.getElementById(id);
       win.classList.remove('open');
+      win.classList.remove('active');
 
       const taskBtn = getTaskBtn(id);
       if (taskBtn) {
         taskBtn.classList.remove('visible', 'active');
+      }
+
+      // Если закрыли активное окно, можно переключить фокус на следующее открытое
+      const openWindows = Array.from(document.querySelectorAll('.window.open'));
+      if (openWindows.length > 0) {
+        // Находим окно с максимальным z-index среди оставшихся
+        let highest = openWindows[0];
+        openWindows.forEach(w => {
+          if (parseInt(w.style.zIndex || 0) > parseInt(highest.style.zIndex || 0)) {
+            highest = w;
+          }
+        });
+        bringToFront(highest.id);
       }
     }
 
@@ -1091,15 +1136,35 @@
       const taskBtn = getTaskBtn(id);
 
       if (win.classList.contains('open')) {
-        win.classList.remove('open');
-        if (taskBtn) taskBtn.classList.remove('visible', 'active');
-        playCloseSound();
-      } else {
-        win.classList.add('open');
-        if (taskBtn) {
-          taskBtn.classList.add('visible', 'active');
+        // Если окно уже открыто и активно — сворачиваем/скрываем его
+        if (win.classList.contains('active')) {
+          win.classList.remove('open');
+          win.classList.remove('active');
+          if (taskBtn) taskBtn.classList.remove('visible', 'active');
+          playCloseSound();
+
+          // Фокус на другое открытое
+          const openWindows = Array.from(document.querySelectorAll('.window.open'));
+          if (openWindows.length > 0) {
+            let highest = openWindows[0];
+            openWindows.forEach(w => {
+              if (parseInt(w.style.zIndex || 0) > parseInt(highest.style.zIndex || 0)) {
+                highest = w;
+              }
+            });
+            bringToFront(highest.id);
+          }
+        } else {
+          // Если оно открыто, но неактивно — делаем его активным
+          win.classList.add('open');
+          if (taskBtn) taskBtn.classList.add('visible');
+          bringToFront(id);
         }
-        bringToFront(win);
+      } else {
+        // Если было закрыто — открываем
+        win.classList.add('open');
+        if (taskBtn) taskBtn.classList.add('visible');
+        bringToFront(id);
       }
     }
 
@@ -1109,7 +1174,7 @@
       let offsetX = 0;
       let offsetY = 0;
 
-      win.addEventListener('pointerdown', () => bringToFront(win));
+      win.addEventListener('pointerdown', () => bringToFront(win.id));
 
       titleBar.addEventListener('pointerdown', (e) => {
         if (e.target.tagName.toLowerCase() === 'button') return;
@@ -1125,7 +1190,7 @@
         win.style.right = 'auto';
 
         titleBar.setPointerCapture(e.pointerId);
-        bringToFront(win);
+        bringToFront(win.id);
         e.preventDefault();
       });
 
@@ -1154,6 +1219,9 @@
     makeDraggable(document.getElementById('mainWindow'));
     makeDraggable(document.getElementById('donateWindow'));
     makeDraggable(document.getElementById('playerWindow'));
+
+    // Инициализация при старте: делаем mainWindow активным по умолчанию
+    bringToFront('mainWindow');
   </script>
 </body>
 </html>
