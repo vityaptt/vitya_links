@@ -24,8 +24,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      overflow-x: hidden;
-      padding: 10px;
+      overflow: hidden;
       user-select: none;
     }
 
@@ -74,7 +73,6 @@
       margin-bottom: 20px;
     }
 
-    /* Win95 Loading Bar */
     .progress-bar-container {
       width: 260px;
       height: 20px;
@@ -92,45 +90,100 @@
       transition: width 0.1s linear;
     }
 
-    /* Desktop layout area */
+    /* Desktop Area & Background Wallpaper */
     .desktop {
       flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding-bottom: 40px;
       position: relative;
+      padding-bottom: 30px;
     }
 
-    /* Main Windows */
+    .desktop-wallpaper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: Arial, sans-serif;
+      font-weight: 900;
+      font-size: 72px;
+      color: rgba(255, 255, 255, 0.15);
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      pointer-events: none;
+      text-align: center;
+      line-height: 1;
+    }
+
+    /* Desktop Icons Container */
+    .desktop-icons {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 5;
+    }
+
+    .desktop-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 75px;
+      cursor: pointer;
+      padding: 4px;
+      border: 1px transparent dashed;
+    }
+
+    .desktop-icon:hover {
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .desktop-icon img {
+      width: 32px;
+      height: 32px;
+      margin-bottom: 4px;
+      image-rendering: pixelated;
+    }
+
+    .desktop-icon span {
+      color: #ffffff;
+      font-size: 11px;
+      text-align: center;
+      text-shadow: 1px 1px 1px #000;
+      word-wrap: break-word;
+      line-height: 1.2;
+    }
+
+    /* Windows */
     .window {
       width: 360px;
       max-width: 95vw;
       box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
-      position: relative;
-      z-index: 10;
-    }
-
-    /* Donate Window */
-    #donateWindow {
-      display: none;
-      width: 360px;
-      max-width: 90vw;
       position: absolute;
-      top: 30px;
-      left: calc(50% + 40px);
-      z-index: 20;
+      display: none;
     }
 
-    #donateWindow.open {
+    .window.open {
       display: block;
     }
 
-    @media (max-width: 768px) {
-      #donateWindow {
-        left: auto;
-        right: 10px;
-        top: 10px;
+    #mainWindow {
+      z-index: 10;
+    }
+
+    #donateWindow {
+      z-index: 20;
+    }
+
+    @media (min-width: 769px) {
+      #mainWindow.open {
+        transform: translateX(-40px);
+      }
+      #donateWindow.open {
+        transform: translateX(40px);
       }
     }
 
@@ -159,6 +212,22 @@
       align-items: center;
       gap: 16px;
       background-color: #c0c0c0;
+      position: relative;
+    }
+
+    /* Money BG Detail */
+    .money-bg::before {
+      content: "$  €  $  ₽  $  $  €  $";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      opacity: 0.05;
+      font-family: monospace;
+      font-size: 24px;
+      font-weight: bold;
+      line-height: 32px;
+      overflow: hidden;
+      pointer-events: none;
+      word-wrap: break-word;
     }
 
     .site-title {
@@ -184,6 +253,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      z-index: 2;
     }
 
     .status-icon {
@@ -210,6 +280,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      z-index: 2;
     }
 
     .win-button {
@@ -241,18 +312,18 @@
       display: inline-block;
     }
 
-    /* DonationAlerts Box */
     .da-header {
       width: 100%;
       border: 2px solid;
       border-color: #808080 #fff #fff #808080;
-      background: linear-gradient(135deg, #000080, #1084d0);
+      background: linear-gradient(90deg, #ff6600, #ff9933);
       position: relative;
       height: 65px;
       display: flex;
       align-items: center;
       padding: 8px 12px;
       gap: 12px;
+      z-index: 2;
     }
 
     .da-avatar-container {
@@ -270,94 +341,15 @@
     .da-avatar {
       width: 32px;
       height: 32px;
+      image-rendering: pixelated;
     }
 
     .da-user-info {
       color: #fff;
       font-weight: bold;
-      font-size: 14px;
-      text-shadow: 1px 1px 1px #000;
-    }
-
-    .donate-form {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 5px;
-    }
-
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      text-align: left;
-      width: 100%;
-    }
-
-    .field-group label {
-      font-size: 11px;
-      font-weight: bold;
-    }
-
-    .field-group input, .field-group textarea, .field-group select {
-      width: 100%;
-      padding: 4px;
-      font-family: "MS Sans Serif", Arial, sans-serif;
-      font-size: 12px;
-      border: 2px solid;
-      border-color: #808080 #fff #fff #808080;
-      background: #fff;
-      outline: none;
-    }
-
-    .amount-presets {
-      display: flex;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .preset-btn {
-      flex: 1;
-      padding: 3px 0;
-      font-size: 11px;
-      font-weight: bold;
-      background: #c0c0c0;
-      box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
-      border: none;
-      cursor: pointer;
-    }
-
-    .preset-btn:active {
-      box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
-    }
-
-    .donate-action-btn {
-      margin-top: 6px;
-      padding: 8px;
-      background: #c0c0c0;
-      font-weight: bold;
-      font-size: 12px;
-      color: #000;
-      box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .donate-action-btn:active {
-      box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
-    }
-
-    .copy-hint {
-      font-size: 10px;
-      color: #000080;
-      text-align: center;
-      display: none;
-      font-weight: bold;
+      font-size: 16px;
+      text-shadow: 1px 1px 2px #000;
+      letter-spacing: 0.5px;
     }
 
     .status-bar {
@@ -365,6 +357,7 @@
       display: flex;
       gap: 2px;
       margin-top: 4px;
+      z-index: 2;
     }
 
     .status-bar-field {
@@ -497,7 +490,7 @@
     }
 
     .task-item {
-      display: flex;
+      display: none;
       align-items: center;
       gap: 4px;
       font-size: 11px;
@@ -509,6 +502,10 @@
       font-weight: bold;
       cursor: pointer;
       border: none;
+    }
+
+    .task-item.visible {
+      display: flex;
     }
 
     .task-item.active {
@@ -542,16 +539,30 @@
   </div>
 
   <div class="desktop">
+    <!-- Clean Desktop Wallpaper -->
+    <div class="desktop-wallpaper">ВИТЯ 02</div>
+
+    <!-- Desktop Shortcuts -->
+    <div class="desktop-icons">
+      <div class="desktop-icon" onclick="openWindow('mainWindow')">
+        <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" alt="VITYA.exe">
+        <span>ВИТЯ.exe</span>
+      </div>
+      <div class="desktop-icon" onclick="openWindow('donateWindow')">
+        <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" alt="Donate">
+        <span>Донат</span>
+      </div>
+    </div>
+
     <!-- Main Window -->
-    <div class="window" id="mainWindow">
+    <div class="window open" id="mainWindow">
       <div class="title-bar">
         <div class="title-bar-text">
           <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="14" height="14" alt="icon">
           C:\WINDOWS\Personal\VITYA.exe
         </div>
         <div class="title-bar-controls">
-          <button aria-label="Minimize" onclick="playClickSound()"></button>
-          <button aria-label="Maximize" onclick="playClickSound()"></button>
+          <button aria-label="Close" onclick="closeWindow('mainWindow')"></button>
         </div>
       </div>
 
@@ -577,11 +588,6 @@
             Twitch
           </a>
 
-          <a href="https://boosty.to/viteapotatkafm" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
-            <img src="https://win98icons.alexmeub.com/icons/png/key_padlock-0.png" class="button-icon" alt="Boosty">
-            Boosty
-          </a>
-
           <a href="https://www.youtube.com/@potatkadwg/featured" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
             <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" class="button-icon" alt="YouTube">
             YouTube
@@ -589,7 +595,7 @@
         </div>
 
         <div class="status-bar">
-          <div class="status-bar-field" style="flex: 1;">4 объекта(ов)</div>
+          <div class="status-bar-field" style="flex: 1;">3 объекта(ов)</div>
           <div class="status-bar-field">Win95 Edition</div>
         </div>
       </div>
@@ -603,56 +609,39 @@
           C:\WINDOWS\System\DonateWizard.exe
         </div>
         <div class="title-bar-controls">
-          <button aria-label="Close" id="closeDonateBtn"></button>
+          <button aria-label="Close" onclick="closeWindow('donateWindow')"></button>
         </div>
       </div>
 
-      <div class="window-body">
+      <div class="window-body money-bg">
         <div class="da-header">
           <div class="da-avatar-container">
-            <img src="https://win98icons.alexmeub.com/icons/png/user_headset-0.png" class="da-avatar" alt="vityaptt avatar">
+            <img src="https://win98icons.alexmeub.com/icons/png/user_headset-0.png" class="da-avatar" alt="User Icon">
           </div>
           <div class="da-user-info">
             vityaptt
           </div>
         </div>
 
-        <div class="donate-form">
-          <div class="field-group">
-            <label for="donorAmount">Сумма доната:</label>
-            <div style="display: flex; gap: 6px;">
-              <input type="number" id="donorAmount" value="100" min="1" style="flex: 1;" />
-              <select id="donorCurrency" style="width: 70px;">
-                <option value="RUB">RUB</option>
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-              </select>
-            </div>
-            <div class="amount-presets">
-              <button class="preset-btn" type="button" onclick="setAmount(50)">50 ₽</button>
-              <button class="preset-btn" type="button" onclick="setAmount(100)">100 ₽</button>
-              <button class="preset-btn" type="button" onclick="setAmount(500)">500 ₽</button>
-              <button class="preset-btn" type="button" onclick="setAmount(1000)">1000 ₽</button>
-            </div>
-          </div>
+        <div class="links-container">
+          <a href="https://www.donationalerts.com/r/vityaptt?amount=100&currency=RUB&comment=dbffgggsdrgerg" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
+            <img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" class="button-icon" alt="DA">
+            DonationAlerts
+          </a>
 
-          <div class="field-group">
-            <label for="donorMessage">Сообщение стримеру:</label>
-            <textarea id="donorMessage" rows="3" placeholder="Текст сообщения..."></textarea>
-          </div>
+          <a href="https://web.tribute.tg/d/NvR" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
+            <img src="https://win98icons.alexmeub.com/icons/png/coins-0.png" class="button-icon" alt="Tribute">
+            Tribute
+          </a>
 
-          <button class="donate-action-btn" id="sendDonateBtn" type="button">
-            <img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" width="16" height="16" alt="Send">
-            Отправить донат
-          </button>
-          
-          <div class="copy-hint" id="copyHint">
-            Сообщение скопировано! Нажмите Ctrl+V при вставке.
-          </div>
+          <a href="https://boosty.to/viteapotatkafm" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
+            <img src="https://win98icons.alexmeub.com/icons/png/key_padlock-0.png" class="button-icon" alt="Boosty">
+            Boosty
+          </a>
         </div>
 
         <div class="status-bar">
-          <div class="status-bar-field" style="flex: 1;">DonationAlerts Link</div>
+          <div class="status-bar-field" style="flex: 1;">Поддержка автора</div>
           <div class="status-bar-field">vityaptt</div>
         </div>
       </div>
@@ -691,14 +680,14 @@
       <div class="taskbar-divider"></div>
       
       <div class="taskbar-tasks">
-        <button class="task-item active" id="taskMain">
+        <button class="task-item visible active" id="taskMain" onclick="toggleTask('mainWindow')">
           <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="12" height="12" alt="App">
           ВИТЯ - Links
         </button>
 
-        <button class="task-item" id="taskHelp">
+        <button class="task-item" id="taskHelp" onclick="toggleTask('donateWindow')">
           <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="12" height="12" alt="Help">
-          Помощь
+          Донат
         </button>
       </div>
     </div>
@@ -706,7 +695,7 @@
   </div>
 
   <script>
-    // Audio System Setup
+    // Audio System
     let audioCtx = null;
 
     function initAudio() {
@@ -766,7 +755,7 @@
       osc.stop(audioCtx.currentTime + 0.07);
     }
 
-    // Boot Screen Animation
+    // Boot Screen
     const bootProgress = document.getElementById('bootProgress');
     const bootScreen = document.getElementById('bootScreen');
     let progress = 0;
@@ -811,68 +800,40 @@
       startButton.classList.remove('active');
     });
 
-    // Donate Window & Taskbar Buttons Toggle Logic
-    const taskMain = document.getElementById('taskMain');
-    const taskHelp = document.getElementById('taskHelp');
-    const donateWindow = document.getElementById('donateWindow');
-    const closeDonateBtn = document.getElementById('closeDonateBtn');
+    // Window Management & Taskbar Links
+    function openWindow(id) {
+      playWindowSound(true);
+      const win = document.getElementById(id);
+      win.classList.add('open');
 
-    function toggleDonateWindow() {
-      const isOpen = donateWindow.classList.contains('open');
-      playWindowSound(!isOpen);
-      if (isOpen) {
-        donateWindow.classList.remove('open');
-        taskHelp.classList.remove('active');
-        taskMain.classList.add('active');
-      } else {
-        donateWindow.classList.add('open');
-        taskHelp.classList.add('active');
-        taskMain.classList.remove('active');
-      }
+      const taskBtn = id === 'mainWindow' ? document.getElementById('taskMain') : document.getElementById('taskHelp');
+      taskBtn.classList.add('visible', 'active');
     }
 
-    taskHelp.addEventListener('click', toggleDonateWindow);
-    closeDonateBtn.addEventListener('click', toggleDonateWindow);
+    function closeWindow(id) {
+      playWindowSound(false);
+      const win = document.getElementById(id);
+      win.classList.remove('open');
 
-    taskMain.addEventListener('click', () => {
+      const taskBtn = id === 'mainWindow' ? document.getElementById('taskMain') : document.getElementById('taskHelp');
+      taskBtn.classList.remove('visible', 'active');
+    }
+
+    function toggleTask(id) {
       playClickSound();
-      if (donateWindow.classList.contains('open')) {
-        donateWindow.classList.remove('open');
-        taskHelp.classList.remove('active');
-        taskMain.classList.add('active');
+      const win = document.getElementById(id);
+      const taskBtn = id === 'mainWindow' ? document.getElementById('taskMain') : document.getElementById('taskHelp');
+
+      if (win.classList.contains('open')) {
+        win.classList.remove('open');
+        taskBtn.classList.remove('active');
         playWindowSound(false);
+      } else {
+        win.classList.add('open');
+        taskBtn.classList.add('active');
+        playWindowSound(true);
       }
-    });
-
-    // Preset Amount Helper
-    function setAmount(val) {
-      playClickSound();
-      document.getElementById('donorAmount').value = val;
     }
-
-    // Redirect + Auto Copy to Clipboard
-    document.getElementById('sendDonateBtn').addEventListener('click', () => {
-      playClickSound();
-      const amount = encodeURIComponent(document.getElementById('donorAmount').value || 100);
-      const currency = encodeURIComponent(document.getElementById('donorCurrency').value);
-      const rawMessage = document.getElementById('donorMessage').value.trim();
-      const message = encodeURIComponent(rawMessage);
-
-      if (rawMessage) {
-        navigator.clipboard.writeText(rawMessage).then(() => {
-          const hint = document.getElementById('copyHint');
-          hint.style.display = 'block';
-          setTimeout(() => hint.style.display = 'none', 4000);
-        }).catch(() => {});
-      }
-
-      let targetUrl = `https://www.donationalerts.com/r/vityaptt?amount=${amount}&currency=${currency}`;
-      if (message) {
-        targetUrl += `&comment=${message}`;
-      }
-
-      window.open(targetUrl, '_blank');
-    });
   </script>
 </body>
 </html>
