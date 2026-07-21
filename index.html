@@ -212,7 +212,7 @@
       top: 10px;
       right: 10px;
       z-index: 100;
-      width: 320px;
+      width: 335px;
     }
 
     .desktop-icons {
@@ -776,11 +776,13 @@
         </div>
 
         <!-- Кнопки управления -->
-        <div style="display: flex; gap: 4px; width: 100%; justify-content: center;">
-          <button class="win-button" style="width: auto; padding: 4px 8px; justify-content: center;" onclick="playClickSound(); prevTrack()" title="Предыдущий">⏮</button>
-          <button class="win-button" id="audioPlayBtn" style="flex: 1; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); toggleAudioPlay()">▶ Play</button>
-          <button class="win-button" style="width: auto; padding: 4px 8px; justify-content: center;" onclick="playClickSound(); nextTrack()" title="Следующий">⏭</button>
-          <button class="win-button" style="width: auto; padding: 4px 10px; justify-content: center;" onclick="playClickSound(); stopAudio()" title="Стоп">⏹</button>
+        <div style="display: flex; gap: 4px; width: 100%; justify-content: space-between;">
+          <button class="win-button" style="width: 50px; height: 26px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); prevTrack()" title="Предыдущий">⏮</button>
+          <button class="win-button" id="audioPlayBtn" style="width: 115px; height: 26px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); toggleAudioPlay()">▶ Play</button>
+          <button class="win-button" style="width: 50px; height: 26px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); nextTrack()" title="Следующий">⏭</button>
+          <button class="win-button" style="width: 50px; height: 26px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); stopAudio()" title="Стоп">
+            <span style="display:inline-block; width:8px; height:8px; background:#000;"></span>
+          </button>
         </div>
 
         <!-- Выпадающий список треков -->
@@ -792,7 +794,7 @@
 
         <!-- Громкость -->
         <div style="display: flex; gap: 6px; width: 100%; align-items: center; font-size: 11px;">
-          <span style="font-size: 10px; font-weight: bold;" id="volumeIcon">🔊</span>
+          <img src="https://win98icons.alexmeub.com/icons/png/volume-0.png" width="16" height="16" alt="Volume" id="volumeIcon" style="image-rendering: pixelated; flex-shrink: 0;">
           <input type="range" id="volumeSlider" min="0" max="1" value="0.8" step="0.01" style="flex: 1; cursor: pointer;" oninput="changeVolume(this.value)" title="Громкость плеера">
         </div>
 
@@ -1079,13 +1081,12 @@
 
     audio.addEventListener('ended', () => {
       nextTrack();
-      audio.play().catch(e => console.log("Автоплей заблокирован браузером"));
     });
 
     function toggleAudioPlay() {
       if (audio.paused) {
         audio.play().then(() => {
-          playBtn.textContent = "❚❚ Pause";
+          playBtn.innerHTML = "❚❚ Pause";
           statusText.textContent = "Воспроизведение...";
         }).catch(err => {
           console.error("Ошибка воспроизведения audio:", err);
@@ -1093,7 +1094,7 @@
         });
       } else {
         audio.pause();
-        playBtn.textContent = "▶ Play";
+        playBtn.innerHTML = "▶ Play";
         statusText.textContent = "Пауза";
       }
     }
@@ -1101,7 +1102,7 @@
     function stopAudio() {
       audio.pause();
       audio.currentTime = 0;
-      playBtn.textContent = "▶ Play";
+      playBtn.innerHTML = "▶ Play";
       timeline.value = 0;
       currentTimeEl.textContent = "0:00";
       statusText.textContent = "Остановлено";
@@ -1110,18 +1111,27 @@
     function nextTrack() {
       currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
       loadTrack(currentTrackIndex);
-      if (!audio.paused) audio.play();
+      audio.play().then(() => {
+        playBtn.innerHTML = "❚❚ Pause";
+        statusText.textContent = "Воспроизведение...";
+      }).catch(err => console.log(err));
     }
 
     function prevTrack() {
       currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
       loadTrack(currentTrackIndex);
-      if (!audio.paused) audio.play();
+      audio.play().then(() => {
+        playBtn.innerHTML = "❚❚ Pause";
+        statusText.textContent = "Воспроизведение...";
+      }).catch(err => console.log(err));
     }
 
     function selectTrackFromDropdown(index) {
       loadTrack(parseInt(index));
-      if (!audio.paused) audio.play();
+      audio.play().then(() => {
+        playBtn.innerHTML = "❚❚ Pause";
+        statusText.textContent = "Воспроизведение...";
+      }).catch(err => console.log(err));
     }
 
     function onTimelineInput(val) {
@@ -1144,11 +1154,9 @@
       audio.volume = val;
       const icon = document.getElementById('volumeIcon');
       if (val == 0) {
-        icon.textContent = "🔇";
-      } else if (val < 0.4) {
-        icon.textContent = "🔉";
+        icon.src = "https://win98icons.alexmeub.com/icons/png/volume_muted-0.png";
       } else {
-        icon.textContent = "🔊";
+        icon.src = "https://win98icons.alexmeub.com/icons/png/volume-0.png";
       }
     }
 
@@ -1405,7 +1413,7 @@
       } else {
         mainWin.style.left = 'calc(50% - 180px)'; mainWin.style.top = '150px';
         donateWin.style.left = 'calc(50% + 175px)'; donateWin.style.top = '180px';
-        playerWin.style.left = 'auto'; playerWin.style.right = '10px'; playerWin.style.top = '10px'; playerWin.style.width = '320px';
+        playerWin.style.left = 'auto'; playerWin.style.right = '10px'; playerWin.style.top = '10px'; playerWin.style.width = '335px';
         guestbookWin.style.left = 'calc(50% - 320px)'; guestbookWin.style.top = '220px';
       }
     }
