@@ -7,7 +7,6 @@
   
   <link rel="icon" href="https://win98icons.alexmeub.com/icons/png/windows-0.png" type="image/png">
 
-  <!-- 98.css -->
   <link rel="stylesheet" href="https://unpkg.com/98.css" />
   <style>
     * {
@@ -663,7 +662,6 @@
 </head>
 <body>
 
-  <!-- Стартовый экран с кнопкой и вашим курсором cursor.png -->
   <div id="startOverlay">
     <div class="start-prompt-window">
       <div class="title-bar">
@@ -685,10 +683,8 @@
     </div>
   </div>
 
-  <!-- Аудио файл -->
   <audio id="startupSound" src="window-open.mp3" preload="auto"></audio>
 
-  <!-- Boot Screen Overlay -->
   <div id="bootScreen">
     <div class="boot-logo-container">
       <div class="boot-title">ВИТЯ 02</div>
@@ -700,10 +696,8 @@
   </div>
 
   <div class="desktop" id="desktop">
-    <!-- Centered Background Text -->
     <div class="desktop-wallpaper">ВИТЯ 02</div>
 
-    <!-- Media Player Window -->
     <div class="window top-right-player" id="playerWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -720,7 +714,6 @@
       </div>
     </div>
 
-    <!-- Desktop Shortcuts -->
     <div class="desktop-icons">
       <div class="desktop-icon" onclick="playClickSound(); openWindow('mainWindow')">
         <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" alt="VITYA.exe">
@@ -736,7 +729,6 @@
       </div>
     </div>
 
-    <!-- Main Window -->
     <div class="window open" id="mainWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -783,7 +775,6 @@
       </div>
     </div>
 
-    <!-- Donate Window -->
     <div class="window" id="donateWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -830,7 +821,6 @@
     </div>
   </div>
 
-  <!-- Start Menu -->
   <div class="start-menu" id="startMenu">
     <div class="start-menu-side">прив чд</div>
     <div class="start-menu-items">
@@ -850,7 +840,6 @@
     </div>
   </div>
 
-  <!-- Windows Taskbar -->
   <div class="taskbar" id="taskbar">
     <div style="display: flex; align-items: center; overflow: hidden; flex: 1;">
       <div class="start-container">
@@ -1080,14 +1069,11 @@
       const win = document.getElementById(winId);
       win.style.zIndex = highestZ;
 
-      // Убираем класс active у всех окон и кнопок задач
       document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
       document.querySelectorAll('.task-item').forEach(t => t.classList.remove('active'));
 
-      // Добавляем класс active выбранному окну
       win.classList.add('active');
 
-      // Добавляем класс active соответствующей кнопке в панели задач (чтобы она выглядела нажатой)
       const taskBtn = getTaskBtn(winId);
       if (taskBtn) {
         taskBtn.classList.add('active');
@@ -1111,15 +1097,22 @@
       win.classList.remove('open');
       win.classList.remove('active');
 
+      // Останавливаем трек и сбрасываем время ТОЛЬКО при закрытии окна плеера
+      if (id === 'playerWindow') {
+        const audioPlayer = document.getElementById('audioPlayer');
+        if (audioPlayer) {
+          audioPlayer.pause();
+          audioPlayer.currentTime = 0;
+        }
+      }
+
       const taskBtn = getTaskBtn(id);
       if (taskBtn) {
         taskBtn.classList.remove('visible', 'active');
       }
 
-      // Если закрыли активное окно, можно переключить фокус на следующее открытое
       const openWindows = Array.from(document.querySelectorAll('.window.open'));
       if (openWindows.length > 0) {
-        // Находим окно с максимальным z-index среди оставшихся
         let highest = openWindows[0];
         openWindows.forEach(w => {
           if (parseInt(w.style.zIndex || 0) > parseInt(highest.style.zIndex || 0)) {
@@ -1136,15 +1129,13 @@
       const taskBtn = getTaskBtn(id);
 
       if (win.classList.contains('open')) {
-        // Если окно уже открыто и активно — сворачиваем/скрываем его
         if (win.classList.contains('active')) {
-          win.classList.remove('open');
+          // Если кликнули по активной кнопке таскбара, теперь оно просто становится неактивным, но НЕ закрывается и трек НЕ останавливается
+          // (Убираем .active с окна, оставляя его открытым, но фокус уходит на другое окно если есть)
           win.classList.remove('active');
-          if (taskBtn) taskBtn.classList.remove('visible', 'active');
-          playCloseSound();
+          if (taskBtn) taskBtn.classList.remove('active');
 
-          // Фокус на другое открытое
-          const openWindows = Array.from(document.querySelectorAll('.window.open'));
+          const openWindows = Array.from(document.querySelectorAll('.window.open')).filter(w => w !== win);
           if (openWindows.length > 0) {
             let highest = openWindows[0];
             openWindows.forEach(w => {
@@ -1155,7 +1146,7 @@
             bringToFront(highest.id);
           }
         } else {
-          // Если оно открыто, но неактивно — делаем его активным
+          // Если окно было открыто, но неактивно — делаем его активным
           win.classList.add('open');
           if (taskBtn) taskBtn.classList.add('visible');
           bringToFront(id);
@@ -1220,7 +1211,6 @@
     makeDraggable(document.getElementById('donateWindow'));
     makeDraggable(document.getElementById('playerWindow'));
 
-    // Инициализация при старте: делаем mainWindow активным по умолчанию
     bringToFront('mainWindow');
   </script>
 </body>
