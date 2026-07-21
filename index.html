@@ -6,9 +6,8 @@
   <title>ВИТЯ 02 - Desktop</title>
   
   <link rel="icon" href="https://win98icons.alexmeub.com/icons/png/windows-0.png" type="image/png">
-
-  <!-- 98.css -->
   <link rel="stylesheet" href="https://unpkg.com/98.css" />
+
   <style>
     * {
       box-sizing: border-box;
@@ -27,7 +26,7 @@
       user-select: none;
     }
 
-    /* Start Overlay (Кнопка для старта) */
+    /* Start Overlay */
     #startOverlay {
       position: fixed;
       top: 0;
@@ -120,7 +119,7 @@
       100% { opacity: 1; }
     }
 
-    /* Boot Screen Overlay */
+    /* Boot Screen */
     #bootScreen {
       position: fixed;
       top: 0;
@@ -634,6 +633,11 @@
       flex-shrink: 0;
     }
 
+    /* Полное скрытие встроенного виджета Spotify в пользу ретро-дизайна */
+    #embed-iframe {
+      display: none !important;
+    }
+
     /* Guestbook */
     .guestbook-content {
       background: #fff;
@@ -706,7 +710,7 @@
 </head>
 <body>
 
-  <!-- Аудио элементы из репозитория -->
+  <!-- Аудио элементы -->
   <audio id="windowOpenAudio" src="window-open.mp3" preload="auto"></audio>
 
   <!-- Start Overlay -->
@@ -745,7 +749,7 @@
   <div class="desktop" id="desktop">
     <div class="desktop-wallpaper">ВИТЯ 02</div>
 
-    <!-- Media Player -->
+    <!-- Media Player (Win95 Style) -->
     <div class="window top-right-player" id="playerWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -758,11 +762,13 @@
       </div>
       <div class="window-body" style="padding: 10px; gap: 8px;">
         
+        <!-- Зеленый экран дисплея трека -->
         <div style="width: 100%; background: #000; color: #00ff00; font-family: 'Courier New', monospace; font-size: 11px; padding: 6px; border: 2px solid; border-color: #808080 #fff #fff #808080; min-height: 42px; display: flex; flex-direction: column; justify-content: center;">
           <div id="spotifyTrackName" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;">Подключение к Spotify...</div>
           <div id="spotifyArtistName" style="color: #00aa00; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10px;">Плейлист vityaptt</div>
         </div>
 
+        <!-- Таймлайн -->
         <div style="width: 100%; display: flex; flex-direction: column; gap: 2px;">
           <div style="display: flex; justify-content: space-between; font-size: 9px; font-family: 'Courier New', monospace;">
             <span id="currentTime">0:00</span>
@@ -771,22 +777,21 @@
           <input type="range" id="trackTimeline" min="0" max="100" value="0" style="width: 100%; cursor: pointer;" oninput="seekTrack(this.value)">
         </div>
 
+        <!-- Кнопки управления -->
         <div style="display: flex; gap: 4px; width: 100%; justify-content: center;">
-          <button class="win-button" style="width: auto; padding: 4px 8px; justify-content: center;" onclick="playClickSound(); if(spotifyController) spotifyController.previousTrack()">⏮</button>
-          <button class="win-button" id="spotifyPlayBtn" style="flex: 1; padding: 4px 8px; justify-content: center;" onclick="playClickSound(); if(spotifyController) spotifyController.togglePlay()">Play / Pause</button>
-          <button class="win-button" style="width: auto; padding: 4px 8px; justify-content: center;" onclick="playClickSound(); if(spotifyController) spotifyController.nextTrack()">⏭</button>
+          <button class="win-button" style="width: auto; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); if(spotifyController) spotifyController.previousTrack()">⏮</button>
+          <button class="win-button" id="spotifyPlayBtn" style="flex: 1; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); if(spotifyController) spotifyController.togglePlay()">Play / Pause</button>
+          <button class="win-button" style="width: auto; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); if(spotifyController) spotifyController.nextTrack()">⏭</button>
         </div>
 
+        <!-- Громкость и статус -->
         <div style="display: flex; gap: 6px; width: 100%; align-items: center; font-size: 11px;">
           <span style="font-size: 10px; font-weight: bold;">🔊</span>
           <input type="range" id="volumeSlider" min="0" max="100" value="70" style="flex: 1; cursor: pointer;" oninput="changeVolume(this.value)" title="Громкость">
-          <select id="trackSelector" style="font-size: 10px; padding: 2px; background: #c0c0c0; border: 1px solid #808080; max-width: 120px;" onchange="selectTrack(this.value)">
-            <option value="">Выбор трека...</option>
-          </select>
         </div>
 
-        <!-- Скрытый iframe виджет Spotify для соблюдения стилизации плеера -->
-        <div id="embed-iframe" style="width: 100%; height: 80px; display: none; border: 1px solid #808080;"></div>
+        <!-- Скрытый iframe для Spotify API -->
+        <div id="embed-iframe"></div>
 
         <div class="status-bar" style="margin-top: 2px;">
           <div class="status-bar-field" style="flex: 1;">Spotify API Ready</div>
@@ -1112,7 +1117,7 @@
     setInterval(checkTwitchStatus, 60000);
   </script>
 
-  <!-- Логика Spotify API с исправленным таймлайном, громкостью и треками -->
+  <!-- Логика Spotify API -->
   <script>
     let spotifyController = null;
     let trackDurationMs = 0;
@@ -1133,7 +1138,7 @@
             const track = e.data.track;
             const artistsStr = track.artists ? track.artists.map(a => a.name).join(', ') : "vityaptt";
             
-            // Вывод информации о треке на зеленый экран: Артист - Название
+            // Вывод Артист - Название на зеленый дисплей
             document.getElementById('spotifyTrackName').innerText = track.name;
             document.getElementById('spotifyArtistName').innerText = artistsStr;
             
@@ -1166,7 +1171,6 @@
       return m + ':' + (s < 10 ? '0' : '') + s;
     }
 
-    // Обработка таймлайна и перемотки
     const timelineInput = document.getElementById('trackTimeline');
     timelineInput.addEventListener('mousedown', () => { isSeeking = true; });
     timelineInput.addEventListener('touchstart', () => { isSeeking = true; });
@@ -1196,17 +1200,9 @@
       }
     }
 
-    // Обработка ползунка громкости
     function changeVolume(val) {
       if (spotifyController && spotifyController.setVolume) {
         spotifyController.setVolume(val / 100);
-      }
-    }
-
-    function selectTrack(uri) {
-      if (uri && spotifyController) {
-        spotifyController.loadUri(uri);
-        spotifyController.play();
       }
     }
   </script>
@@ -1255,7 +1251,6 @@
       osc.stop(audioCtx.currentTime + 0.07);
     }
 
-    // Воспроизведение реального файла window-open.mp3 из репозитория
     function playWindowOpenSound() {
       const sound = document.getElementById('windowOpenAudio');
       if (sound) {
@@ -1294,7 +1289,7 @@
         progress += 10;
         bootProgress.style.width = progress + '%';
         
-        // Звук window-open начинает проигрываться чуть раньше конца полоски (на 85%)
+        // Звук window-open запускается чуть раньше конца (на 80%)
         if (progress === 80) {
           playWindowOpenSound();
         }
