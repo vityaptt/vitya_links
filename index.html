@@ -172,7 +172,7 @@
       line-height: 1.2;
     }
 
-    /* Windows & Animation System */
+    /* Windows & Animation System (12 FPS / Stepped Look) */
     .window {
       width: 360px;
       max-width: 95vw;
@@ -180,13 +180,12 @@
       position: absolute;
       touch-action: none;
       
-      /* Настройки плавной анимации */
       display: block;
       opacity: 0;
-      transform: scale(0.85);
+      transform: scale(0.7);
       pointer-events: none;
       visibility: hidden;
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      transition: opacity 0.35s steps(4, end), transform 0.35s steps(4, end);
     }
 
     .window.open {
@@ -202,7 +201,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      cursor: move;
+      cursor: grab;
+    }
+
+    .title-bar:active {
+      cursor: grabbing;
     }
 
     .title-bar-text {
@@ -550,18 +553,6 @@
        MOBILE ADAPTATION (MEDIA QUERIES)
        ========================================== */
     @media (max-width: 768px) {
-      .window {
-        width: 94vw !important;
-        left: 3vw !important;
-        top: 130px !important;
-      }
-
-      .top-right-player {
-        width: 94vw !important;
-        right: 3vw !important;
-        top: 130px !important;
-      }
-
       .desktop-wallpaper {
         font-size: 40px;
         letter-spacing: 2px;
@@ -579,8 +570,9 @@
 </head>
 <body>
 
-  <!-- Аудио для старта Windows 95 -->
+  <!-- Аудиофайлы системы -->
   <audio id="startupSound" src="https://www.myinstants.com/media/sounds/windows-95-startup.mp3" preload="auto"></audio>
+  <audio id="customWindowSound" src="window-open.mp3" preload="auto"></audio>
 
   <!-- Boot Screen Animation -->
   <div id="bootScreen">
@@ -631,7 +623,7 @@
     </div>
 
     <!-- Main Window -->
-    <div class="window open" id="mainWindow" style="top: 150px; left: calc(50% - 180px);">
+    <div class="window open" id="mainWindow">
       <div class="title-bar">
         <div class="title-bar-text">
           <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="14" height="14" alt="icon">
@@ -677,8 +669,8 @@
       </div>
     </div>
 
-    <!-- Donate Window (справа, чуть касается главного окна) -->
-    <div class="window" id="donateWindow" style="top: 180px; left: calc(50% + 175px);">
+    <!-- Donate Window -->
+    <div class="window" id="donateWindow">
       <div class="title-bar">
         <div class="title-bar-text">
           <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="14" height="14" alt="Donate">
@@ -820,26 +812,32 @@
 
     function playWindowSound(isOpen) {
       initAudio();
-      if (!audioCtx) return;
+      
+      if (isOpen) {
+        const customSound = document.getElementById('customWindowSound');
+        if (customSound) {
+          customSound.currentTime = 0;
+          customSound.volume = 0.5; // Строго 50% громкости
+          customSound.play().catch(() => {});
+        }
+      } else {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
 
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(350, audioCtx.currentTime + 0.07);
 
-      const startFreq = isOpen ? 350 : 600;
-      const endFreq = isOpen ? 600 : 350;
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.07);
 
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(startFreq, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(endFreq, audioCtx.currentTime + 0.07);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
 
-      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.07);
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.07);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.07);
+      }
     }
 
     // Boot Screen Logic & Win95 Startup Sound
@@ -903,6 +901,42 @@
       }
     });
 
+    // Initial Windows Positioning (Adaptive & Cascade for Desktop/Mobile)
+    function initWindowPositions() {
+      const isMobile = window.innerWidth <= 768;
+      
+      const mainWin = document.getElementById('mainWindow');
+      const donateWin = document.getElementById('donateWindow');
+      const playerWin = document.getElementById('playerWindow');
+
+      if (isMobile) {
+        // Каскадное смещение на телефонах, чтобы окна не наслаивались друг на друга
+        mainWin.style.left = '15px';
+        mainWin.style.top = '60px';
+
+        donateWin.style.left = '35px';
+        donateWin.style.top = '100px';
+
+        playerWin.style.left = '20px';
+        playerWin.style.top = '20px';
+        playerWin.style.width = 'calc(100vw - 40px)';
+      } else {
+        // Десктопная компоновка
+        mainWin.style.left = 'calc(50% - 180px)';
+        mainWin.style.top = '150px';
+
+        donateWin.style.left = 'calc(50% + 175px)';
+        donateWin.style.top = '180px';
+
+        playerWin.style.left = 'auto';
+        playerWin.style.right = '10px';
+        playerWin.style.top = '10px';
+        playerWin.style.width = '280px';
+      }
+    }
+
+    initWindowPositions();
+
     // Window & Z-Index Management
     let highestZ = 100;
 
@@ -960,7 +994,7 @@
       }
     }
 
-    // Universal Draggable Windows Setup (Mouse + Touch via Pointer Events)
+    // Universal Draggable Windows Setup (Fixed for Mobile & Desktop via Global Pointer Events)
     function makeDraggable(win) {
       const titleBar = win.querySelector('.title-bar');
       let isDragging = false;
@@ -972,10 +1006,20 @@
       titleBar.addEventListener('pointerdown', (e) => {
         if (e.target.tagName.toLowerCase() === 'button') return;
         isDragging = true;
-        offsetX = e.clientX - win.offsetLeft;
-        offsetY = e.clientY - win.offsetTop;
+        
+        const rect = win.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+
+        // Фиксируем размеры окна в пикселях перед началом перетаскивания (чтобы избежать прыжков на кастомных width)
+        win.style.width = rect.width + 'px';
+        win.style.left = rect.left + 'px';
+        win.style.top = rect.top + 'px';
+        win.style.right = 'auto';
+
         titleBar.setPointerCapture(e.pointerId);
         bringToFront(win);
+        e.preventDefault();
       });
 
       titleBar.addEventListener('pointermove', (e) => {
@@ -984,7 +1028,7 @@
         let top = e.clientY - offsetY;
 
         if (top < 0) top = 0;
-        if (top > window.innerHeight - 80) top = window.innerHeight - 80;
+        if (top > window.innerHeight - 60) top = window.innerHeight - 60;
 
         win.style.left = left + 'px';
         win.style.top = top + 'px';
