@@ -494,6 +494,7 @@
       flex: 1;
       display: flex;
       gap: 4px;
+      overflow-x: auto;
     }
 
     .task-item {
@@ -509,6 +510,7 @@
       font-weight: bold;
       cursor: pointer;
       border: none;
+      white-space: nowrap;
     }
 
     .task-item.visible {
@@ -529,6 +531,37 @@
       display: flex;
       align-items: center;
       background: #c0c0c0;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================
+       MOBILE ADAPTATION (MEDIA QUERIES)
+       ========================================== */
+    @media (max-width: 768px) {
+      .window {
+        width: 94vw !important;
+        left: 3vw !important;
+        top: 50px !important;
+      }
+
+      .top-right-player {
+        width: 94vw !important;
+        right: 3vw !important;
+        top: 10px !important;
+      }
+
+      .desktop-wallpaper {
+        font-size: 40px;
+        letter-spacing: 2px;
+      }
+
+      .desktop-icons {
+        flex-direction: row;
+        flex-wrap: wrap;
+        top: 75px;
+        left: 10px;
+        gap: 10px;
+      }
     }
   </style>
 </head>
@@ -583,7 +616,7 @@
     </div>
 
     <!-- Main Window -->
-    <div class="window open" id="mainWindow" style="top: 80px; left: calc(50% - 180px);">
+    <div class="window open" id="mainWindow" style="top: 150px; left: calc(50% - 180px);">
       <div class="title-bar">
         <div class="title-bar-text">
           <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="14" height="14" alt="icon">
@@ -630,7 +663,7 @@
     </div>
 
     <!-- Donate Window -->
-    <div class="window" id="donateWindow" style="top: 100px; left: calc(50% - 160px);">
+    <div class="window" id="donateWindow" style="top: 180px; left: calc(50% - 160px);">
       <div class="title-bar">
         <div class="title-bar-text">
           <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="14" height="14" alt="Donate">
@@ -644,7 +677,7 @@
       <div class="window-body money-bg">
         <div class="da-header">
           <div class="da-avatar-container">
-            <img src="https://win98icons.alexmeub.com/icons/png/msn_credits-0.png" class="da-avatar" alt="Avatar">
+            <img src="warning.png" class="da-avatar" alt="Avatar">
           </div>
           <div class="da-user-info">
             vityaptt
@@ -658,7 +691,7 @@
           </a>
 
           <a href="https://web.tribute.tg/d/NvR" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
-            <img src="https://win98icons.alexmeub.com/icons/png/coin-0.png" class="button-icon" alt="Tribute">
+            <img src="recycle_bin.png" class="button-icon" alt="Tribute">
             Tribute
           </a>
 
@@ -678,7 +711,7 @@
 
   <!-- Windows Taskbar -->
   <div class="taskbar">
-    <div style="display: flex; align-items: center;">
+    <div style="display: flex; align-items: center; overflow: hidden; flex: 1;">
       <div class="start-container">
         <button class="start-button" id="startButton">
           <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" width="14" height="14" alt="Start">
@@ -892,6 +925,7 @@
       let offsetY = 0;
 
       win.addEventListener('mousedown', () => bringToFront(win));
+      win.addEventListener('touchstart', () => bringToFront(win), {passive: true});
 
       titleBar.addEventListener('mousedown', (e) => {
         if (e.target.tagName.toLowerCase() === 'button') return;
@@ -901,21 +935,40 @@
         bringToFront(win);
       });
 
+      titleBar.addEventListener('touchstart', (e) => {
+        if (e.target.tagName.toLowerCase() === 'button') return;
+        isDragging = true;
+        offsetX = e.touches[0].clientX - win.offsetLeft;
+        offsetY = e.touches[0].clientY - win.offsetTop;
+        bringToFront(win);
+      }, {passive: true});
+
       document.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
         let left = e.clientX - offsetX;
         let top = e.clientY - offsetY;
 
         if (top < 0) top = 0;
-        if (top > window.innerHeight - 60) top = window.innerHeight - 60;
+        if (top > window.innerHeight - 80) top = window.innerHeight - 80;
 
         win.style.left = left + 'px';
         win.style.top = top + 'px';
       });
 
-      document.addEventListener('mouseup', () => {
-        isDragging = false;
-      });
+      document.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        let left = e.touches[0].clientX - offsetX;
+        let top = e.touches[0].clientY - offsetY;
+
+        if (top < 0) top = 0;
+        if (top > window.innerHeight - 80) top = window.innerHeight - 80;
+
+        win.style.left = left + 'px';
+        win.style.top = top + 'px';
+      }, {passive: true});
+
+      document.addEventListener('mouseup', () => { isDragging = false; });
+      document.addEventListener('touchend', () => { isDragging = false; });
     }
 
     makeDraggable(document.getElementById('mainWindow'));
