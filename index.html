@@ -705,9 +705,8 @@
 </head>
 <body>
 
-  <!-- Аудио элементы -->
+  <!-- Аудио элементы для UI -->
   <audio id="windowOpenAudio" src="window-open.mp3" preload="auto"></audio>
-  <audio id="audioPlayer" preload="auto"></audio>
 
   <!-- Start Overlay -->
   <div id="startOverlay">
@@ -745,12 +744,12 @@
   <div class="desktop" id="desktop">
     <div class="desktop-wallpaper">ВИТЯ 02</div>
 
-    <!-- Media Player (Win95 Style) -->
+    <!-- Spotify Web Playback SDK Player (Win95 Style) -->
     <div class="window top-right-player" id="playerWindow">
       <div class="title-bar">
         <div class="title-bar-text">
           <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" width="14" height="14" alt="Media Player">
-          Media Player - vityaptt
+          Spotify Player - vityaptt
         </div>
         <div class="title-bar-controls">
           <button aria-label="Close" onclick="closeWindow('playerWindow')"></button>
@@ -760,8 +759,8 @@
         
         <!-- Зеленый экран дисплея трека -->
         <div style="width: 100%; background: #000; color: #00ff00; font-family: 'Courier New', monospace; font-size: 11px; padding: 6px; border: 2px solid; border-color: #808080 #fff #fff #808080; min-height: 42px; display: flex; flex-direction: column; justify-content: center;">
-          <div id="spotifyTrackName" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;">Название трека</div>
-          <div id="spotifyArtistName" style="color: #00aa00; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10px;">Исполнитель</div>
+          <div id="spotifyTrackName" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;">Подключение к Spotify...</div>
+          <div id="spotifyArtistName" style="color: #00aa00; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10px;">Ожидание SDK</div>
         </div>
 
         <!-- Таймлайн -->
@@ -775,10 +774,15 @@
 
         <!-- Кнопки управления -->
         <div style="display: flex; gap: 4px; width: 100%; justify-content: center;">
-          <button class="win-button" style="width: auto; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); prevTrack()">⏮</button>
-          <button class="win-button" id="spotifyPlayBtn" style="flex: 1; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); togglePlayState()">Play / Pause</button>
-          <button class="win-button" style="width: auto; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); nextTrack()">⏭</button>
+          <button class="win-button" style="width: auto; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); spotifyPlayer.previousTrack()">⏮</button>
+          <button class="win-button" id="spotifyPlayBtn" style="flex: 1; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); spotifyPlayer.togglePlay()">Play / Pause</button>
+          <button class="win-button" style="width: auto; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); spotifyPlayer.nextTrack()">⏭</button>
         </div>
+
+        <!-- Кнопка запуска плейлиста -->
+        <button class="win-button" style="justify-content: center; font-size: 11px; height: 24px;" onclick="playClickSound(); playMyPlaylist()">
+          ▶ Запустить плейлист 7IjNxr...
+        </button>
 
         <!-- Громкость -->
         <div style="display: flex; gap: 6px; width: 100%; align-items: center; font-size: 11px;">
@@ -787,8 +791,8 @@
         </div>
 
         <div class="status-bar" style="margin-top: 2px;">
-          <div class="status-bar-field" style="flex: 1;" id="spotifyStatusText">Плеер готов к работе</div>
-          <div class="status-bar-field">Win95 UI</div>
+          <div class="status-bar-field" style="flex: 1;" id="spotifyStatusText">Инициализация SDK...</div>
+          <div class="status-bar-field">Spotify API</div>
         </div>
       </div>
     </div>
@@ -1005,6 +1009,135 @@
     </div>
   </div>
 
+  <!-- Spotify Web Playback SDK -->
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+
+  <!-- Логика Spotify SDK плеера -->
+  <script>
+    let spotifyPlayer = null;
+    let deviceId = null;
+    let isSeeking = false;
+    let trackDuration = 0;
+
+    // Интегрирован ваш OAuth токен Spotify
+    const spotifyToken = "BQCOogO1U495j8pfJLLRkve1qk1MVamguYHiZzxj7MeAs3sfRiHrumPGtvTI_OTr1SxXNE2rfeg78OEsj-gJmi5uuPs4vR4LnHG3gB4IAMv6pMZ-WkVU8ThgG5RhmSZipYNauf5dLaGL_hiVHa3dxvZmz9siKLf-xyP-IgGrsWzjgK_IORHS70EMZwF1R6eklUCI4VklHggDeuqEu_S_-B81K67O-Td3c2vbTUT2OzOZjhX-e4HO0fnZx7nenZbLZptVp7pcSrzVfGaYuf04AkaU11JkFur_lvKetnB51zYA8Hb-Muhik7zXqdGDS4lyFc7jH-B0FlrbT2EG-3ZzYCaIpJdBc3f29aLUf76UZqefgxgK0spC6PS9pdmtoWF0jXSaO8b4nHusLizU_wNT5iEQQ";
+    const playlistId = "7IjNxrK2cpGrE2ptZ0aXyu";
+
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      spotifyPlayer = new Spotify.Player({
+        name: 'ВИТЯ 02 - Win95 Player',
+        getOAuthToken: cb => { cb(spotifyToken); },
+        volume: 0.8
+      });
+
+      // Ready
+      spotifyPlayer.addListener('ready', ({ device_id }) => {
+        deviceId = device_id;
+        document.getElementById('spotifyStatusText').innerText = "Готов к работе";
+        document.getElementById('spotifyTrackName').innerText = "Плеер подключен";
+        document.getElementById('spotifyArtistName').innerText = "Нажми 'Запустить плейлист'";
+      });
+
+      // Not Ready
+      spotifyPlayer.addListener('not_ready', ({ device_id }) => {
+        document.getElementById('spotifyStatusText').innerText = "Устройство офлайн";
+      });
+
+      // Изменение состояния воспроизведения и метаданных
+      spotifyPlayer.addListener('player_state_changed', state => {
+        if (!state) return;
+
+        const currentTrack = state.track_window.current_track;
+        if (currentTrack) {
+          document.getElementById('spotifyTrackName').innerText = currentTrack.name;
+          document.getElementById('spotifyArtistName').innerText = currentTrack.artists.map(a => a.name).join(', ');
+        }
+
+        trackDuration = state.duration;
+        document.getElementById('totalTime').innerText = formatTime(trackDuration);
+        document.getElementById('currentTime').innerText = formatTime(state.position);
+
+        if (!isSeeking && trackDuration > 0) {
+          const progressPercent = (state.position / trackDuration) * 100;
+          document.getElementById('trackTimeline').value = progressPercent;
+        }
+
+        const playBtn = document.getElementById('spotifyPlayBtn');
+        if (state.paused) {
+          playBtn.innerText = "Play";
+          document.getElementById('spotifyStatusText').innerText = "Пауза";
+        } else {
+          playBtn.innerText = "Pause";
+          document.getElementById('spotifyStatusText').innerText = "Воспроизведение";
+        }
+      });
+
+      spotifyPlayer.connect();
+    };
+
+    // Запуск твоего плейлиста через Spotify Web API
+    function playMyPlaylist() {
+      if (!deviceId) {
+        alert("Плеер еще не инициализировался. Подожди пару секунд!");
+        return;
+      }
+      fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ context_uri: `spotify:playlist:${playlistId}` }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${spotifyToken}`
+        }
+      }).then(res => {
+        if (!res.ok) {
+          console.error("Ошибка запуска плейлиста. Проверь токен или активный премиум.");
+          document.getElementById('spotifyStatusText').innerText = "Ошибка запуска плейлиста";
+        }
+      }).catch(err => console.error(err));
+    }
+
+    function onTimelineInput(val) {
+      isSeeking = true;
+      if (trackDuration) {
+        const targetTime = (val / 100) * trackDuration;
+        document.getElementById('currentTime').innerText = formatTime(targetTime);
+      }
+    }
+
+    function onTimelineChange(val) {
+      if (trackDuration && spotifyPlayer) {
+        const targetTime = (val / 100) * trackDuration;
+        spotifyPlayer.seek(targetTime).then(() => {
+          isSeeking = false;
+        });
+      } else {
+        isSeeking = false;
+      }
+    }
+
+    function changeVolume(val) {
+      const icon = document.getElementById('volumeIcon');
+      if (spotifyPlayer) {
+        spotifyPlayer.setVolume(val / 100);
+      }
+
+      if (val == 0) {
+        icon.innerText = "🔇";
+      } else if (val < 40) {
+        icon.innerText = "🔉";
+      } else {
+        icon.innerText = "🔊";
+      }
+    }
+
+    function formatTime(ms) {
+      const sec = Math.floor(ms / 1000);
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return m + ':' + (s < 10 ? '0' : '') + s;
+    }
+  </script>
+
   <!-- Firebase & Twitch Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -1105,130 +1238,6 @@
 
     checkTwitchStatus();
     setInterval(checkTwitchStatus, 60000);
-  </script>
-
-  <!-- Полностью рабочая логика аудио плеера -->
-  <script>
-    // Список треков для воспроизведения
-    const playlist = [
-      {
-        title: "Трек 1 (Пример)",
-        artist: "vityaptt",
-        url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-      },
-      {
-        title: "Трек 2 (Пример)",
-        artist: "vityaptt",
-        url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
-      },
-      {
-        title: "Трек 3 (Пример)",
-        artist: "vityaptt",
-        url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
-      }
-    ];
-
-    let currentTrackIndex = 0;
-    const audioPlayer = document.getElementById('audioPlayer');
-    let isSeeking = false;
-
-    // Инициализация при загрузке
-    window.addEventListener('DOMContentLoaded', () => {
-      loadTrack(currentTrackIndex);
-      audioPlayer.volume = 0.8;
-    });
-
-    function loadTrack(index) {
-      currentTrackIndex = index;
-      const track = playlist[currentTrackIndex];
-      audioPlayer.src = track.url;
-      document.getElementById('spotifyTrackName').innerText = track.title;
-      document.getElementById('spotifyArtistName').innerText = track.artist;
-      document.getElementById('currentTime').innerText = "0:00";
-      document.getElementById('totalTime').innerText = "0:00";
-      document.getElementById('trackTimeline').value = 0;
-    }
-
-    function togglePlayState() {
-      if (audioPlayer.paused) {
-        audioPlayer.play().then(() => {
-          document.getElementById('spotifyStatusText').innerText = "Воспроизведение...";
-        }).catch(err => {
-          console.log("Play blocked:", err);
-        });
-      } else {
-        audioPlayer.pause();
-        document.getElementById('spotifyStatusText').innerText = "Пауза";
-      }
-    }
-
-    function nextTrack() {
-      currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-      loadTrack(currentTrackIndex);
-      audioPlayer.play();
-    }
-
-    function prevTrack() {
-      currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
-      loadTrack(currentTrackIndex);
-      audioPlayer.play();
-    }
-
-    // Обновление таймлайна во время воспроизведения
-    audioPlayer.addEventListener('timeupdate', () => {
-      if (!isSeeking && audioPlayer.duration) {
-        const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-        document.getElementById('trackTimeline').value = progress;
-        document.getElementById('currentTime').innerText = formatTime(audioPlayer.currentTime);
-        document.getElementById('totalTime').innerText = formatTime(audioPlayer.duration);
-      }
-    });
-
-    audioPlayer.addEventListener('ended', () => {
-      nextTrack();
-    });
-
-    function onTimelineInput(val) {
-      isSeeking = true;
-      if (audioPlayer.duration) {
-        const targetTime = (val / 100) * audioPlayer.duration;
-        document.getElementById('currentTime').innerText = formatTime(targetTime);
-      }
-    }
-
-    function onTimelineChange(val) {
-      isSeeking = false;
-      if (audioPlayer.duration) {
-        const targetTime = (val / 100) * audioPlayer.duration;
-        audioPlayer.currentTime = targetTime;
-      }
-    }
-
-    function changeVolume(val) {
-      const icon = document.getElementById('volumeIcon');
-      const statusText = document.getElementById('spotifyStatusText');
-      
-      audioPlayer.volume = val / 100;
-
-      if (val == 0) {
-        icon.innerText = "🔇";
-      } else if (val < 40) {
-        icon.innerText = "🔉";
-      } else {
-        icon.innerText = "🔊";
-      }
-      
-      statusText.innerText = `Громкость: ${val}%`;
-      setTimeout(() => {
-        statusText.innerText = audioPlayer.paused ? "Пауза" : "Воспроизведение...";
-      }, 1500);
-    }
-
-    function formatTime(sec) {
-      const m = Math.floor(sec / 60);
-      const s = Math.floor(sec % 60);
-      return m + ':' + (s < 10 ? '0' : '') + s;
-    }
   </script>
 
   <!-- Интерфейс и Звуки -->
