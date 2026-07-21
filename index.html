@@ -172,7 +172,7 @@
       line-height: 1.2;
     }
 
-    /* Windows & Animation System (12 FPS / Stepped Look for both Open & Close) */
+    /* Windows & Animation System */
     .window {
       width: 360px;
       max-width: 95vw;
@@ -549,7 +549,7 @@
       flex-shrink: 0;
     }
 
-    /* Mobile Adaptation Media Queries */
+    /* Mobile Adaptation */
     @media (max-width: 768px) {
       .desktop-wallpaper {
         font-size: 40px;
@@ -568,9 +568,8 @@
 </head>
 <body>
 
-  <!-- Аудиофайлы системы -->
-  <audio id="startupSound" src="https://www.myinstants.com/media/sounds/windows-95-startup.mp3" preload="auto"></audio>
-  <audio id="customWindowSound" src="window-open.mp3" preload="auto"></audio>
+  <!-- Единственный стартовый звуковой файл (ваш window-open.mp3) -->
+  <audio id="startupSound" src="window-open.mp3" preload="auto"></audio>
 
   <!-- Boot Screen Overlay -->
   <div id="bootScreen">
@@ -606,15 +605,15 @@
 
     <!-- Desktop Shortcuts -->
     <div class="desktop-icons">
-      <div class="desktop-icon" onclick="openWindow('mainWindow')">
+      <div class="desktop-icon" onclick="playClickSound(); openWindow('mainWindow')">
         <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" alt="VITYA.exe">
         <span>ВИТЯ.exe</span>
       </div>
-      <div class="desktop-icon" onclick="openWindow('donateWindow')">
+      <div class="desktop-icon" onclick="playClickSound(); openWindow('donateWindow')">
         <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" alt="Donate">
         <span>Донат</span>
       </div>
-      <div class="desktop-icon" onclick="openWindow('playerWindow')">
+      <div class="desktop-icon" onclick="playClickSound(); openWindow('playerWindow')">
         <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" alt="Player">
         <span>Плеер</span>
       </div>
@@ -808,7 +807,7 @@
       osc.stop(audioCtx.currentTime + 0.03);
     }
 
-    // Функция звука ТОЛЬКО для закрытия окон (при открытии больше ничего не играет)
+    // Функция звука для закрытия окон
     function playCloseSound() {
       if (!audioCtx) return;
       const osc = audioCtx.createOscillator();
@@ -828,11 +827,10 @@
       osc.stop(audioCtx.currentTime + 0.07);
     }
 
-    // Boot Screen Logic & Startup Sound (Автоматически при запуске сайта)
+    // Boot Screen Logic & Startup Sound (Срабатывает каждый раз после конца анимации загрузки)
     const bootProgress = document.getElementById('bootProgress');
     const bootScreen = document.getElementById('bootScreen');
     const startupSound = document.getElementById('startupSound');
-    const customWindowSound = document.getElementById('customWindowSound');
     let progress = 0;
 
     const bootInterval = setInterval(() => {
@@ -843,15 +841,12 @@
         
         initAudio();
         
-        // Звук window-open играет СТРОГО здесь при загрузке сайта (50% громкости)
-        if (customWindowSound) {
-          customWindowSound.currentTime = 0;
-          customWindowSound.volume = 0.5;
-          customWindowSound.play().catch(() => {});
+        // Ваш звуковой файл window-open.mp3 играет строго один раз в конце загрузки
+        if (startupSound) {
+          startupSound.currentTime = 0;
+          startupSound.volume = 0.5;
+          startupSound.play().catch(() => {});
         }
-
-        startupSound.volume = 0.5;
-        startupSound.play().catch(() => {});
 
         setTimeout(() => {
           bootScreen.style.opacity = '0';
@@ -948,7 +943,6 @@
     }
 
     function openWindow(id) {
-      // Звук при открытии окна УДАЛЕН. Теперь музыка играет только при старте сайта.
       const win = document.getElementById(id);
       win.classList.add('open');
       bringToFront(win);
@@ -985,11 +979,10 @@
           taskBtn.classList.add('visible', 'active');
         }
         bringToFront(win);
-        // При открытии из таскбара звук тоже не воспроизводится
       }
     }
 
-    // Universal Draggable Windows Setup (Fixed for Mobile & Desktop via Global Pointer Events)
+    // Universal Draggable Windows Setup
     function makeDraggable(win) {
       const titleBar = win.querySelector('.title-bar');
       let isDragging = false;
