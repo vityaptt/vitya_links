@@ -7,6 +7,7 @@
   
   <link rel="icon" href="https://win98icons.alexmeub.com/icons/png/windows-0.png" type="image/png">
 
+  <!-- 98.css -->
   <link rel="stylesheet" href="https://unpkg.com/98.css" />
   <style>
     * {
@@ -605,7 +606,6 @@
       overflow-x: auto;
     }
 
-    /* Элементы панели задач (по умолчанию как кнопка Пуск — не нажатые) */
     .task-item {
       display: none;
       align-items: center;
@@ -626,7 +626,6 @@
       display: flex;
     }
 
-    /* Активное окно в панели задач — показывается как нажатая кнопка */
     .task-item.active {
       box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
       background: #d4d4d4;
@@ -642,6 +641,79 @@
       align-items: center;
       background: #c0c0c0;
       flex-shrink: 0;
+    }
+
+    /* Стили для Гостевой книги (Notepad) */
+    .notepad-menu-bar {
+      display: flex;
+      gap: 12px;
+      padding: 2px 4px;
+      font-size: 11px;
+      background: #c0c0c0;
+      border-bottom: 1px solid #808080;
+      width: 100%;
+    }
+    .notepad-menu-item {
+      padding: 1px 4px;
+      cursor: default;
+    }
+    .notepad-menu-item:hover {
+      background: #000080;
+      color: #fff;
+    }
+
+    .guestbook-content {
+      background: #fff;
+      border: 2px solid;
+      border-color: #808080 #fff #fff #808080;
+      width: 100%;
+      height: 160px;
+      overflow-y: auto;
+      padding: 6px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .guestbook-msg {
+      border-bottom: 1px dashed #ccc;
+      padding-bottom: 4px;
+    }
+    .guestbook-msg .author {
+      font-weight: bold;
+      color: #000080;
+    }
+    .guestbook-msg .date {
+      font-size: 9px;
+      color: #666;
+      float: right;
+    }
+    .guestbook-msg .text {
+      margin-top: 2px;
+      word-break: break-word;
+    }
+
+    .guestbook-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .guestbook-form input, .guestbook-form textarea {
+      background: #fff;
+      border: 2px solid;
+      border-color: #808080 #fff #fff #808080;
+      padding: 4px;
+      font-family: "MS Sans Serif", Arial, sans-serif;
+      font-size: 11px;
+      outline: none;
+      width: 100%;
+    }
+    .guestbook-form textarea {
+      resize: none;
+      height: 45px;
     }
 
     @media (max-width: 768px) {
@@ -662,6 +734,7 @@
 </head>
 <body>
 
+  <!-- Стартовый экран с кнопкой и вашим курсором cursor.png -->
   <div id="startOverlay">
     <div class="start-prompt-window">
       <div class="title-bar">
@@ -683,8 +756,10 @@
     </div>
   </div>
 
+  <!-- Аудио файл -->
   <audio id="startupSound" src="window-open.mp3" preload="auto"></audio>
 
+  <!-- Boot Screen Overlay -->
   <div id="bootScreen">
     <div class="boot-logo-container">
       <div class="boot-title">ВИТЯ 02</div>
@@ -696,8 +771,10 @@
   </div>
 
   <div class="desktop" id="desktop">
+    <!-- Centered Background Text -->
     <div class="desktop-wallpaper">ВИТЯ 02</div>
 
+    <!-- Media Player Window -->
     <div class="window top-right-player" id="playerWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -714,6 +791,7 @@
       </div>
     </div>
 
+    <!-- Desktop Shortcuts -->
     <div class="desktop-icons">
       <div class="desktop-icon" onclick="playClickSound(); openWindow('mainWindow')">
         <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" alt="VITYA.exe">
@@ -727,8 +805,13 @@
         <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" alt="Player">
         <span>Плеер</span>
       </div>
+      <div class="desktop-icon" onclick="playClickSound(); openWindow('guestbookWindow')">
+        <img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png" alt="Guestbook">
+        <span>Гостевая.txt</span>
+      </div>
     </div>
 
+    <!-- Main Window -->
     <div class="window open" id="mainWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -775,6 +858,7 @@
       </div>
     </div>
 
+    <!-- Donate Window -->
     <div class="window" id="donateWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -819,8 +903,49 @@
         </div>
       </div>
     </div>
+
+    <!-- Guestbook Window (Notepad.exe) -->
+    <div class="window" id="guestbookWindow" style="width: 380px;">
+      <div class="title-bar">
+        <div class="title-bar-text">
+          <img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png" width="14" height="14" alt="Notepad">
+          Гостевая книга - Блокнот
+        </div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" onclick="closeWindow('guestbookWindow')"></button>
+        </div>
+      </div>
+      <div class="notepad-menu-bar">
+        <div class="notepad-menu-item">Файл</div>
+        <div class="notepad-menu-item">Правка</div>
+        <div class="notepad-menu-item">Формат</div>
+        <div class="notepad-menu-item">Справка</div>
+      </div>
+      <div class="window-body" style="gap: 10px; padding: 10px;">
+        <!-- Стена сообщений -->
+        <div class="guestbook-content" id="guestbookMessages">
+          <!-- Сюда JS будет подгружать сообщения -->
+        </div>
+
+        <!-- Форма отправки -->
+        <form class="guestbook-form" onsubmit="postGuestbookMessage(event)">
+          <input type="text" id="gbAuthor" placeholder="Ваш ник / имя..." maxlength="25" required />
+          <textarea id="gbText" placeholder="Оставьте весточку для Вити и гостей..." maxlength="180" required></textarea>
+          <button type="submit" class="win-button" style="justify-content: center; height: 26px;" onclick="playClickSound()">
+            Оставить запись
+          </button>
+        </form>
+
+        <div class="status-bar" style="margin-top: 0;">
+          <div class="status-bar-field" style="flex: 1;">Записи сохраняются локально</div>
+          <div class="status-bar-field">Win98</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
+  <!-- Start Menu -->
   <div class="start-menu" id="startMenu">
     <div class="start-menu-side">прив чд</div>
     <div class="start-menu-items">
@@ -840,6 +965,7 @@
     </div>
   </div>
 
+  <!-- Windows Taskbar -->
   <div class="taskbar" id="taskbar">
     <div style="display: flex; align-items: center; overflow: hidden; flex: 1;">
       <div class="start-container">
@@ -865,6 +991,11 @@
         <button class="task-item" id="taskPlayer" onclick="toggleTask('playerWindow')">
           <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" width="12" height="12" alt="Player">
           Media Player
+        </button>
+
+        <button class="task-item" id="taskGuestbook" onclick="toggleTask('guestbookWindow')">
+          <img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png" width="12" height="12" alt="Guestbook">
+          Гостевая.txt
         </button>
       </div>
     </div>
@@ -1027,6 +1158,7 @@
       const mainWin = document.getElementById('mainWindow');
       const donateWin = document.getElementById('donateWindow');
       const playerWin = document.getElementById('playerWindow');
+      const guestbookWin = document.getElementById('guestbookWindow');
 
       if (isMobile) {
         mainWin.style.left = '15px';
@@ -1038,6 +1170,10 @@
         playerWin.style.left = '15px';
         playerWin.style.top = '115px';
         playerWin.style.width = 'calc(100vw - 30px)';
+
+        guestbookWin.style.left = '20px';
+        guestbookWin.style.top = '210px';
+        guestbookWin.style.width = 'calc(100vw - 40px)';
       } else {
         mainWin.style.left = 'calc(50% - 180px)';
         mainWin.style.top = '150px';
@@ -1049,6 +1185,9 @@
         playerWin.style.right = '10px';
         playerWin.style.top = '10px';
         playerWin.style.width = '280px';
+
+        guestbookWin.style.left = 'calc(50% - 320px)';
+        guestbookWin.style.top = '220px';
       }
     }
 
@@ -1060,10 +1199,10 @@
       if (id === 'mainWindow') return document.getElementById('taskMain');
       if (id === 'donateWindow') return document.getElementById('taskHelp');
       if (id === 'playerWindow') return document.getElementById('taskPlayer');
+      if (id === 'guestbookWindow') return document.getElementById('taskGuestbook');
       return null;
     }
 
-    // Функция обновления активного состояния окон и кнопок в панели задач
     function bringToFront(winId) {
       highestZ++;
       const win = document.getElementById(winId);
@@ -1097,7 +1236,6 @@
       win.classList.remove('open');
       win.classList.remove('active');
 
-      // Останавливаем трек и сбрасываем время ТОЛЬКО при закрытии окна плеера
       if (id === 'playerWindow') {
         const audioPlayer = document.getElementById('audioPlayer');
         if (audioPlayer) {
@@ -1130,8 +1268,6 @@
 
       if (win.classList.contains('open')) {
         if (win.classList.contains('active')) {
-          // Если кликнули по активной кнопке таскбара, теперь оно просто становится неактивным, но НЕ закрывается и трек НЕ останавливается
-          // (Убираем .active с окна, оставляя его открытым, но фокус уходит на другое окно если есть)
           win.classList.remove('active');
           if (taskBtn) taskBtn.classList.remove('active');
 
@@ -1146,18 +1282,89 @@
             bringToFront(highest.id);
           }
         } else {
-          // Если окно было открыто, но неактивно — делаем его активным
           win.classList.add('open');
           if (taskBtn) taskBtn.classList.add('visible');
           bringToFront(id);
         }
       } else {
-        // Если было закрыто — открываем
         win.classList.add('open');
         if (taskBtn) taskBtn.classList.add('visible');
         bringToFront(id);
       }
     }
+
+    // --- Логика гостевой книги ---
+    function loadGuestbookMessages() {
+      const container = document.getElementById('guestbookMessages');
+      let messages = [];
+      try {
+        messages = JSON.parse(localStorage.getItem('vityaptt_guestbook')) || [];
+      } catch (e) {
+        messages = [];
+      }
+
+      if (messages.length === 0) {
+        container.innerHTML = `
+          <div class="guestbook-msg">
+            <span class="author">Система</span>
+            <span class="date">01.01.1998</span>
+            <div class="text">Добро пожаловать в гостевую книгу! Оставьте свой след на сайте Вити.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = messages.map(m => `
+        <div class="guestbook-msg">
+          <span class="author">${escapeHtml(m.author)}</span>
+          <span class="date">${m.date}</span>
+          <div class="text">${escapeHtml(m.text)}</div>
+        </div>
+      `).join('');
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function postGuestbookMessage(e) {
+      e.preventDefault();
+      const authorInput = document.getElementById('gbAuthor');
+      const textInput = document.getElementById('gbText');
+
+      const author = authorInput.value.trim();
+      const text = textInput.value.trim();
+      if (!author || !text) return;
+
+      const now = new Date();
+      const dateStr = String(now.getDate()).padStart(2, '0') + '.' + 
+                      String(now.getMonth() + 1).padStart(2, '0') + '.' + 
+                      now.getFullYear() + ' ' + 
+                      String(now.getHours()).padStart(2, '0') + ':' + 
+                      String(now.getMinutes()).padStart(2, '0');
+
+      let messages = [];
+      try {
+        messages = JSON.parse(localStorage.getItem('vityaptt_guestbook')) || [];
+      } catch (err) {
+        messages = [];
+      }
+
+      messages.push({ author, text, date: dateStr });
+      // Ограничим до 50 сообщений, чтобы не забивать память
+      if (messages.length > 50) messages.shift();
+
+      localStorage.setItem('vityaptt_guestbook', JSON.stringify(messages));
+
+      textInput.value = '';
+      loadGuestbookMessages();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
+    }
+
+    // Загружаем сообщения при старте
+    loadGuestbookMessages();
 
     function makeDraggable(win) {
       const titleBar = win.querySelector('.title-bar');
@@ -1210,6 +1417,7 @@
     makeDraggable(document.getElementById('mainWindow'));
     makeDraggable(document.getElementById('donateWindow'));
     makeDraggable(document.getElementById('playerWindow'));
+    makeDraggable(document.getElementById('guestbookWindow'));
 
     bringToFront('mainWindow');
   </script>
