@@ -808,34 +808,24 @@
       osc.stop(audioCtx.currentTime + 0.03);
     }
 
-    function playWindowSound(isOpen) {
-      initAudio();
-      
-      if (isOpen) {
-        const customSound = document.getElementById('customWindowSound');
-        if (customSound) {
-          customSound.currentTime = 0;
-          customSound.volume = 0.5; // Строго 50% громкости
-          customSound.play().catch(() => {});
-        }
-      } else {
-        if (!audioCtx) return;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+    // Функция звука ТОЛЬКО для закрытия окон (при открытии больше ничего не играет)
+    function playCloseSound() {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
 
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(350, audioCtx.currentTime + 0.07);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(350, audioCtx.currentTime + 0.07);
 
-        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.07);
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.07);
 
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
 
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.07);
-      }
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.07);
     }
 
     // Boot Screen Logic & Startup Sound (Автоматически при запуске сайта)
@@ -853,6 +843,7 @@
         
         initAudio();
         
+        // Звук window-open играет СТРОГО здесь при загрузке сайта (50% громкости)
         if (customWindowSound) {
           customWindowSound.currentTime = 0;
           customWindowSound.volume = 0.5;
@@ -907,7 +898,7 @@
       }
     });
 
-    // Initial Windows Positioning (Adaptive & Cascade for Desktop/Mobile - Adjusted for Mobile Shortcuts Clearance)
+    // Initial Windows Positioning (Adaptive & Cascade for Desktop/Mobile)
     function initWindowPositions() {
       const isMobile = window.innerWidth <= 768;
       
@@ -916,7 +907,6 @@
       const playerWin = document.getElementById('playerWindow');
 
       if (isMobile) {
-        // Опускаем стартовые окна ниже ряда иконок, чтобы они не перекрывали ярлыки слева вверху
         mainWin.style.left = '15px';
         mainWin.style.top = '145px';
 
@@ -927,7 +917,6 @@
         playerWin.style.top = '115px';
         playerWin.style.width = 'calc(100vw - 30px)';
       } else {
-        // Десктопная компоновка
         mainWin.style.left = 'calc(50% - 180px)';
         mainWin.style.top = '150px';
 
@@ -959,7 +948,7 @@
     }
 
     function openWindow(id) {
-      playWindowSound(true);
+      // Звук при открытии окна УДАЛЕН. Теперь музыка играет только при старте сайта.
       const win = document.getElementById(id);
       win.classList.add('open');
       bringToFront(win);
@@ -971,7 +960,7 @@
     }
 
     function closeWindow(id) {
-      playWindowSound(false);
+      playCloseSound();
       const win = document.getElementById(id);
       win.classList.remove('open');
 
@@ -989,14 +978,14 @@
       if (win.classList.contains('open')) {
         win.classList.remove('open');
         if (taskBtn) taskBtn.classList.remove('visible', 'active');
-        playWindowWindowSound(false);
+        playCloseSound();
       } else {
         win.classList.add('open');
         if (taskBtn) {
           taskBtn.classList.add('visible', 'active');
         }
         bringToFront(win);
-        playWindowSound(true);
+        // При открытии из таскбара звук тоже не воспроизводится
       }
     }
 
