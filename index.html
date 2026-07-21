@@ -898,7 +898,11 @@
       <div class="window-body" style="gap: 10px; padding: 10px;">
         <!-- Стена сообщений -->
         <div class="guestbook-content" id="guestbookMessages">
-          <!-- Сюда JS будет подгружать сообщения -->
+          <div class="guestbook-msg">
+            <span class="author">Система</span>
+            <span class="date">01.01.1998</span>
+            <div class="text">Загрузка сообщений из облака...</div>
+          </div>
         </div>
 
         <!-- Форма отправки -->
@@ -911,8 +915,8 @@
         </form>
 
         <div class="status-bar" style="margin-top: 0;">
-          <div class="status-bar-field" style="flex: 1;">Записи сохраняются локально</div>
-          <div class="status-bar-field">Win98</div>
+          <div class="status-bar-field" style="flex: 1;">Синхронизация в реальном времени</div>
+          <div class="status-bar-field">Firebase</div>
         </div>
       </div>
     </div>
@@ -979,6 +983,103 @@
     </div>
   </div>
 
+  <!-- Основной скрипт с интеграцией Firebase Firestore -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Ваши реальные ключи из консоли Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCKo0rXgyP_DU1BNG9iqQfmm8h49twimVE",
+      authDomain: "vitya-guestbook.firebaseapp.com",
+      projectId: "vitya-guestbook",
+      storageBucket: "vitya-guestbook.firebasestorage.app",
+      messagingSenderId: "446796880365",
+      appId: "1:446796880365:web:1e5849eb562645cb0b6fe4",
+      measurementId: "G-CBGCJ1MFE0"
+    };
+
+    // Инициализация Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Функция отправки сообщения в облачную базу данных
+    window.postGuestbookMessage = async function(e) {
+      e.preventDefault();
+      const authorInput = document.getElementById('gbAuthor');
+      const textInput = document.getElementById('gbText');
+
+      const author = authorInput.value.trim();
+      const text = textInput.value.trim();
+      if (!author || !text) return;
+
+      try {
+        await addDoc(collection(db, "messages"), {
+          author: author,
+          text: text,
+          timestamp: new Date()
+        });
+        textInput.value = '';
+      } catch (err) {
+        console.error("Ошибка отправки сообщения: ", err);
+        alert("Не удалось отправить сообщение. Проверьте консоль.");
+      }
+    };
+
+    // Автоматическая загрузка и обновление сообщений в реальном времени
+    function listenGuestbook() {
+      const container = document.getElementById('guestbookMessages');
+      const q = query(collection(db, "messages"), orderBy("timestamp", "asc"), limit(50));
+
+      onSnapshot(q, (snapshot) => {
+        let messages = [];
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          let dateStr = "Только что";
+          if (data.timestamp) {
+            const d = data.timestamp.toDate();
+            dateStr = String(d.getDate()).padStart(2, '0') + '.' + 
+                      String(d.getMonth() + 1).padStart(2, '0') + '.' + 
+                      d.getFullYear() + ' ' + 
+                      String(d.getHours()).padStart(2, '0') + ':' + 
+                      String(d.getMinutes()).padStart(2, '0');
+          }
+          messages.push({
+            author: data.author,
+            text: data.text,
+            date: dateStr
+          });
+        });
+
+        if (messages.length === 0) {
+          container.innerHTML = `
+            <div class="guestbook-msg">
+              <span class="author">Система</span>
+              <span class="date">01.01.1998</span>
+              <div class="text">Добро пожаловать в гостевую книгу! Оставьте свой след на сайте Вити.</div>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = messages.map(m => `
+          <div class="guestbook-msg">
+            <span class="author">${escapeHtml(m.author)}</span>
+            <span class="date">${m.date}</span>
+            <div class="text">${escapeHtml(m.text)}</div>
+          </div>
+        `).join('');
+        container.scrollTop = container.scrollHeight;
+      }, (error) => {
+        console.error("Ошибка чтения базы данных: ", error);
+        container.innerHTML = `<div class="guestbook-msg"><span class="author">Ошибка</span><div class="text">Нет доступа к базе данных. Проверьте правила Firestore.</div></div>`;
+      });
+    }
+
+    listenGuestbook();
+  </script>
+
+  <!-- Вспомогательные скрипты интерфейса (Окна, Звуки, Часы) -->
   <script>
     let audioCtx = null;
 
@@ -1263,75 +1364,11 @@
       }
     }
 
-    function loadGuestbookMessages() {
-      const container = document.getElementById('guestbookMessages');
-      let messages = [];
-      try {
-        messages = JSON.parse(localStorage.getItem('vityaptt_guestbook')) || [];
-      } catch (e) {
-        messages = [];
-      }
-
-      if (messages.length === 0) {
-        container.innerHTML = `
-          <div class="guestbook-msg">
-            <span class="author">Система</span>
-            <span class="date">01.01.1998</span>
-            <div class="text">Добро пожаловать в гостевую книгу! Оставьте свой след на сайте Вити.</div>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = messages.map(m => `
-        <div class="guestbook-msg">
-          <span class="author">${escapeHtml(m.author)}</span>
-          <span class="date">${m.date}</span>
-          <div class="text">${escapeHtml(m.text)}</div>
-        </div>
-      `).join('');
-      container.scrollTop = container.scrollHeight;
-    }
-
-    function postGuestbookMessage(e) {
-      e.preventDefault();
-      const authorInput = document.getElementById('gbAuthor');
-      const textInput = document.getElementById('gbText');
-
-      const author = authorInput.value.trim();
-      const text = textInput.value.trim();
-      if (!author || !text) return;
-
-      const now = new Date();
-      const dateStr = String(now.getDate()).padStart(2, '0') + '.' + 
-                      String(now.getMonth() + 1).padStart(2, '0') + '.' + 
-                      now.getFullYear() + ' ' + 
-                      String(now.getHours()).padStart(2, '0') + ':' + 
-                      String(now.getMinutes()).padStart(2, '0');
-
-      let messages = [];
-      try {
-        messages = JSON.parse(localStorage.getItem('vityaptt_guestbook')) || [];
-      } catch (err) {
-        messages = [];
-      }
-
-      messages.push({ author, text, date: dateStr });
-      if (messages.length > 50) messages.shift();
-
-      localStorage.setItem('vityaptt_guestbook', JSON.stringify(messages));
-
-      textInput.value = '';
-      loadGuestbookMessages();
-    }
-
     function escapeHtml(str) {
       return str.replace(/[&<>'"]/g, 
         tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
       );
     }
-
-    loadGuestbookMessages();
 
     function makeDraggable(win) {
       const titleBar = win.querySelector('.title-bar');
