@@ -212,7 +212,7 @@
       top: 10px;
       right: 10px;
       z-index: 100;
-      width: 380px;
+      width: 360px;
     }
 
     .desktop-icons {
@@ -775,13 +775,13 @@
           <input type="range" id="trackTimeline" min="0" max="100" value="0" step="0.1" style="width: 100%; cursor: pointer;" oninput="onTimelineInput(this.value)" onchange="onTimelineChange(this.value)">
         </div>
 
-        <!-- Кнопки управления -->
+        <!-- Кнопки управления (уменьшены для идеального размещения) -->
         <div style="display: flex; gap: 4px; width: 100%; justify-content: space-between;">
-          <button class="win-button" style="width: 60px; height: 26px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); prevTrack()" title="Предыдущий">⏮</button>
-          <button class="win-button" id="audioPlayBtn" style="min-width: 125px; height: 26px; padding: 0 8px; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); toggleAudioPlay()">▶ Play</button>
-          <button class="win-button" style="width: 60px; height: 26px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); nextTrack()" title="Следующий">⏭</button>
-          <button class="win-button" style="width: 60px; height: 26px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); stopAudio()" title="Стоп">
-            <span style="display:inline-block; width:8px; height:8px; background:#000;"></span>
+          <button class="win-button" style="width: 52px; height: 24px; padding: 0; justify-content: center; flex-shrink: 0; font-size: 11px;" onclick="playClickSound(); prevTrack()" title="Предыдущий">⏮</button>
+          <button class="win-button" id="audioPlayBtn" style="flex: 1; height: 24px; padding: 0 4px; justify-content: center; flex-shrink: 0; font-size: 11px;" onclick="playClickSound(); toggleAudioPlay()">▶ Play</button>
+          <button class="win-button" style="width: 52px; height: 24px; padding: 0; justify-content: center; flex-shrink: 0; font-size: 11px;" onclick="playClickSound(); nextTrack()" title="Следующий">⏭</button>
+          <button class="win-button" style="width: 42px; height: 24px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); stopAudio()" title="Стоп">
+            <span style="display:inline-block; width:7px; height:7px; background:#000;"></span>
           </button>
         </div>
 
@@ -1413,7 +1413,7 @@
       } else {
         mainWin.style.left = 'calc(50% - 180px)'; mainWin.style.top = '150px';
         donateWin.style.left = 'calc(50% + 175px)'; donateWin.style.top = '180px';
-        playerWin.style.left = 'auto'; playerWin.style.right = '10px'; playerWin.style.top = '10px'; playerWin.style.width = '380px';
+        playerWin.style.left = 'auto'; playerWin.style.right = '10px'; playerWin.style.top = '10px'; playerWin.style.width = '360px';
         guestbookWin.style.left = 'calc(50% - 320px)'; guestbookWin.style.top = '220px';
       }
     }
@@ -1454,6 +1454,11 @@
       win.classList.remove('open', 'active');
       const taskBtn = getTaskBtn(id);
       if (taskBtn) taskBtn.classList.remove('visible', 'active');
+
+      // Если закрывается окно плеера — останавливаем музыку
+      if (id === 'playerWindow') {
+        stopAudio();
+      }
     }
 
     function toggleTask(id) {
