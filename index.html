@@ -172,7 +172,7 @@
       line-height: 1.2;
     }
 
-    /* Windows & Animation System (12 FPS / Stepped Look) */
+    /* Windows & Animation System (12 FPS / Stepped Look for both Open & Close) */
     .window {
       width: 360px;
       max-width: 95vw;
@@ -549,9 +549,7 @@
       flex-shrink: 0;
     }
 
-    /* ==========================================
-       MOBILE ADAPTATION (MEDIA QUERIES)
-       ========================================== */
+    /* Mobile Adaptation Media Queries */
     @media (max-width: 768px) {
       .desktop-wallpaper {
         font-size: 40px;
@@ -574,7 +572,7 @@
   <audio id="startupSound" src="https://www.myinstants.com/media/sounds/windows-95-startup.mp3" preload="auto"></audio>
   <audio id="customWindowSound" src="window-open.mp3" preload="auto"></audio>
 
-  <!-- Boot Screen Animation -->
+  <!-- Boot Screen Overlay -->
   <div id="bootScreen">
     <div class="boot-logo-container">
       <div class="boot-title">ВИТЯ 02</div>
@@ -840,10 +838,11 @@
       }
     }
 
-    // Boot Screen Logic & Win95 Startup Sound
+    // Boot Screen Logic & Startup Sound (Автоматически при запуске сайта)
     const bootProgress = document.getElementById('bootProgress');
     const bootScreen = document.getElementById('bootScreen');
     const startupSound = document.getElementById('startupSound');
+    const customWindowSound = document.getElementById('customWindowSound');
     let progress = 0;
 
     const bootInterval = setInterval(() => {
@@ -853,6 +852,13 @@
         clearInterval(bootInterval);
         
         initAudio();
+        
+        if (customWindowSound) {
+          customWindowSound.currentTime = 0;
+          customWindowSound.volume = 0.5;
+          customWindowSound.play().catch(() => {});
+        }
+
         startupSound.volume = 0.5;
         startupSound.play().catch(() => {});
 
@@ -901,7 +907,7 @@
       }
     });
 
-    // Initial Windows Positioning (Adaptive & Cascade for Desktop/Mobile)
+    // Initial Windows Positioning (Adaptive & Cascade for Desktop/Mobile - Adjusted for Mobile Shortcuts Clearance)
     function initWindowPositions() {
       const isMobile = window.innerWidth <= 768;
       
@@ -910,16 +916,16 @@
       const playerWin = document.getElementById('playerWindow');
 
       if (isMobile) {
-        // Каскадное смещение на телефонах, чтобы окна не наслаивались друг на друга
+        // Опускаем стартовые окна ниже ряда иконок, чтобы они не перекрывали ярлыки слева вверху
         mainWin.style.left = '15px';
-        mainWin.style.top = '60px';
+        mainWin.style.top = '145px';
 
-        donateWin.style.left = '35px';
-        donateWin.style.top = '100px';
+        donateWin.style.left = '30px';
+        donateWin.style.top = '175px';
 
-        playerWin.style.left = '20px';
-        playerWin.style.top = '20px';
-        playerWin.style.width = 'calc(100vw - 40px)';
+        playerWin.style.left = '15px';
+        playerWin.style.top = '115px';
+        playerWin.style.width = 'calc(100vw - 30px)';
       } else {
         // Десктопная компоновка
         mainWin.style.left = 'calc(50% - 180px)';
@@ -983,7 +989,7 @@
       if (win.classList.contains('open')) {
         win.classList.remove('open');
         if (taskBtn) taskBtn.classList.remove('visible', 'active');
-        playWindowSound(false);
+        playWindowWindowSound(false);
       } else {
         win.classList.add('open');
         if (taskBtn) {
@@ -1011,7 +1017,6 @@
         offsetX = e.clientX - rect.left;
         offsetY = e.clientY - rect.top;
 
-        // Фиксируем размеры окна в пикселях перед началом перетаскивания (чтобы избежать прыжков на кастомных width)
         win.style.width = rect.width + 'px';
         win.style.left = rect.left + 'px';
         win.style.top = rect.top + 'px';
