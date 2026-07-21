@@ -541,7 +541,7 @@
       .window {
         width: 94vw !important;
         left: 3vw !important;
-        top: 50px !important;
+        top: 130px !important;
       }
 
       .top-right-player {
@@ -558,7 +558,7 @@
       .desktop-icons {
         flex-direction: row;
         flex-wrap: wrap;
-        top: 75px;
+        top: 10px;
         left: 10px;
         gap: 10px;
       }
@@ -741,16 +741,19 @@
       <div class="taskbar-divider"></div>
       
       <div class="taskbar-tasks">
+        <!-- Главное окно открыто при старте -->
         <button class="task-item visible active" id="taskMain" onclick="toggleTask('mainWindow')">
           <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="12" height="12" alt="App">
           ВИТЯ - Links
         </button>
 
+        <!-- Окно доната закрыто при старте -->
         <button class="task-item" id="taskHelp" onclick="toggleTask('donateWindow')">
           <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="12" height="12" alt="Help">
           Донат
         </button>
 
+        <!-- Плеер закрыт при старте -->
         <button class="task-item" id="taskPlayer" onclick="toggleTask('playerWindow')">
           <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" width="12" height="12" alt="Player">
           Media Player
@@ -850,24 +853,30 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Start Menu Toggle (Fixed)
+    // Start Menu Toggle (Robust implementation)
     const startButton = document.getElementById('startButton');
     const startMenu = document.getElementById('startMenu');
 
     startButton.addEventListener('click', (e) => {
       e.stopPropagation();
       playClickSound();
-      startMenu.classList.toggle('open');
-      startButton.classList.toggle('active');
+      const isOpen = startMenu.classList.toggle('open');
+      if (isOpen) {
+        startButton.classList.add('active');
+      } else {
+        startButton.classList.remove('active');
+      }
     });
 
     startMenu.addEventListener('click', (e) => {
       e.stopPropagation();
     });
 
-    document.addEventListener('click', () => {
-      startMenu.classList.remove('open');
-      startButton.classList.remove('active');
+    document.addEventListener('click', (e) => {
+      if (!startMenu.contains(e.target) && e.target !== startButton) {
+        startMenu.classList.remove('open');
+        startButton.classList.remove('active');
+      }
     });
 
     // Window & Z-Index Management
@@ -904,7 +913,7 @@
 
       const taskBtn = getTaskBtn(id);
       if (taskBtn) {
-        taskBtn.classList.remove('active');
+        taskBtn.classList.remove('visible', 'active');
       }
     }
 
@@ -915,7 +924,7 @@
 
       if (win.classList.contains('open')) {
         win.classList.remove('open');
-        if (taskBtn) taskBtn.classList.remove('active');
+        if (taskBtn) taskBtn.classList.remove('visible', 'active');
         playWindowSound(false);
       } else {
         win.classList.add('open');
