@@ -64,7 +64,6 @@
       color: #000;
     }
 
-    /* Контейнер для кнопки и вращающегося курсора */
     .launcher-wrapper {
       position: relative;
       width: 220px;
@@ -97,7 +96,6 @@
       padding-top: 2px;
     }
 
-    /* Твой файл cursor.png с дерганой 14fps анимацией */
     .orbiting-cursor {
       position: absolute;
       width: 24px;
@@ -112,15 +110,10 @@
     }
 
     @keyframes orbit {
-      0% {
-        transform: rotate(0deg) translate(130px) rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg) translate(130px) rotate(-360deg);
-      }
+      0% { transform: rotate(0deg) translate(130px) rotate(0deg); }
+      100% { transform: rotate(360deg) translate(130px) rotate(-360deg); }
     }
 
-    /* Анимация мигания для LIVE индикатора */
     @keyframes blink {
       0% { opacity: 1; }
       50% { opacity: 0.2; }
@@ -189,7 +182,7 @@
       transition: width 0.1s linear;
     }
 
-    /* Desktop Area & Background Wallpaper */
+    /* Desktop */
     .desktop {
       flex: 1;
       position: relative;
@@ -220,7 +213,7 @@
       top: 10px;
       right: 10px;
       z-index: 100;
-      width: 280px;
+      width: 320px;
     }
 
     .desktop-icons {
@@ -269,7 +262,6 @@
       box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
       position: absolute;
       touch-action: none;
-      
       display: block;
       opacity: 0;
       transform: scale(0.7);
@@ -484,6 +476,7 @@
       color: #404040;
     }
 
+    /* Taskbar */
     .taskbar {
       position: fixed;
       bottom: 0;
@@ -641,7 +634,7 @@
       flex-shrink: 0;
     }
 
-    /* Стили для Гостевой книги (Notepad) */
+    /* Guestbook */
     .guestbook-content {
       background: #fff;
       border: 2px solid;
@@ -701,7 +694,6 @@
         font-size: 40px;
         letter-spacing: 2px;
       }
-
       .desktop-icons {
         flex-direction: row;
         flex-wrap: wrap;
@@ -714,7 +706,10 @@
 </head>
 <body>
 
-  <!-- Стартовый экран с кнопкой и вашим курсором cursor.png -->
+  <!-- Аудио элементы из репозитория -->
+  <audio id="windowOpenAudio" src="window-open.mp3" preload="auto"></audio>
+
+  <!-- Start Overlay -->
   <div id="startOverlay">
     <div class="start-prompt-window">
       <div class="title-bar">
@@ -736,7 +731,7 @@
     </div>
   </div>
 
-  <!-- Boot Screen Overlay -->
+  <!-- Boot Screen -->
   <div id="bootScreen">
     <div class="boot-logo-container">
       <div class="boot-title">ВИТЯ 02</div>
@@ -748,10 +743,9 @@
   </div>
 
   <div class="desktop" id="desktop">
-    <!-- Centered Background Text -->
     <div class="desktop-wallpaper">ВИТЯ 02</div>
 
-    <!-- Media Player Window в ретро-стиле со Spotify API -->
+    <!-- Media Player -->
     <div class="window top-right-player" id="playerWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -763,24 +757,38 @@
         </div>
       </div>
       <div class="window-body" style="padding: 10px; gap: 8px;">
-        <!-- Электронный дисплей в стиле старых устройств -->
-        <div style="width: 100%; background: #000; color: #00ff00; font-family: 'Courier New', monospace; font-size: 11px; padding: 6px; border: 2px solid; border-color: #808080 #fff #fff #808080; min-height: 40px; display: flex; flex-direction: column; justify-content: center;">
-          <div id="spotifyTrackName" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;">Загрузка плейлиста...</div>
-          <div id="spotifyArtistName" style="color: #00aa00; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10px;">Spotify API</div>
+        
+        <div style="width: 100%; background: #000; color: #00ff00; font-family: 'Courier New', monospace; font-size: 11px; padding: 6px; border: 2px solid; border-color: #808080 #fff #fff #808080; min-height: 42px; display: flex; flex-direction: column; justify-content: center;">
+          <div id="spotifyTrackName" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;">Подключение к Spotify...</div>
+          <div id="spotifyArtistName" style="color: #00aa00; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10px;">Плейлист vityaptt</div>
         </div>
 
-        <!-- Контейнер для скрытого плеера Spotify API -->
-        <div id="embed-iframe" style="display:none;"></div>
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 2px;">
+          <div style="display: flex; justify-content: space-between; font-size: 9px; font-family: 'Courier New', monospace;">
+            <span id="currentTime">0:00</span>
+            <span id="totalTime">0:00</span>
+          </div>
+          <input type="range" id="trackTimeline" min="0" max="100" value="0" style="width: 100%; cursor: pointer;" oninput="seekTrack(this.value)">
+        </div>
 
-        <!-- Панель управления с ретро-кнопками -->
         <div style="display: flex; gap: 4px; width: 100%; justify-content: center;">
           <button class="win-button" style="width: auto; padding: 4px 8px; justify-content: center;" onclick="playClickSound(); if(spotifyController) spotifyController.previousTrack()">⏮</button>
           <button class="win-button" id="spotifyPlayBtn" style="flex: 1; padding: 4px 8px; justify-content: center;" onclick="playClickSound(); if(spotifyController) spotifyController.togglePlay()">Play / Pause</button>
           <button class="win-button" style="width: auto; padding: 4px 8px; justify-content: center;" onclick="playClickSound(); if(spotifyController) spotifyController.nextTrack()">⏭</button>
         </div>
 
+        <div style="display: flex; gap: 6px; width: 100%; align-items: center; font-size: 11px;">
+          <span style="font-size: 10px; font-weight: bold;">🔊</span>
+          <input type="range" id="volumeSlider" min="0" max="100" value="70" style="flex: 1; cursor: pointer;" oninput="changeVolume(this.value)" title="Громкость">
+          <select id="trackSelector" style="font-size: 10px; padding: 2px; background: #c0c0c0; border: 1px solid #808080; max-width: 120px;" onchange="selectTrack(this.value)">
+            <option value="">Выбор трека...</option>
+          </select>
+        </div>
+
+        <div id="embed-iframe" style="width: 100%; height: 80px; display: block; border: 1px solid #808080;"></div>
+
         <div class="status-bar" style="margin-top: 2px;">
-          <div class="status-bar-field" style="flex: 1;">Плейлист vityaptt</div>
+          <div class="status-bar-field" style="flex: 1;">Spotify API Ready</div>
           <div class="status-bar-field">Win95 UI</div>
         </div>
       </div>
@@ -871,9 +879,7 @@
           <div class="da-avatar-container">
             <img src="warning.png" class="da-avatar" alt="Avatar">
           </div>
-          <div class="da-user-info">
-            vityaptt
-          </div>
+          <div class="da-user-info">vityaptt</div>
         </div>
 
         <div class="links-container">
@@ -900,7 +906,7 @@
       </div>
     </div>
 
-    <!-- Guestbook Window (Notepad.exe) -->
+    <!-- Guestbook Window -->
     <div class="window" id="guestbookWindow" style="width: 380px;">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -912,7 +918,6 @@
         </div>
       </div>
       <div class="window-body" style="gap: 10px; padding: 10px;">
-        <!-- Стена сообщений -->
         <div class="guestbook-content" id="guestbookMessages">
           <div class="guestbook-msg">
             <span class="author">Система</span>
@@ -921,7 +926,6 @@
           </div>
         </div>
 
-        <!-- Форма отправки -->
         <form class="guestbook-form" onsubmit="postGuestbookMessage(event)">
           <input type="text" id="gbAuthor" placeholder="Ваш ник / имя..." maxlength="25" required />
           <textarea id="gbText" placeholder="Оставьте весточку для Вити и гостей..." maxlength="180" required></textarea>
@@ -936,7 +940,6 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <!-- Start Menu -->
@@ -959,7 +962,7 @@
     </div>
   </div>
 
-  <!-- Windows Taskbar -->
+  <!-- Taskbar -->
   <div class="taskbar" id="taskbar">
     <div style="display: flex; align-items: center; overflow: hidden; flex: 1;">
       <div class="start-container">
@@ -994,7 +997,6 @@
       </div>
     </div>
 
-    <!-- Трей с часами и живым LIVE информером Twitch -->
     <div class="tray" style="gap: 6px;">
       <a href="https://www.twitch.tv/vityaptt" target="_blank" rel="noopener" id="twitchTrayBadge" title="Я в эфире! Нажми, чтобы залететь" style="display: none; align-items: center; gap: 4px; text-decoration: none; color: #000; font-weight: bold; background: #ffcc00; padding: 0 4px; border: 1px solid #808080;">
         <span style="width: 8px; height: 8px; background: red; border-radius: 50%; display: inline-block; animation: blink 1s infinite;"></span>
@@ -1004,15 +1006,14 @@
     </div>
   </div>
 
-  <!-- Подключение Spotify iFrame API -->
+  <!-- Spotify API Script -->
   <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
 
-  <!-- Основной скрипт: Firebase, Spotify API и Twitch API -->
+  <!-- Firebase & Twitch Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Ваши реальные ключи из консоли Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyCKo0rXgyP_DU1BNG9iqQfmm8h49twimVE",
       authDomain: "vitya-guestbook.firebaseapp.com",
@@ -1026,7 +1027,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Функция отправки сообщения в гостевую книгу
     window.postGuestbookMessage = async function(e) {
       e.preventDefault();
       const authorInput = document.getElementById('gbAuthor');
@@ -1045,11 +1045,9 @@
         textInput.value = '';
       } catch (err) {
         console.error("Ошибка отправки сообщения: ", err);
-        alert("Не удалось отправить сообщение. Проверьте консоль.");
       }
     };
 
-    // Чтение сообщений гостевой книги в реальном времени
     function listenGuestbook() {
       const container = document.getElementById('guestbookMessages');
       const q = query(collection(db, "messages"), orderBy("timestamp", "asc"), limit(50));
@@ -1067,21 +1065,11 @@
                       String(d.getHours()).padStart(2, '0') + ':' + 
                       String(d.getMinutes()).padStart(2, '0');
           }
-          messages.push({
-            author: data.author,
-            text: data.text,
-            date: dateStr
-          });
+          messages.push({ author: data.author, text: data.text, date: dateStr });
         });
 
         if (messages.length === 0) {
-          container.innerHTML = `
-            <div class="guestbook-msg">
-              <span class="author">Система</span>
-              <span class="date">01.01.1998</span>
-              <div class="text">Добро пожаловать в гостевую книгу! Оставьте свой след на сайте Вити.</div>
-            </div>
-          `;
+          container.innerHTML = `<div class="guestbook-msg"><span class="author">Система</span><div class="text">Добро пожаловать!</div></div>`;
           return;
         }
 
@@ -1093,26 +1081,21 @@
           </div>
         `).join('');
         container.scrollTop = container.scrollHeight;
-      }, (error) => {
-        console.error("Ошибка чтения базы данных: ", error);
-        container.innerHTML = `<div class="guestbook-msg"><span class="author">Ошибка</span><div class="text">Нет доступа к базе данных. Проверьте правила Firestore.</div></div>`;
       });
     }
 
     listenGuestbook();
 
-    // Проверка статуса стрима Twitch
     async function checkTwitchStatus() {
-      const channelName = "vityaptt"; 
-      
+      const channelName = "vityaptt";
       try {
-        const response = await fetch(`https://api.twitchapps.com/uptime/?channel=${channelName}`);
-        const text = await response.text();
+        const res = await fetch(`https://decapi.me/twitch/uptime/${channelName}`);
+        const text = await res.text();
 
         const trayBadge = document.getElementById('twitchTrayBadge');
         const btnBadge = document.getElementById('twitchBtnBadge');
 
-        if (text && !text.toLowerCase().includes("offline") && !text.toLowerCase().includes("error") && text.trim().length > 2) {
+        if (text && !text.includes("offline") && !text.includes("does not exist") && text.length > 1) {
           if (trayBadge) trayBadge.style.display = 'flex';
           if (btnBadge) btnBadge.style.display = 'inline-block';
         } else {
@@ -1120,23 +1103,23 @@
           if (btnBadge) btnBadge.style.display = 'none';
         }
       } catch (err) {
-        console.error("Ошибка проверки Twitch статуса:", err);
+        console.error("Twitch check error:", err);
       }
     }
 
     checkTwitchStatus();
-    setInterval(checkTwitchStatus, 120000);
+    setInterval(checkTwitchStatus, 60000);
   </script>
 
-  <!-- Инициализация Spotify iFrame API для плеера -->
+  <!-- Логика Spotify API -->
   <script>
     let spotifyController = null;
 
     window.onSpotifyIframeApiReady = (IFrameAPI) => {
       const element = document.getElementById('embed-iframe');
       const options = {
-        width: '0',
-        height: '0',
+        width: '100%',
+        height: '80px',
         uri: 'spotify:playlist:7IjNxrK2cpGrE2ptZ0aXyu'
       };
       const callback = (EmbedController) => {
@@ -1146,14 +1129,54 @@
           if (e.data && e.data.track) {
             document.getElementById('spotifyTrackName').innerText = e.data.track.name;
             document.getElementById('spotifyArtistName').innerText = e.data.track.artists.map(a => a.name).join(', ');
+            
+            const duration = e.data.duration || 0;
+            const position = e.data.position || 0;
+            
+            document.getElementById('totalTime').innerText = formatTime(duration);
+            document.getElementById('currentTime').innerText = formatTime(position);
+            
+            if (duration > 0) {
+              const progressPercent = (position / duration) * 100;
+              document.getElementById('trackTimeline').value = progressPercent;
+            }
           }
         });
+
+        setTimeout(() => {
+          if (EmbedController.loadUri) {
+            document.getElementById('spotifyTrackName').innerText = "Плейлист готов к работе";
+          }
+        }, 1500);
       };
+
       IFrameAPI.createController(element, options, callback);
     };
+
+    function formatTime(ms) {
+      const seconds = Math.floor(ms / 1000);
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    function seekTrack(val) {}
+
+    function changeVolume(val) {
+      if (spotifyController && spotifyController.setVolume) {
+        spotifyController.setVolume(val / 100);
+      }
+    }
+
+    function selectTrack(uri) {
+      if (uri && spotifyController) {
+        spotifyController.loadUri(uri);
+        spotifyController.play();
+      }
+    }
   </script>
 
-  <!-- Вспомогательные скрипты интерфейса (Окна, Звуки, Часы) -->
+  <!-- Интерфейс и Звуки (используем реальный window-open.mp3) -->
   <script>
     let audioCtx = null;
 
@@ -1169,20 +1192,15 @@
     function playClickSound() {
       initAudio();
       if (!audioCtx) return;
-
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-
       osc.type = 'square';
       osc.frequency.setValueAtTime(800, audioCtx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.03);
-
       gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.03);
-
       osc.connect(gain);
       gain.connect(audioCtx.destination);
-
       osc.start();
       osc.stop(audioCtx.currentTime + 0.03);
     }
@@ -1191,19 +1209,24 @@
       if (!audioCtx) return;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(600, audioCtx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(350, audioCtx.currentTime + 0.07);
-
       gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.07);
-
       osc.connect(gain);
       gain.connect(audioCtx.destination);
-
       osc.start();
       osc.stop(audioCtx.currentTime + 0.07);
+    }
+
+    // Воспроизведение реального файла window-open.mp3 из репозитория
+    function playWindowOpenSound() {
+      const sound = document.getElementById('windowOpenAudio');
+      if (sound) {
+        sound.currentTime = 0;
+        sound.play().catch(err => console.log("Audio play blocked:", err));
+      }
     }
 
     const startOverlay = document.getElementById('startOverlay');
@@ -1215,19 +1238,13 @@
     const desktop = document.getElementById('desktop');
     const taskbar = document.getElementById('taskbar');
 
-    launcherWrapper.addEventListener('mouseenter', () => {
-      orbitCursor.style.opacity = '0';
-    });
-    launcherWrapper.addEventListener('mouseleave', () => {
-      orbitCursor.style.opacity = '1';
-    });
+    launcherWrapper.addEventListener('mouseenter', () => orbitCursor.style.opacity = '0');
+    launcherWrapper.addEventListener('mouseleave', () => orbitCursor.style.opacity = '1');
 
     launchButton.addEventListener('click', () => {
       initAudio();
       playClickSound();
-
       orbitCursor.style.opacity = '0';
-
       startOverlay.style.opacity = '0';
       setTimeout(() => {
         startOverlay.style.display = 'none';
@@ -1243,13 +1260,13 @@
         bootProgress.style.width = progress + '%';
         if (progress >= 100) {
           clearInterval(bootInterval);
-
           setTimeout(() => {
             bootScreen.style.opacity = '0';
             setTimeout(() => {
               bootScreen.style.display = 'none';
               desktop.style.display = 'block';
               taskbar.style.display = 'flex';
+              playWindowOpenSound(); // Срабатывает оригинальный звук из репозитория!
             }, 500);
           }, 300);
         }
@@ -1272,15 +1289,8 @@
       e.stopPropagation();
       playClickSound();
       const isOpen = startMenu.classList.toggle('open');
-      if (isOpen) {
-        startButton.classList.add('active');
-      } else {
-        startButton.classList.remove('active');
-      }
-    });
-
-    startMenu.addEventListener('click', (e) => {
-      e.stopPropagation();
+      if (isOpen) startButton.classList.add('active');
+      else startButton.classList.remove('active');
     });
 
     document.addEventListener('click', (e) => {
@@ -1292,47 +1302,27 @@
 
     function initWindowPositions() {
       const isMobile = window.innerWidth <= 768;
-      
       const mainWin = document.getElementById('mainWindow');
       const donateWin = document.getElementById('donateWindow');
       const playerWin = document.getElementById('playerWindow');
       const guestbookWin = document.getElementById('guestbookWindow');
 
       if (isMobile) {
-        mainWin.style.left = '15px';
-        mainWin.style.top = '145px';
-
-        donateWin.style.left = '30px';
-        donateWin.style.top = '175px';
-
-        playerWin.style.left = '15px';
-        playerWin.style.top = '115px';
-        playerWin.style.width = 'calc(100vw - 30px)';
-
-        guestbookWin.style.left = '20px';
-        guestbookWin.style.top = '210px';
-        guestbookWin.style.width = 'calc(100vw - 40px)';
+        mainWin.style.left = '15px'; mainWin.style.top = '145px';
+        donateWin.style.left = '30px'; donateWin.style.top = '175px';
+        playerWin.style.left = '15px'; playerWin.style.top = '115px'; playerWin.style.width = 'calc(100vw - 30px)';
+        guestbookWin.style.left = '20px'; guestbookWin.style.top = '210px'; guestbookWin.style.width = 'calc(100vw - 40px)';
       } else {
-        mainWin.style.left = 'calc(50% - 180px)';
-        mainWin.style.top = '150px';
-
-        donateWin.style.left = 'calc(50% + 175px)';
-        donateWin.style.top = '180px';
-
-        playerWin.style.left = 'auto';
-        playerWin.style.right = '10px';
-        playerWin.style.top = '10px';
-        playerWin.style.width = '280px';
-
-        guestbookWin.style.left = 'calc(50% - 320px)';
-        guestbookWin.style.top = '220px';
+        mainWin.style.left = 'calc(50% - 180px)'; mainWin.style.top = '150px';
+        donateWin.style.left = 'calc(50% + 175px)'; donateWin.style.top = '180px';
+        playerWin.style.left = 'auto'; playerWin.style.right = '10px'; playerWin.style.top = '10px'; playerWin.style.width = '320px';
+        guestbookWin.style.left = 'calc(50% - 320px)'; guestbookWin.style.top = '220px';
       }
     }
 
     initWindowPositions();
 
     let highestZ = 100;
-
     function getTaskBtn(id) {
       if (id === 'mainWindow') return document.getElementById('taskMain');
       if (id === 'donateWindow') return document.getElementById('taskHelp');
@@ -1345,134 +1335,81 @@
       highestZ++;
       const win = document.getElementById(winId);
       win.style.zIndex = highestZ;
-
       document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
       document.querySelectorAll('.task-item').forEach(t => t.classList.remove('active'));
-
       win.classList.add('active');
-
       const taskBtn = getTaskBtn(winId);
-      if (taskBtn) {
-        taskBtn.classList.add('active');
-      }
+      if (taskBtn) taskBtn.classList.add('active');
     }
 
     function openWindow(id) {
       const win = document.getElementById(id);
       win.classList.add('open');
       bringToFront(id);
-
       const taskBtn = getTaskBtn(id);
-      if (taskBtn) {
-        taskBtn.classList.add('visible');
-      }
+      if (taskBtn) taskBtn.classList.add('visible');
     }
 
     function closeWindow(id) {
       playCloseSound();
       const win = document.getElementById(id);
-      win.classList.remove('open');
-      win.classList.remove('active');
-
+      win.classList.remove('open', 'active');
       const taskBtn = getTaskBtn(id);
-      if (taskBtn) {
-        taskBtn.classList.remove('visible', 'active');
-      }
-
-      const openWindows = Array.from(document.querySelectorAll('.window.open'));
-      if (openWindows.length > 0) {
-        let highest = openWindows[0];
-        openWindows.forEach(w => {
-          if (parseInt(w.style.zIndex || 0) > parseInt(highest.style.zIndex || 0)) {
-            highest = w;
-          }
-        });
-        bringToFront(highest.id);
-      }
+      if (taskBtn) taskBtn.classList.remove('visible', 'active');
     }
 
     function toggleTask(id) {
       playClickSound();
       const win = document.getElementById(id);
       const taskBtn = getTaskBtn(id);
-
       if (win.classList.contains('open')) {
         if (win.classList.contains('active')) {
           win.classList.remove('active');
           if (taskBtn) taskBtn.classList.remove('active');
-
-          const openWindows = Array.from(document.querySelectorAll('.window.open')).filter(w => w !== win);
-          if (openWindows.length > 0) {
-            let highest = openWindows[0];
-            openWindows.forEach(w => {
-              if (parseInt(w.style.zIndex || 0) > parseInt(highest.style.zIndex || 0)) {
-                highest = w;
-              }
-            });
-            bringToFront(highest.id);
-          }
         } else {
           win.classList.add('open');
           if (taskBtn) taskBtn.classList.add('visible');
           bringToFront(id);
         }
       } else {
-        win.classList.add('open');
-        if (taskBtn) taskBtn.classList.add('visible');
-        bringToFront(id);
+        openWindow(id);
       }
     }
 
     function escapeHtml(str) {
-      return str.replace(/[&<>'"]/g, 
-        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-      );
+      return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
     }
 
     function makeDraggable(win) {
       const titleBar = win.querySelector('.title-bar');
-      let isDragging = false;
-      let offsetX = 0;
-      let offsetY = 0;
-
+      let isDragging = false, offsetX = 0, offsetY = 0;
       win.addEventListener('pointerdown', () => bringToFront(win.id));
-
       titleBar.addEventListener('pointerdown', (e) => {
         if (e.target.tagName.toLowerCase() === 'button') return;
         isDragging = true;
-        
         const rect = win.getBoundingClientRect();
         offsetX = e.clientX - rect.left;
         offsetY = e.clientY - rect.top;
-
         win.style.width = rect.width + 'px';
         win.style.left = rect.left + 'px';
         win.style.top = rect.top + 'px';
         win.style.right = 'auto';
-
         titleBar.setPointerCapture(e.pointerId);
         bringToFront(win.id);
         e.preventDefault();
       });
-
       titleBar.addEventListener('pointermove', (e) => {
         if (!isDragging) return;
-        let left = e.clientX - offsetX;
-        let top = e.clientY - offsetY;
-
+        let left = e.clientX - offsetX, top = e.clientY - offsetY;
         if (top < 0) top = 0;
         if (top > window.innerHeight - 60) top = window.innerHeight - 60;
-
         win.style.left = left + 'px';
         win.style.top = top + 'px';
       });
-
       titleBar.addEventListener('pointerup', (e) => {
         if (isDragging) {
           isDragging = false;
-          try {
-            titleBar.releasePointerCapture(e.pointerId);
-          } catch (err) {}
+          try { titleBar.releasePointerCapture(e.pointerId); } catch (err) {}
         }
       });
     }
@@ -1481,7 +1418,6 @@
     makeDraggable(document.getElementById('donateWindow'));
     makeDraggable(document.getElementById('playerWindow'));
     makeDraggable(document.getElementById('guestbookWindow'));
-
     bringToFront('mainWindow');
   </script>
 </body>
