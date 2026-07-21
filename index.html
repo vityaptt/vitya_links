@@ -172,17 +172,28 @@
       line-height: 1.2;
     }
 
-    /* Windows & Drag System */
+    /* Windows & Animation System */
     .window {
       width: 360px;
       max-width: 95vw;
       box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
       position: absolute;
-      display: none;
+      touch-action: none;
+      
+      /* Настройки плавной анимации */
+      display: block;
+      opacity: 0;
+      transform: scale(0.85);
+      pointer-events: none;
+      visibility: hidden;
+      transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
     .window.open {
-      display: block;
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+      visibility: visible;
     }
 
     .title-bar {
@@ -415,7 +426,7 @@
       box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
     }
 
-    /* Start Menu (Fixed positioning above taskbar) */
+    /* Start Menu */
     .start-menu {
       display: none;
       position: fixed;
@@ -568,6 +579,9 @@
 </head>
 <body>
 
+  <!-- Аудио для старта Windows 95 -->
+  <audio id="startupSound" src="https://www.myinstants.com/media/sounds/windows-95-startup.mp3" preload="auto"></audio>
+
   <!-- Boot Screen Animation -->
   <div id="bootScreen">
     <div class="boot-logo-container">
@@ -663,8 +677,8 @@
       </div>
     </div>
 
-    <!-- Donate Window -->
-    <div class="window" id="donateWindow" style="top: 180px; left: calc(50% - 160px);">
+    <!-- Donate Window (справа, чуть касается главного окна) -->
+    <div class="window" id="donateWindow" style="top: 180px; left: calc(50% + 175px);">
       <div class="title-bar">
         <div class="title-bar-text">
           <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="14" height="14" alt="Donate">
@@ -710,7 +724,7 @@
     </div>
   </div>
 
-  <!-- Start Menu (Вынесено наружу, чтобы позиционироваться строго от экрана) -->
+  <!-- Start Menu -->
   <div class="start-menu" id="startMenu">
     <div class="start-menu-side">прив чд</div>
     <div class="start-menu-items">
@@ -766,7 +780,7 @@
   </div>
 
   <script>
-    // System Sound Effects
+    // System Sound Effects & Mobile Audio Unlock
     let audioCtx = null;
 
     function initAudio() {
@@ -777,6 +791,11 @@
         audioCtx.resume();
       }
     }
+
+    document.addEventListener('pointerdown', function unlockMobileAudio() {
+      initAudio();
+      document.removeEventListener('pointerdown', unlockMobileAudio);
+    }, { once: true });
 
     function playClickSound() {
       initAudio();
@@ -823,9 +842,10 @@
       osc.stop(audioCtx.currentTime + 0.07);
     }
 
-    // Boot Screen Logic
+    // Boot Screen Logic & Win95 Startup Sound
     const bootProgress = document.getElementById('bootProgress');
     const bootScreen = document.getElementById('bootScreen');
+    const startupSound = document.getElementById('startupSound');
     let progress = 0;
 
     const bootInterval = setInterval(() => {
@@ -833,6 +853,11 @@
       bootProgress.style.width = progress + '%';
       if (progress >= 100) {
         clearInterval(bootInterval);
+        
+        initAudio();
+        startupSound.volume = 0.5;
+        startupSound.play().catch(() => {});
+
         setTimeout(() => {
           bootScreen.style.opacity = '0';
           setTimeout(() => {
@@ -935,33 +960,25 @@
       }
     }
 
-    // Draggable Windows Setup
+    // Universal Draggable Windows Setup (Mouse + Touch via Pointer Events)
     function makeDraggable(win) {
       const titleBar = win.querySelector('.title-bar');
       let isDragging = false;
       let offsetX = 0;
       let offsetY = 0;
 
-      win.addEventListener('mousedown', () => bringToFront(win));
-      win.addEventListener('touchstart', () => bringToFront(win), {passive: true});
+      win.addEventListener('pointerdown', () => bringToFront(win));
 
-      titleBar.addEventListener('mousedown', (e) => {
+      titleBar.addEventListener('pointerdown', (e) => {
         if (e.target.tagName.toLowerCase() === 'button') return;
         isDragging = true;
         offsetX = e.clientX - win.offsetLeft;
         offsetY = e.clientY - win.offsetTop;
+        titleBar.setPointerCapture(e.pointerId);
         bringToFront(win);
       });
 
-      titleBar.addEventListener('touchstart', (e) => {
-        if (e.target.tagName.toLowerCase() === 'button') return;
-        isDragging = true;
-        offsetX = e.touches[0].clientX - win.offsetLeft;
-        offsetY = e.touches[0].clientY - win.offsetTop;
-        bringToFront(win);
-      }, {passive: true});
-
-      document.addEventListener('mousemove', (e) => {
+      titleBar.addEventListener('pointermove', (e) => {
         if (!isDragging) return;
         let left = e.clientX - offsetX;
         let top = e.clientY - offsetY;
@@ -973,20 +990,14 @@
         win.style.top = top + 'px';
       });
 
-      document.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        let left = e.touches[0].clientX - offsetX;
-        let top = e.touches[0].clientY - offsetY;
-
-        if (top < 0) top = 0;
-        if (top > window.innerHeight - 80) top = window.innerHeight - 80;
-
-        win.style.left = left + 'px';
-        win.style.top = top + 'px';
-      }, {passive: true});
-
-      document.addEventListener('mouseup', () => { isDragging = false; });
-      document.addEventListener('touchend', () => { isDragging = false; });
+      titleBar.addEventListener('pointerup', (e) => {
+        if (isDragging) {
+          isDragging = false;
+          try {
+            titleBar.releasePointerCapture(e.pointerId);
+          } catch (err) {}
+        }
+      });
     }
 
     makeDraggable(document.getElementById('mainWindow'));
