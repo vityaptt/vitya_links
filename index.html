@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ВИТЯ 02 - Desktop</title>
   
-  <!-- Favicon (Windows Logo) -->
-  <link rel="icon" href="https://win98icons.alexmeub.com/icons/png/windows-0.png" type="image/png">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='%23f25022' d='0 0h7v7H0z'/><path fill='%237fba00' d='9 0h7v7H9z'/><path fill='%2300a4ef' d='0 9h7v7H0z'/><path fill='%23ffb900' d='9 9h7v7H9z'/></svg>" type="image/svg+xml">
 
   <!-- 98.css for authentic Windows UI elements -->
   <link rel="stylesheet" href="https://unpkg.com/98.css" />
@@ -18,7 +17,7 @@
     }
 
     body {
-      background-color: #008080; /* Classic Win95 Teal background */
+      background-color: #008080;
       font-family: "MS Sans Serif", Arial, sans-serif;
       min-height: 100vh;
       display: flex;
@@ -93,11 +92,9 @@
     /* Desktop Area & Background Wallpaper */
     .desktop {
       flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       position: relative;
       padding-bottom: 30px;
+      overflow: hidden;
     }
 
     .desktop-wallpaper {
@@ -107,8 +104,8 @@
       transform: translate(-50%, -50%);
       font-family: Arial, sans-serif;
       font-weight: 900;
-      font-size: 72px;
-      color: rgba(255, 255, 255, 0.15);
+      font-size: 80px;
+      color: rgba(255, 255, 255, 0.18);
       letter-spacing: 6px;
       text-transform: uppercase;
       pointer-events: none;
@@ -141,11 +138,10 @@
       border-color: rgba(255, 255, 255, 0.5);
     }
 
-    .desktop-icon img {
+    .desktop-icon svg, .desktop-icon img {
       width: 32px;
       height: 32px;
       margin-bottom: 4px;
-      image-rendering: pixelated;
     }
 
     .desktop-icon span {
@@ -157,7 +153,7 @@
       line-height: 1.2;
     }
 
-    /* Windows */
+    /* Windows & Drag System */
     .window {
       width: 360px;
       max-width: 95vw;
@@ -170,29 +166,13 @@
       display: block;
     }
 
-    #mainWindow {
-      z-index: 10;
-    }
-
-    #donateWindow {
-      z-index: 20;
-    }
-
-    @media (min-width: 769px) {
-      #mainWindow.open {
-        transform: translateX(-40px);
-      }
-      #donateWindow.open {
-        transform: translateX(40px);
-      }
-    }
-
     .title-bar {
       background: linear-gradient(90deg, #000080, #1084d0);
       padding: 3px 2px 3px 3px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      cursor: move;
     }
 
     .title-bar-text {
@@ -215,19 +195,25 @@
       position: relative;
     }
 
-    /* Money BG Detail */
-    .money-bg::before {
-      content: "$  €  $  ₽  $  $  €  $";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      opacity: 0.05;
-      font-family: monospace;
-      font-size: 24px;
-      font-weight: bold;
-      line-height: 32px;
+    /* Big Win95 Money Pattern Detail */
+    .money-bg {
+      position: relative;
       overflow: hidden;
+    }
+
+    .money-bg::before {
+      content: "$  $  $  $\n$  $  $  $\n$  $  $  $";
+      position: absolute;
+      top: -10px; left: -10px; right: -10px; bottom: -10px;
+      opacity: 0.12;
+      font-family: "Courier New", monospace;
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 58px;
+      color: #000000;
       pointer-events: none;
       word-wrap: break-word;
+      white-space: pre-wrap;
     }
 
     .site-title {
@@ -309,9 +295,13 @@
     .button-icon {
       width: 20px;
       height: 20px;
-      display: inline-block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
+    /* Orange Header Block for Donate Window */
     .da-header {
       width: 100%;
       border: 2px solid;
@@ -336,12 +326,6 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-    }
-
-    .da-avatar {
-      width: 32px;
-      height: 32px;
-      image-rendering: pixelated;
     }
 
     .da-user-info {
@@ -462,12 +446,6 @@
       color: #ffffff;
     }
 
-    .start-menu-item img {
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-    }
-
     .start-menu-divider {
       height: 1px;
       background: #808080;
@@ -538,27 +516,38 @@
     </div>
   </div>
 
-  <div class="desktop">
+  <div class="desktop" id="desktop">
     <!-- Clean Desktop Wallpaper -->
     <div class="desktop-wallpaper">ВИТЯ 02</div>
 
     <!-- Desktop Shortcuts -->
     <div class="desktop-icons">
       <div class="desktop-icon" onclick="openWindow('mainWindow')">
-        <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" alt="VITYA.exe">
+        <!-- SVG Pixel User Icon -->
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="4" width="12" height="10" fill="#FFCC99"/>
+          <rect x="8" y="14" width="16" height="12" fill="#000080"/>
+          <rect x="12" y="8" width="2" height="2" fill="#000000"/>
+          <rect x="18" y="8" width="2" height="2" fill="#000000"/>
+        </svg>
         <span>ВИТЯ.exe</span>
       </div>
       <div class="desktop-icon" onclick="openWindow('donateWindow')">
-        <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" alt="Donate">
+        <!-- SVG Pixel Help/Donate Icon -->
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="2" width="20" height="28" fill="#FFFFFF" stroke="#000" stroke-width="2"/>
+          <path d="M12 10 C12 6, 20 6, 20 10 C20 14, 16 14, 16 18" stroke="#000080" stroke-width="3" fill="none"/>
+          <rect x="15" y="22" width="3" height="3" fill="#000080"/>
+        </svg>
         <span>Донат</span>
       </div>
     </div>
 
     <!-- Main Window -->
-    <div class="window open" id="mainWindow">
+    <div class="window open" id="mainWindow" style="top: 80px; left: calc(50% - 180px);">
       <div class="title-bar">
         <div class="title-bar-text">
-          <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="14" height="14" alt="icon">
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><rect x="10" y="4" width="12" height="10" fill="#FFF"/><rect x="8" y="14" width="16" height="12" fill="#FFF"/></svg>
           C:\WINDOWS\Personal\VITYA.exe
         </div>
         <div class="title-bar-controls">
@@ -579,17 +568,23 @@
 
         <div class="links-container">
           <a href="https://t.me/datizaebalsuca" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
-            <img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" class="button-icon" alt="Telegram">
+            <div class="button-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" fill="#FFF" stroke="#000" stroke-width="2"/><path d="M2 4L12 13L22 4" stroke="#000" stroke-width="2"/></svg>
+            </div>
             Telegram
           </a>
 
           <a href="https://www.twitch.tv/vityaptt" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
-            <img src="https://win98icons.alexmeub.com/icons/png/display_properties-2.png" class="button-icon" alt="Twitch">
+            <div class="button-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#000"><path d="M2 2h20v14h-6l-4 4v-4H2V2zm16 3h-2v6h2V5zm-5 0h-2v6h2V5z"/></svg>
+            </div>
             Twitch
           </a>
 
           <a href="https://www.youtube.com/@potatkadwg/featured" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
-            <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" class="button-icon" alt="YouTube">
+            <div class="button-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#000"><circle cx="12" cy="12" r="10" fill="#808080"/><circle cx="12" cy="12" r="4" fill="#FFF"/></svg>
+            </div>
             YouTube
           </a>
         </div>
@@ -602,10 +597,10 @@
     </div>
 
     <!-- Donate Window -->
-    <div class="window" id="donateWindow">
+    <div class="window" id="donateWindow" style="top: 100px; left: calc(50% - 160px);">
       <div class="title-bar">
         <div class="title-bar-text">
-          <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="14" height="14" alt="Donate">
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><rect x="6" y="2" width="20" height="28" fill="#FFF"/></svg>
           C:\WINDOWS\System\DonateWizard.exe
         </div>
         <div class="title-bar-controls">
@@ -614,9 +609,19 @@
       </div>
 
       <div class="window-body money-bg">
+        <!-- Orange Header Banner with Working Pixel Avatar -->
         <div class="da-header">
           <div class="da-avatar-container">
-            <img src="https://win98icons.alexmeub.com/icons/png/user_headset-0.png" class="da-avatar" alt="User Icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Pixel User Icon -->
+              <rect x="0" y="0" width="32" height="32" fill="#C0C0C0"/>
+              <rect x="10" y="5" width="12" height="10" fill="#FFCC99"/>
+              <rect x="8" y="4" width="16" height="4" fill="#804000"/>
+              <rect x="8" y="16" width="16" height="12" fill="#000080"/>
+              <rect x="12" y="9" width="2" height="2" fill="#000"/>
+              <rect x="18" y="9" width="2" height="2" fill="#000"/>
+              <rect x="13" y="12" width="6" height="1" fill="#800000"/>
+            </svg>
           </div>
           <div class="da-user-info">
             vityaptt
@@ -625,17 +630,26 @@
 
         <div class="links-container">
           <a href="https://www.donationalerts.com/r/vityaptt?amount=100&currency=RUB&comment=dbffgggsdrgerg" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
-            <img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" class="button-icon" alt="DA">
+            <div class="button-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" fill="#FFF" stroke="#000" stroke-width="2"/><path d="M2 4L12 13L22 4" stroke="#000" stroke-width="2"/></svg>
+            </div>
             DonationAlerts
           </a>
 
+          <!-- Tribute button with custom pixel STAR icon -->
           <a href="https://web.tribute.tg/d/NvR" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
-            <img src="https://win98icons.alexmeub.com/icons/png/coins-0.png" class="button-icon" alt="Tribute">
+            <div class="button-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8L12 2Z" fill="#FFD700" stroke="#000" stroke-width="1.5"/>
+              </svg>
+            </div>
             Tribute
           </a>
 
           <a href="https://boosty.to/viteapotatkafm" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
-            <img src="https://win98icons.alexmeub.com/icons/png/key_padlock-0.png" class="button-icon" alt="Boosty">
+            <div class="button-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="10" fill="#FFD700" stroke="#000" stroke-width="2"/><path d="M8 10V6C8 3.7 9.8 2 12 2C14.2 2 16 3.7 16 6V10" stroke="#000" stroke-width="2"/></svg>
+            </div>
             Boosty
           </a>
         </div>
@@ -653,7 +667,7 @@
     <div style="display: flex; align-items: center;">
       <div class="start-container">
         <button class="start-button" id="startButton">
-          <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" width="14" height="14" alt="Start">
+          <svg width="14" height="14" viewBox="0 0 16 16"><path fill="#f25022" d="0 0h7v7H0z"/><path fill="#7fba00" d="9 0h7v7H9z"/><path fill="#00a4ef" d="0 9h7v7H0z"/><path fill="#ffb900" d="9 9h7v7H9z"/></svg>
           <strong>Пуск</strong>
         </button>
 
@@ -661,16 +675,13 @@
           <div class="start-menu-side">прив чд</div>
           <div class="start-menu-items">
             <a href="https://open.spotify.com/user/gtahh91k0wd62si8reaw9c0w5?si=da4a95cad13442c1" target="_blank" rel="noopener" class="start-menu-item" onclick="playClickSound()">
-              <img src="https://win98icons.alexmeub.com/icons/png/media_player-0.png" alt="Spotify">
               Spotify
             </a>
             <a href="https://t.me/potatka" target="_blank" rel="noopener" class="start-menu-item" onclick="playClickSound()">
-              <img src="https://win98icons.alexmeub.com/icons/png/address_book-0.png" alt="Telegram">
               Личный Telegram
             </a>
             <div class="start-menu-divider"></div>
             <a href="https://t.me/InYourEyesVault" target="_blank" rel="noopener" class="start-menu-item" onclick="playClickSound()">
-              <img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png" alt="Memes">
               Мемы (Vault)
             </a>
           </div>
@@ -681,12 +692,10 @@
       
       <div class="taskbar-tasks">
         <button class="task-item visible active" id="taskMain" onclick="toggleTask('mainWindow')">
-          <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="12" height="12" alt="App">
           ВИТЯ - Links
         </button>
 
         <button class="task-item" id="taskHelp" onclick="toggleTask('donateWindow')">
-          <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="12" height="12" alt="Help">
           Донат
         </button>
       </div>
@@ -800,11 +809,19 @@
       startButton.classList.remove('active');
     });
 
-    // Window Management & Taskbar Links
+    // Window Management
+    let highestZ = 100;
+
+    function bringToFront(win) {
+      highestZ++;
+      win.style.zIndex = highestZ;
+    }
+
     function openWindow(id) {
       playWindowSound(true);
       const win = document.getElementById(id);
       win.classList.add('open');
+      bringToFront(win);
 
       const taskBtn = id === 'mainWindow' ? document.getElementById('taskMain') : document.getElementById('taskHelp');
       taskBtn.classList.add('visible', 'active');
@@ -831,9 +848,48 @@
       } else {
         win.classList.add('open');
         taskBtn.classList.add('active');
+        bringToFront(win);
         playWindowSound(true);
       }
     }
+
+    // Drag and Drop Windows Implementation
+    function makeDraggable(win) {
+      const titleBar = win.querySelector('.title-bar');
+      let isDragging = false;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      win.addEventListener('mousedown', () => bringToFront(win));
+
+      titleBar.addEventListener('mousedown', (e) => {
+        if (e.target.tagName.toLowerCase() === 'button') return;
+        isDragging = true;
+        offsetX = e.clientX - win.offsetLeft;
+        offsetY = e.clientY - win.offsetTop;
+        bringToFront(win);
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        let left = e.clientX - offsetX;
+        let top = e.clientY - offsetY;
+
+        // Keep inside window bounds
+        if (top < 0) top = 0;
+        if (top > window.innerHeight - 60) top = window.innerHeight - 60;
+
+        win.style.left = left + 'px';
+        win.style.top = top + 'px';
+      });
+
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+    }
+
+    makeDraggable(document.getElementById('mainWindow'));
+    makeDraggable(document.getElementById('donateWindow'));
   </script>
 </body>
 </html>
