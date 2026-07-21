@@ -27,6 +27,98 @@
       user-select: none;
     }
 
+    /* Start Overlay (Кнопка для старта) */
+    #startOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #008080;
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease;
+    }
+
+    .start-prompt-window {
+      width: 340px;
+      background: #c0c0c0;
+      box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+      padding: 3px;
+    }
+
+    .start-prompt-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+    }
+
+    .start-prompt-title {
+      font-weight: bold;
+      font-size: 13px;
+      color: #000;
+    }
+
+    /* Контейнер для кнопки и вращающегося курсора */
+    .launcher-wrapper {
+      position: relative;
+      width: 220px;
+      height: 60px;
+      margin: 10px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .launcher-btn {
+      width: 100%;
+      height: 100%;
+      background: #c0c0c0;
+      box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
+      border: none;
+      font-family: "MS Sans Serif", Arial, sans-serif;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #000;
+    }
+
+    .launcher-btn:active {
+      box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+      padding-top: 2px;
+    }
+
+    /* Медленно крутящийся ретро-курсор вокруг кнопки */
+    .orbiting-cursor {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background-image: url('https://win98icons.alexmeub.com/icons/png/help_bubble-0.png'); /* Иконка указателя или курсора */
+      background-size: contain;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      animation: orbit 4s linear infinite;
+      z-index: 10;
+    }
+
+    @keyframes orbit {
+      0% {
+        transform: rotate(0deg) translate(135px) rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg) translate(135px) rotate(-360deg);
+      }
+    }
+
     /* Boot Screen Overlay */
     #bootScreen {
       position: fixed;
@@ -36,7 +128,7 @@
       height: 100vh;
       background-color: #008080;
       z-index: 99999;
-      display: flex;
+      display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -97,7 +189,6 @@
       overflow: hidden;
     }
 
-    /* Centered Background Text */
     .desktop-wallpaper {
       position: absolute;
       top: 50%;
@@ -115,7 +206,6 @@
       white-space: nowrap;
     }
 
-    /* Audio Player Window in Top Right */
     .top-right-player {
       position: absolute;
       top: 10px;
@@ -131,7 +221,6 @@
       outline: none;
     }
 
-    /* Desktop Icons Container */
     .desktop-icons {
       position: absolute;
       top: 10px;
@@ -172,7 +261,6 @@
       line-height: 1.2;
     }
 
-    /* Windows & Animation System */
     .window {
       width: 360px;
       max-width: 95vw;
@@ -228,7 +316,6 @@
       position: relative;
     }
 
-    /* Money Pattern Background */
     .money-bg {
       position: relative;
       overflow: hidden;
@@ -391,7 +478,6 @@
       color: #404040;
     }
 
-    /* Windows Taskbar */
     .taskbar {
       position: fixed;
       bottom: 0;
@@ -429,7 +515,6 @@
       box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
     }
 
-    /* Start Menu */
     .start-menu {
       display: none;
       position: fixed;
@@ -549,7 +634,6 @@
       flex-shrink: 0;
     }
 
-    /* Mobile Adaptation */
     @media (max-width: 768px) {
       .desktop-wallpaper {
         font-size: 40px;
@@ -568,7 +652,29 @@
 </head>
 <body>
 
-  <!-- Единственный стартовый звуковой файл (ваш window-open.mp3) -->
+  <!-- Стартовый экран с большой кнопкой и крутящимся курсором -->
+  <div id="startOverlay">
+    <div class="start-prompt-window">
+      <div class="title-bar">
+        <div class="title-bar-text">
+          <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" width="14" height="14" alt="icon">
+          ВИТЯ 02 - Setup
+        </div>
+      </div>
+      <div class="start-prompt-body">
+        <div class="start-prompt-title">Нажмите кнопку для запуска системы:</div>
+        <div class="launcher-wrapper">
+          <div class="orbiting-cursor"></div>
+          <button class="launcher-btn" id="launchButton">
+            <img src="https://win98icons.alexmeub.com/icons/png/computer_explorer-0.png" width="20" height="20" alt="PC">
+            Запустить систему
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Аудио файл -->
   <audio id="startupSound" src="window-open.mp3" preload="auto"></audio>
 
   <!-- Boot Screen Overlay -->
@@ -769,7 +875,6 @@
   </div>
 
   <script>
-    // System Sound Effects & Mobile Audio Unlock
     let audioCtx = null;
 
     function initAudio() {
@@ -780,11 +885,6 @@
         audioCtx.resume();
       }
     }
-
-    document.addEventListener('pointerdown', function unlockMobileAudio() {
-      initAudio();
-      document.removeEventListener('pointerdown', unlockMobileAudio);
-    }, { once: true });
 
     function playClickSound() {
       initAudio();
@@ -807,7 +907,6 @@
       osc.stop(audioCtx.currentTime + 0.03);
     }
 
-    // Функция звука для закрытия окон
     function playCloseSound() {
       if (!audioCtx) return;
       const osc = audioCtx.createOscillator();
@@ -827,35 +926,51 @@
       osc.stop(audioCtx.currentTime + 0.07);
     }
 
-    // Boot Screen Logic & Startup Sound (Срабатывает каждый раз после конца анимации загрузки)
-    const bootProgress = document.getElementById('bootProgress');
+    // Логика нажатия на стартовую кнопку
+    const startOverlay = document.getElementById('startOverlay');
+    const launchButton = document.getElementById('launchButton');
     const bootScreen = document.getElementById('bootScreen');
+    const bootProgress = document.getElementById('bootProgress');
     const startupSound = document.getElementById('startupSound');
-    let progress = 0;
 
-    const bootInterval = setInterval(() => {
-      progress += 10;
-      bootProgress.style.width = progress + '%';
-      if (progress >= 100) {
-        clearInterval(bootInterval);
-        
-        initAudio();
-        
-        // Ваш звуковой файл window-open.mp3 играет строго один раз в конце загрузки
-        if (startupSound) {
-          startupSound.currentTime = 0;
-          startupSound.volume = 0.5;
-          startupSound.play().catch(() => {});
-        }
+    launchButton.addEventListener('click', () => {
+      initAudio();
+      playClickSound();
 
-        setTimeout(() => {
-          bootScreen.style.opacity = '0';
+      // Убираем окно с кнопкой
+      startOverlay.style.opacity = '0';
+      setTimeout(() => {
+        startOverlay.style.display = 'none';
+        // Показываем boot-экран и запускаем прогресс
+        bootScreen.style.display = 'flex';
+        startBootSequence();
+      }, 300);
+    });
+
+    function startBootSequence() {
+      let progress = 0;
+      const bootInterval = setInterval(() => {
+        progress += 10;
+        bootProgress.style.width = progress + '%';
+        if (progress >= 100) {
+          clearInterval(bootInterval);
+          
+          // Проигрываем ваш стартовый звук window-open.mp3
+          if (startupSound) {
+            startupSound.currentTime = 0;
+            startupSound.volume = 0.5;
+            startupSound.play().catch(() => {});
+          }
+
           setTimeout(() => {
-            bootScreen.style.display = 'none';
-          }, 500);
-        }, 300);
-      }
-    }, 120);
+            bootScreen.style.opacity = '0';
+            setTimeout(() => {
+              bootScreen.style.display = 'none';
+            }, 500);
+          }, 300);
+        }
+      }, 120);
+    }
 
     // Live Clock
     function updateClock() {
@@ -893,7 +1008,7 @@
       }
     });
 
-    // Initial Windows Positioning (Adaptive & Cascade for Desktop/Mobile)
+    // Initial Windows Positioning
     function initWindowPositions() {
       const isMobile = window.innerWidth <= 768;
       
@@ -927,7 +1042,6 @@
 
     initWindowPositions();
 
-    // Window & Z-Index Management
     let highestZ = 100;
 
     function bringToFront(win) {
@@ -982,7 +1096,6 @@
       }
     }
 
-    // Universal Draggable Windows Setup
     function makeDraggable(win) {
       const titleBar = win.querySelector('.title-bar');
       let isDragging = false;
