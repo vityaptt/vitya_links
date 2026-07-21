@@ -7,7 +7,6 @@
   
   <link rel="icon" href="https://win98icons.alexmeub.com/icons/png/windows-0.png" type="image/png">
 
-  <!-- 98.css -->
   <link rel="stylesheet" href="https://unpkg.com/98.css" />
   <style>
     * {
@@ -97,12 +96,12 @@
       padding-top: 2px;
     }
 
-    /* Вращающийся курсор ожидания (песочные часы Win98) */
+    /* Твой файл cursor.png, летающий вокруг кнопки */
     .orbiting-cursor {
       position: absolute;
-      width: 20px;
-      height: 20px;
-      background-image: url('https://win98icons.alexmeub.com/icons/png/help_bubble-0.png');
+      width: 24px;
+      height: 24px;
+      background-image: url('cursor.png');
       background-size: contain;
       background-repeat: no-repeat;
       pointer-events: none;
@@ -113,10 +112,10 @@
 
     @keyframes orbit {
       0% {
-        transform: rotate(0deg) translate(135px) rotate(0deg);
+        transform: rotate(0deg) translate(130px) rotate(0deg);
       }
       100% {
-        transform: rotate(360deg) translate(135px) rotate(-360deg);
+        transform: rotate(360deg) translate(130px) rotate(-360deg);
       }
     }
 
@@ -188,7 +187,7 @@
       position: relative;
       padding-bottom: 30px;
       overflow: hidden;
-      display: none; /* Скрыто до окончания загрузки */
+      display: none;
     }
 
     .desktop-wallpaper {
@@ -493,7 +492,7 @@
       padding: 2px 4px;
       justify-content: space-between;
       z-index: 9999;
-      display: none; /* Скрыто до окончания загрузки */
+      display: none;
     }
 
     .start-container {
@@ -655,7 +654,6 @@
 </head>
 <body>
 
-  <!-- Стартовый экран с кнопкой и плавающим курсором -->
   <div id="startOverlay">
     <div class="start-prompt-window">
       <div class="title-bar">
@@ -666,7 +664,7 @@
       </div>
       <div class="start-prompt-body">
         <div class="start-prompt-title">Нажмите кнопку для запуска системы:</div>
-        <div class="launcher-wrapper">
+        <div class="launcher-wrapper" id="launcherWrapper">
           <div class="orbiting-cursor" id="orbitCursor"></div>
           <button class="launcher-btn" id="launchButton">
             <img src="https://win98icons.alexmeub.com/icons/png/computer_explorer-0.png" width="20" height="20" alt="PC">
@@ -677,10 +675,8 @@
     </div>
   </div>
 
-  <!-- Аудио файл -->
   <audio id="startupSound" src="window-open.mp3" preload="auto"></audio>
 
-  <!-- Boot Screen Overlay -->
   <div id="bootScreen">
     <div class="boot-logo-container">
       <div class="boot-title">ВИТЯ 02</div>
@@ -692,10 +688,8 @@
   </div>
 
   <div class="desktop" id="desktop">
-    <!-- Centered Background Text -->
     <div class="desktop-wallpaper">ВИТЯ 02</div>
 
-    <!-- Media Player Window -->
     <div class="window top-right-player" id="playerWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -712,7 +706,6 @@
       </div>
     </div>
 
-    <!-- Desktop Shortcuts -->
     <div class="desktop-icons">
       <div class="desktop-icon" onclick="playClickSound(); openWindow('mainWindow')">
         <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" alt="VITYA.exe">
@@ -728,7 +721,6 @@
       </div>
     </div>
 
-    <!-- Main Window -->
     <div class="window open" id="mainWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -775,7 +767,6 @@
       </div>
     </div>
 
-    <!-- Donate Window -->
     <div class="window" id="donateWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -822,7 +813,6 @@
     </div>
   </div>
 
-  <!-- Start Menu -->
   <div class="start-menu" id="startMenu">
     <div class="start-menu-side">прив чд</div>
     <div class="start-menu-items">
@@ -842,7 +832,6 @@
     </div>
   </div>
 
-  <!-- Windows Taskbar -->
   <div class="taskbar" id="taskbar">
     <div style="display: flex; align-items: center; overflow: hidden; flex: 1;">
       <div class="start-container">
@@ -929,9 +918,10 @@
       osc.stop(audioCtx.currentTime + 0.07);
     }
 
-    // Логика нажатия на стартовую кнопку
+    // Логика нажатия и наведения для курсора
     const startOverlay = document.getElementById('startOverlay');
     const launchButton = document.getElementById('launchButton');
+    const launcherWrapper = document.getElementById('launcherWrapper');
     const orbitCursor = document.getElementById('orbitCursor');
     const bootScreen = document.getElementById('bootScreen');
     const bootProgress = document.getElementById('bootProgress');
@@ -939,14 +929,22 @@
     const desktop = document.getElementById('desktop');
     const taskbar = document.getElementById('taskbar');
 
+    // Если наводят мышь на блок кнопки — курсор прячется
+    launcherWrapper.addEventListener('mouseenter', () => {
+      orbitCursor.style.opacity = '0';
+    });
+    launcherWrapper.addEventListener('mouseleave', () => {
+      orbitCursor.style.opacity = '1';
+    });
+
     launchButton.addEventListener('click', () => {
       initAudio();
       playClickSound();
 
-      // Моментально гасим курсор вокруг кнопки при клике
+      // Гасим кастомный курсор сразу при клике
       orbitCursor.style.opacity = '0';
 
-      // Убираем окно с кнопкой и сразу показываем boot-экран (без мерцания рабочего стола)
+      // Скрываем окно с кнопкой и запускаем загрузку
       startOverlay.style.opacity = '0';
       setTimeout(() => {
         startOverlay.style.display = 'none';
@@ -963,7 +961,6 @@
         if (progress >= 100) {
           clearInterval(bootInterval);
           
-          // Проигрываем стартовый звук window-open.mp3
           if (startupSound) {
             startupSound.currentTime = 0;
             startupSound.volume = 0.5;
@@ -974,7 +971,6 @@
             bootScreen.style.opacity = '0';
             setTimeout(() => {
               bootScreen.style.display = 'none';
-              // Включаем отображение рабочего стола и панели задач только после загрузки
               desktop.style.display = 'block';
               taskbar.style.display = 'flex';
             }, 500);
