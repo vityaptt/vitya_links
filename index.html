@@ -37,8 +37,6 @@
       align-items: center;
       padding-bottom: 40px; /* Leave room for taskbar */
       position: relative;
-      gap: 20px;
-      flex-wrap: wrap;
     }
 
     /* Main Windows */
@@ -50,16 +48,27 @@
       z-index: 10;
     }
 
-    /* Donate Window Specifics */
+    /* Donate Window - Positioned to slightly overlap the main window on the right */
     #donateWindow {
       display: none; /* Hidden by default */
-      width: 380px;
+      width: 360px;
+      max-width: 90vw;
       position: absolute;
+      top: 30px;
+      left: calc(50% + 40px); /* Смещено вправо от центра: перекрывает правый край основного окна */
       z-index: 20;
     }
 
     #donateWindow.open {
       display: block;
+    }
+
+    @media (max-width: 768px) {
+      #donateWindow {
+        left: auto;
+        right: 10px;
+        top: 10px;
+      }
     }
 
     .title-bar {
@@ -164,7 +173,7 @@
 
     .win-button:active {
       box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
-      padding: 9px 11px 7px 13px; /* Shift text down-right on press */
+      padding: 9px 11px 7px 13px;
     }
 
     .button-icon {
@@ -173,21 +182,43 @@
       display: inline-block;
     }
 
-    /* Footer Info / Status bar inside window */
-    .status-bar {
+    /* DonationAlerts Header Box */
+    .da-header {
       width: 100%;
+      border: 2px solid;
+      border-color: #808080 #fff #fff #808080;
+      background: linear-gradient(135deg, #f37023, #ffc000);
+      position: relative;
+      height: 70px;
       display: flex;
-      gap: 2px;
-      margin-top: 4px;
+      align-items: flex-end;
+      padding: 8px;
     }
 
-    .status-bar-field {
-      background: #c0c0c0;
-      border: 1px solid;
-      border-color: #808080 #fff #fff #808080;
-      padding: 2px 6px;
-      font-size: 11px;
-      color: #404040;
+    .da-avatar-container {
+      position: absolute;
+      bottom: -15px;
+      left: 12px;
+      width: 50px;
+      height: 50px;
+      border: 2px solid #000;
+      background: #fff;
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    .da-avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .da-user-info {
+      margin-left: 60px;
+      color: #fff;
+      text-shadow: 1px 1px 2px #000;
+      font-weight: bold;
+      font-size: 13px;
     }
 
     /* Donate Form Styling */
@@ -196,6 +227,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
+      margin-top: 10px;
     }
 
     .field-group {
@@ -261,6 +293,23 @@
 
     .donate-action-btn:active {
       box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+    }
+
+    /* Footer Info / Status bar inside window */
+    .status-bar {
+      width: 100%;
+      display: flex;
+      gap: 2px;
+      margin-top: 4px;
+    }
+
+    .status-bar-field {
+      background: #c0c0c0;
+      border: 1px solid;
+      border-color: #808080 #fff #fff #808080;
+      padding: 2px 6px;
+      font-size: 11px;
+      color: #404040;
     }
 
     /* Windows Taskbar */
@@ -384,6 +433,7 @@
       gap: 4px;
     }
 
+    /* Taskbar Buttons - Raised (like Start button) by default */
     .task-item {
       display: flex;
       align-items: center;
@@ -393,14 +443,15 @@
       height: 22px;
       max-width: 160px;
       background: #c0c0c0;
-      box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+      box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
       font-weight: bold;
       cursor: pointer;
       border: none;
     }
 
+    /* Pressed state when window is open */
     .task-item.active {
-      box-shadow: inset 1px 1px #0a0a0a, inset -1px -1px #fff, inset 2px 2px #808080, inset -2px -2px #dfdfdf;
+      box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
       background: #e0e0e0;
     }
 
@@ -476,7 +527,7 @@
       </div>
     </div>
 
-    <!-- Donate / Help Window (Win95 Payment Wizard) -->
+    <!-- Donate / Help Window (Slightly overlapping main window on the right) -->
     <div class="window" id="donateWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -489,22 +540,18 @@
       </div>
 
       <div class="window-body">
-        <!-- Status Card -->
-        <div class="status-field">
-          <img src="https://win98icons.alexmeub.com/icons/png/game_card_hearts-0.png" width="32" height="32" alt="Heart">
-          <div class="status-text">
-            <strong>Поддержка автора: vityaptt</strong><br/>
-            <span>DonationAlerts Wizard v1.0</span>
+        <!-- DonationAlerts Header & Avatar -->
+        <div class="da-header">
+          <div class="da-avatar-container">
+            <img src="https://static.donationalerts.ru/uploads/images/avatars/4096057/399066fba040bfa15259cf5c66eac2fa.jpg" class="da-avatar" alt="vityaptt avatar" onerror="this.src='https://win98icons.alexmeub.com/icons/png/user_headset-0.png'">
+          </div>
+          <div class="da-user-info">
+            vityaptt
           </div>
         </div>
 
         <!-- Donate Interactive Form -->
         <div class="donate-form">
-          <div class="field-group">
-            <label for="donorName">Ваше имя / Никнейм:</label>
-            <input type="text" id="donorName" placeholder="Введите имя..." />
-          </div>
-
           <div class="field-group">
             <label for="donorAmount">Сумма доната:</label>
             <div style="display: flex; gap: 6px;">
@@ -517,10 +564,10 @@
             </div>
             <!-- Quick Presets -->
             <div class="amount-presets">
-              <button class="preset-btn" onclick="setAmount(50)">50 ₽</button>
-              <button class="preset-btn" onclick="setAmount(100)">100 ₽</button>
-              <button class="preset-btn" onclick="setAmount(500)">500 ₽</button>
-              <button class="preset-btn" onclick="setAmount(1000)">1000 ₽</button>
+              <button class="preset-btn" type="button" onclick="setAmount(50)">50 ₽</button>
+              <button class="preset-btn" type="button" onclick="setAmount(100)">100 ₽</button>
+              <button class="preset-btn" type="button" onclick="setAmount(500)">500 ₽</button>
+              <button class="preset-btn" type="button" onclick="setAmount(1000)">1000 ₽</button>
             </div>
           </div>
 
@@ -529,15 +576,15 @@
             <textarea id="donorMessage" rows="3" placeholder="Текст сообщения..."></textarea>
           </div>
 
-          <button class="donate-action-btn" id="sendDonateBtn">
+          <button class="donate-action-btn" id="sendDonateBtn" type="button">
             <img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" width="16" height="16" alt="Send">
-            Задонатить (DonationAlerts)
+            Отправить донат
           </button>
         </div>
 
         <!-- Bottom status bar -->
         <div class="status-bar">
-          <div class="status-bar-field" style="flex: 1;">Защищенное соединение</div>
+          <div class="status-bar-field" style="flex: 1;">DonationAlerts Link</div>
           <div class="status-bar-field">vityaptt</div>
         </div>
       </div>
@@ -554,7 +601,7 @@
           <strong>Пуск</strong>
         </button>
 
-        <!-- Easter Egg Start Menu Pop-up -->
+        <!-- Start Menu Pop-up -->
         <div class="start-menu" id="startMenu">
           <div class="start-menu-side">прив чд</div>
           <div class="start-menu-items">
@@ -584,6 +631,7 @@
           ВИТЯ - Links
         </button>
 
+        <!-- "Помощь" Button - Raised by default -->
         <button class="task-item" id="taskHelp">
           <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="12" height="12" alt="Help">
           Помощь
@@ -620,7 +668,8 @@
       startButton.classList.remove('active');
     });
 
-    // Donate Window Toggle Logic
+    // Donate Window & Taskbar Buttons Toggle Logic
+    const taskMain = document.getElementById('taskMain');
     const taskHelp = document.getElementById('taskHelp');
     const donateWindow = document.getElementById('donateWindow');
     const closeDonateBtn = document.getElementById('closeDonateBtn');
@@ -628,33 +677,47 @@
     function toggleDonateWindow() {
       const isOpen = donateWindow.classList.contains('open');
       if (isOpen) {
+        // Закрываем окно "Помощь"
         donateWindow.classList.remove('open');
         taskHelp.classList.remove('active');
+        // Возвращаем активность главной кнопке
+        taskMain.classList.add('active');
       } else {
+        // Открываем окно "Помощь"
         donateWindow.classList.add('open');
         taskHelp.classList.add('active');
+        // Делаем главную кнопку неактивной (выпуклой)
+        taskMain.classList.remove('active');
       }
     }
 
     taskHelp.addEventListener('click', toggleDonateWindow);
     closeDonateBtn.addEventListener('click', toggleDonateWindow);
 
+    // Клик по основной кнопке также переключает фокус назад
+    taskMain.addEventListener('click', () => {
+      if (donateWindow.classList.contains('open')) {
+        donateWindow.classList.remove('open');
+        taskHelp.classList.remove('active');
+        taskMain.classList.add('active');
+      }
+    });
+
     // Preset Amount Helper
     function setAmount(val) {
       document.getElementById('donorAmount').value = val;
     }
 
-    // Send Donate Redirect with form arguments
+    // Redirect to DonationAlerts with exact params
     document.getElementById('sendDonateBtn').addEventListener('click', () => {
-      const name = encodeURIComponent(document.getElementById('donorName').value.trim());
       const amount = encodeURIComponent(document.getElementById('donorAmount').value || 100);
       const currency = encodeURIComponent(document.getElementById('donorCurrency').value);
       const message = encodeURIComponent(document.getElementById('donorMessage').value.trim());
 
-      // Donationalerts user URL with query params
       let targetUrl = `https://www.donationalerts.com/r/vityaptt?amount=${amount}&currency=${currency}`;
-      if (name) targetUrl += `&name=${name}`;
-      if (message) targetUrl += `&comment=${message}`;
+      if (message) {
+        targetUrl += `&comment=${message}`;
+      }
 
       window.open(targetUrl, '_blank');
     });
