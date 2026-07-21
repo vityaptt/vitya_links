@@ -618,8 +618,6 @@
     }
 
     .task-item span {
-      overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
       display: inline-block;
     }
@@ -633,21 +631,34 @@
       background: #d4d4d4;
     }
 
-    /* Компактный режим на телефоне при открытии > 3 окон */
-    .taskbar.compact-tasks .task-item {
-      flex: unset;
-      width: 26px;
-      min-width: 26px;
-      max-width: 26px;
-      padding: 0;
-      justify-content: center;
-      font-size: 0;
-    }
-    .taskbar.compact-tasks .task-item span {
-      display: none;
-    }
-    .taskbar.compact-tasks .task-item img {
-      margin: 0;
+    /* Компактный режим только для мобильных устройств при открытии > 3 окон */
+    @media (max-width: 768px) {
+      .taskbar.compact-tasks .task-item {
+        flex: unset;
+        width: 26px;
+        min-width: 26px;
+        max-width: 26px;
+        padding: 0;
+        justify-content: center;
+        font-size: 0;
+      }
+      .taskbar.compact-tasks .task-item span {
+        display: none;
+      }
+      .taskbar.compact-tasks .task-item img {
+        margin: 0;
+      }
+      .desktop-wallpaper {
+        font-size: 40px;
+        letter-spacing: 2px;
+      }
+      .desktop-icons {
+        flex-direction: row;
+        flex-wrap: wrap;
+        top: 10px;
+        left: 10px;
+        gap: 10px;
+      }
     }
 
     .tray {
@@ -715,20 +726,6 @@
     .guestbook-form textarea {
       resize: none;
       height: 45px;
-    }
-
-    @media (max-width: 768px) {
-      .desktop-wallpaper {
-        font-size: 40px;
-        letter-spacing: 2px;
-      }
-      .desktop-icons {
-        flex-direction: row;
-        flex-wrap: wrap;
-        top: 10px;
-        left: 10px;
-        gap: 10px;
-      }
     }
   </style>
 </head>
