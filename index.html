@@ -582,8 +582,8 @@
     <!-- Centered Background Text -->
     <div class="desktop-wallpaper">ВИТЯ 02</div>
 
-    <!-- Media Player Window -->
-    <div class="window open top-right-player" id="playerWindow">
+    <!-- Media Player Window (ЗАКРЫТ ПРИ СТАРТЕ) -->
+    <div class="window top-right-player" id="playerWindow">
       <div class="title-bar">
         <div class="title-bar-text">
           <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" width="14" height="14" alt="Media Player">
@@ -615,7 +615,7 @@
       </div>
     </div>
 
-    <!-- Main Window -->
+    <!-- Main Window (ОТКРЫТ ПРИ СТАРТЕ) -->
     <div class="window open" id="mainWindow" style="top: 150px; left: calc(50% - 180px);">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -751,7 +751,7 @@
           Донат
         </button>
 
-        <button class="task-item visible active" id="taskPlayer" onclick="toggleTask('playerWindow')">
+        <button class="task-item" id="taskPlayer" onclick="toggleTask('playerWindow')">
           <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" width="12" height="12" alt="Player">
           Media Player
         </button>
@@ -850,7 +850,7 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Start Menu Toggle
+    // Start Menu Toggle (Fixed)
     const startButton = document.getElementById('startButton');
     const startMenu = document.getElementById('startMenu');
 
@@ -859,6 +859,10 @@
       playClickSound();
       startMenu.classList.toggle('open');
       startButton.classList.toggle('active');
+    });
+
+    startMenu.addEventListener('click', (e) => {
+      e.stopPropagation();
     });
 
     document.addEventListener('click', () => {
@@ -888,7 +892,9 @@
       bringToFront(win);
 
       const taskBtn = getTaskBtn(id);
-      if (taskBtn) taskBtn.classList.add('visible', 'active');
+      if (taskBtn) {
+        taskBtn.classList.add('visible', 'active');
+      }
     }
 
     function closeWindow(id) {
@@ -897,7 +903,9 @@
       win.classList.remove('open');
 
       const taskBtn = getTaskBtn(id);
-      if (taskBtn) taskBtn.classList.remove('visible', 'active');
+      if (taskBtn) {
+        taskBtn.classList.remove('active');
+      }
     }
 
     function toggleTask(id) {
@@ -911,7 +919,9 @@
         playWindowSound(false);
       } else {
         win.classList.add('open');
-        if (taskBtn) taskBtn.classList.add('active');
+        if (taskBtn) {
+          taskBtn.classList.add('visible', 'active');
+        }
         bringToFront(win);
         playWindowSound(true);
       }
