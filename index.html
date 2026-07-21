@@ -785,7 +785,8 @@
           </select>
         </div>
 
-        <div id="embed-iframe" style="width: 100%; height: 80px; display: block; border: 1px solid #808080;"></div>
+        <!-- Скрытый iframe виджет Spotify для соблюдения стилизации плеера -->
+        <div id="embed-iframe" style="width: 100%; height: 80px; display: none; border: 1px solid #808080;"></div>
 
         <div class="status-bar" style="margin-top: 2px;">
           <div class="status-bar-field" style="flex: 1;">Spotify API Ready</div>
@@ -1111,9 +1112,11 @@
     setInterval(checkTwitchStatus, 60000);
   </script>
 
-  <!-- Логика Spotify API -->
+  <!-- Логика Spotify API с исправленным таймлайном, громкостью и треками -->
   <script>
     let spotifyController = null;
+    let trackDurationMs = 0;
+    let isSeeking = false;
 
     window.onSpotifyIframeApiReady = (IFrameAPI) => {
       const element = document.getElementById('embed-iframe');
@@ -1127,26 +1130,29 @@
         
         EmbedController.addListener('playback_update', e => {
           if (e.data && e.data.track) {
-            document.getElementById('spotifyTrackName').innerText = e.data.track.name;
-            document.getElementById('spotifyArtistName').innerText = e.data.track.artists.map(a => a.name).join(', ');
+            const track = e.data.track;
+            const artistsStr = track.artists ? track.artists.map(a => a.name).join(', ') : "vityaptt";
             
-            const duration = e.data.duration || 0;
-            const position = e.data.position || 0;
+            // Вывод информации о треке на зеленый экран: Артист - Название
+            document.getElementById('spotifyTrackName').innerText = track.name;
+            document.getElementById('spotifyArtistName').innerText = artistsStr;
             
-            document.getElementById('totalTime').innerText = formatTime(duration);
-            document.getElementById('currentTime').innerText = formatTime(position);
+            trackDurationMs = e.data.duration || 0;
+            const positionMs = e.data.position || 0;
             
-            if (duration > 0) {
-              const progressPercent = (position / duration) * 100;
+            document.getElementById('totalTime').innerText = formatTime(trackDurationMs);
+            document.getElementById('currentTime').innerText = formatTime(positionMs);
+            
+            if (trackDurationMs > 0 && !isSeeking) {
+              const progressPercent = (positionMs / trackDurationMs) * 100;
               document.getElementById('trackTimeline').value = progressPercent;
             }
           }
         });
 
         setTimeout(() => {
-          if (EmbedController.loadUri) {
-            document.getElementById('spotifyTrackName').innerText = "Плейлист готов к работе";
-          }
+          document.getElementById('spotifyTrackName').innerText = "Плейлист готов к работе";
+          document.getElementById('spotifyArtistName').innerText = "vityaptt";
         }, 1500);
       };
 
@@ -1160,8 +1166,37 @@
       return m + ':' + (s < 10 ? '0' : '') + s;
     }
 
-    function seekTrack(val) {}
+    // Обработка таймлайна и перемотки
+    const timelineInput = document.getElementById('trackTimeline');
+    timelineInput.addEventListener('mousedown', () => { isSeeking = true; });
+    timelineInput.addEventListener('touchstart', () => { isSeeking = true; });
 
+    timelineInput.addEventListener('mouseup', (e) => {
+      isSeeking = false;
+      if (spotifyController && trackDurationMs > 0) {
+        const val = e.target.value;
+        const targetMs = (val / 100) * trackDurationMs;
+        spotifyController.seek(targetMs);
+      }
+    });
+
+    timelineInput.addEventListener('touchend', (e) => {
+      isSeeking = false;
+      if (spotifyController && trackDurationMs > 0) {
+        const val = e.target.value;
+        const targetMs = (val / 100) * trackDurationMs;
+        spotifyController.seek(targetMs);
+      }
+    });
+
+    function seekTrack(val) {
+      if (trackDurationMs > 0) {
+        const targetMs = (val / 100) * trackDurationMs;
+        document.getElementById('currentTime').innerText = formatTime(targetMs);
+      }
+    }
+
+    // Обработка ползунка громкости
     function changeVolume(val) {
       if (spotifyController && spotifyController.setVolume) {
         spotifyController.setVolume(val / 100);
@@ -1176,7 +1211,7 @@
     }
   </script>
 
-  <!-- Интерфейс и Звуки (используем реальный window-open.mp3) -->
+  <!-- Интерфейс и Звуки -->
   <script>
     let audioCtx = null;
 
@@ -1258,6 +1293,12 @@
       const bootInterval = setInterval(() => {
         progress += 10;
         bootProgress.style.width = progress + '%';
+        
+        // Звук window-open начинает проигрываться чуть раньше конца полоски (на 85%)
+        if (progress === 80) {
+          playWindowOpenSound();
+        }
+
         if (progress >= 100) {
           clearInterval(bootInterval);
           setTimeout(() => {
@@ -1266,7 +1307,6 @@
               bootScreen.style.display = 'none';
               desktop.style.display = 'block';
               taskbar.style.display = 'flex';
-              playWindowOpenSound(); // Срабатывает оригинальный звук из репозитория!
             }, 500);
           }, 300);
         }
