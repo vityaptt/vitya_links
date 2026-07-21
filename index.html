@@ -601,16 +601,18 @@
       align-items: center;
       gap: 4px;
       font-size: 11px;
-      padding: 2px 6px;
+      padding: 2px 10px;
       height: 22px;
-      flex: 1;
-      min-width: 0;
+      flex: 0 0 auto; /* На ПК кнопки не растягиваются на всю ширину, а имеют фиксированный размер под контент */
+      min-width: 120px;
+      max-width: 160px;
       background: #c0c0c0;
       box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
       font-weight: bold;
       cursor: pointer;
       border: none;
       white-space: nowrap;
+      overflow: hidden;
     }
 
     .task-item img {
@@ -619,7 +621,10 @@
 
     .task-item span {
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       display: inline-block;
+      width: 100%;
     }
 
     .task-item.visible {
@@ -631,7 +636,7 @@
       background: #d4d4d4;
     }
 
-    /* Компактный режим только для мобильных устройств при открытии > 3 окон */
+    /* Адаптивное сжатие только для мобильных устройств при открытии > 3 окон */
     @media (max-width: 768px) {
       .taskbar.compact-tasks .task-item {
         flex: unset;
@@ -801,7 +806,7 @@
           <input type="range" id="trackTimeline" min="0" max="100" value="0" step="0.1" style="width: 100%; cursor: pointer;" oninput="onTimelineInput(this.value)" onchange="onTimelineChange(this.value)">
         </div>
 
-        <!-- Кнопки управления (уменьшены для идеального размещения) -->
+        <!-- Кнопки управления -->
         <div style="display: flex; gap: 4px; width: 100%; justify-content: space-between;">
           <button class="win-button" style="width: 52px; height: 24px; padding: 0; justify-content: center; flex-shrink: 0; font-size: 11px;" onclick="playClickSound(); prevTrack()" title="Предыдущий">⏮</button>
           <button class="win-button" id="audioPlayBtn" style="flex: 1; height: 24px; padding: 0 4px; justify-content: center; flex-shrink: 0; font-size: 11px;" onclick="playClickSound(); toggleAudioPlay()">▶ Play</button>
