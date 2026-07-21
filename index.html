@@ -601,15 +601,27 @@
       align-items: center;
       gap: 4px;
       font-size: 11px;
-      padding: 2px 8px;
+      padding: 2px 6px;
       height: 22px;
-      max-width: 160px;
+      flex: 1;
+      min-width: 0;
       background: #c0c0c0;
       box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
       font-weight: bold;
       cursor: pointer;
       border: none;
       white-space: nowrap;
+    }
+
+    .task-item img {
+      flex-shrink: 0;
+    }
+
+    .task-item span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
     }
 
     .task-item.visible {
@@ -623,18 +635,16 @@
 
     /* Компактный режим на телефоне при открытии > 3 окон */
     .taskbar.compact-tasks .task-item {
+      flex: unset;
       width: 26px;
+      min-width: 26px;
       max-width: 26px;
       padding: 0;
       justify-content: center;
-    }
-    .taskbar.compact-tasks .task-item span-text,
-    .taskbar.compact-tasks .task-item {
-      overflow: hidden;
-    }
-    /* Скрываем текст внутри кнопок таскбара, оставляя только иконку */
-    .taskbar.compact-tasks .task-item {
       font-size: 0;
+    }
+    .taskbar.compact-tasks .task-item span {
+      display: none;
     }
     .taskbar.compact-tasks .task-item img {
       margin: 0;
@@ -1007,22 +1017,22 @@
       <div class="taskbar-tasks">
         <button class="task-item visible active" id="taskMain" onclick="toggleTask('mainWindow')">
           <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="12" height="12" alt="App">
-          ВИТЯ - Links
+          <span>ВИТЯ - Links</span>
         </button>
 
         <button class="task-item" id="taskHelp" onclick="toggleTask('donateWindow')">
           <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="12" height="12" alt="Help">
-          Донат
+          <span>Донат</span>
         </button>
 
         <button class="task-item" id="taskPlayer" onclick="toggleTask('playerWindow')">
           <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" width="12" height="12" alt="Player">
-          Media Player
+          <span>Media Player</span>
         </button>
 
         <button class="task-item" id="taskGuestbook" onclick="toggleTask('guestbookWindow')">
           <img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png" width="12" height="12" alt="Guestbook">
-          Гостевая.txt
+          <span>Гостевая.txt</span>
         </button>
       </div>
     </div>
@@ -1448,7 +1458,6 @@
       return null;
     }
 
-    // Проверка количества открытых окон и ширины экрана для мобилок
     function updateTaskbarMode() {
       const isMobile = window.innerWidth <= 768;
       if (!isMobile) {
