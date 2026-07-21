@@ -7,7 +7,7 @@
   
   <link rel="icon" href="https://win98icons.alexmeub.com/icons/png/windows-0.png" type="image/png">
 
-  <!-- 98.css for authentic Windows UI elements -->
+  <!-- 98.css -->
   <link rel="stylesheet" href="https://unpkg.com/98.css" />
   <style>
     * {
@@ -97,6 +97,7 @@
       overflow: hidden;
     }
 
+    /* Centered Background Text */
     .desktop-wallpaper {
       position: absolute;
       top: 50%;
@@ -111,6 +112,23 @@
       pointer-events: none;
       text-align: center;
       line-height: 1;
+      white-space: nowrap;
+    }
+
+    /* Audio Player Window in Top Right */
+    .top-right-player {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 100;
+      width: 280px;
+    }
+
+    .top-right-player audio {
+      width: 100%;
+      height: 32px;
+      margin-top: 4px;
+      outline: none;
     }
 
     /* Desktop Icons Container */
@@ -328,9 +346,10 @@
     }
 
     .da-avatar {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      image-rendering: pixelated;
     }
 
     .da-user-info {
@@ -509,56 +528,11 @@
       height: 22px;
       display: flex;
       align-items: center;
-      gap: 6px;
       background: #c0c0c0;
-      position: relative;
-    }
-
-    .volume-icon {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-      image-rendering: pixelated;
-    }
-
-    /* Volume Popup Window */
-    .volume-popup {
-      display: none;
-      position: absolute;
-      bottom: 26px;
-      right: 0;
-      width: 80px;
-      height: 120px;
-      background: #c0c0c0;
-      border: 2px solid;
-      border-color: #fff #808080 #808080 #fff;
-      box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-      padding: 6px;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      z-index: 1001;
-    }
-
-    .volume-popup.open {
-      display: flex;
-    }
-
-    .volume-slider {
-      writing-mode: bt-lr; /* Vertical slider */
-      -webkit-appearance: slider-vertical;
-      width: 20px;
-      height: 75px;
-      cursor: pointer;
     }
   </style>
 </head>
 <body>
-
-  <!-- Audio element playing Win95 Jungle track -->
-  <audio id="bgMusic" loop preload="auto">
-    <source src="https://stream.voidboost.cc/window95-jungle.mp3" type="audio/mpeg">
-  </audio>
 
   <!-- Boot Screen Animation -->
   <div id="bootScreen">
@@ -572,8 +546,25 @@
   </div>
 
   <div class="desktop" id="desktop">
-    <!-- Clean Desktop Wallpaper -->
+    <!-- Centered Background Text -->
     <div class="desktop-wallpaper">ВИТЯ 02</div>
+
+    <!-- Media Player Window -->
+    <div class="window open top-right-player" id="playerWindow">
+      <div class="title-bar">
+        <div class="title-bar-text">
+          <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" width="14" height="14" alt="Media Player">
+          Media Player - track.mp3
+        </div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" onclick="closeWindow('playerWindow')"></button>
+        </div>
+      </div>
+      <div style="padding: 8px; background: #c0c0c0; display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 11px; font-weight: bold; color: #000;">Playing: track.mp3</span>
+        <audio controls id="audioPlayer" src="track.mp3" preload="auto"></audio>
+      </div>
+    </div>
 
     <!-- Desktop Shortcuts -->
     <div class="desktop-icons">
@@ -584,6 +575,10 @@
       <div class="desktop-icon" onclick="openWindow('donateWindow')">
         <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" alt="Donate">
         <span>Донат</span>
+      </div>
+      <div class="desktop-icon" onclick="openWindow('playerWindow')">
+        <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" alt="Player">
+        <span>Плеер</span>
       </div>
     </div>
 
@@ -649,7 +644,7 @@
       <div class="window-body money-bg">
         <div class="da-header">
           <div class="da-avatar-container">
-            <img src="https://static-cdn.jtvnw.net/jtv_user_pictures/vityaptt-profile_image.png" class="da-avatar" alt="vityaptt Avatar" onerror="this.src='https://win98icons.alexmeub.com/icons/png/user_headset-0.png'">
+            <img src="https://win98icons.alexmeub.com/icons/png/money_bag-0.png" class="da-avatar" alt="Money Bag Icon">
           </div>
           <div class="da-user-info">
             vityaptt
@@ -663,7 +658,7 @@
           </a>
 
           <a href="https://web.tribute.tg/d/NvR" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
-            <img src="https://win98icons.alexmeub.com/icons/png/star-0.png" class="button-icon" alt="Tribute Star Icon">
+            <img src="https://win98icons.alexmeub.com/icons/png/star-0.png" class="button-icon" alt="Tribute">
             Tribute
           </a>
 
@@ -722,52 +717,21 @@
           <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="12" height="12" alt="Help">
           Донат
         </button>
+
+        <button class="task-item visible active" id="taskPlayer" onclick="toggleTask('playerWindow')">
+          <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" width="12" height="12" alt="Player">
+          Media Player
+        </button>
       </div>
     </div>
 
     <div class="tray">
-      <!-- Speaker Icon -->
-      <img src="https://win98icons.alexmeub.com/icons/png/loudspeaker_rays-0.png" class="volume-icon" id="volumeBtn" alt="Volume">
-      
-      <!-- Volume Slider Popup -->
-      <div class="volume-popup" id="volumePopup">
-        <span style="font-size:10px; font-weight:bold;">Volume</span>
-        <input type="range" class="volume-slider" id="volumeControl" min="0" max="1" step="0.01" value="0.15">
-      </div>
-
       <div id="clock">12:00</div>
     </div>
   </div>
 
   <script>
-    // Audio Control & Background Music
-    const bgMusic = document.getElementById('bgMusic');
-    const volumeBtn = document.getElementById('volumeBtn');
-    const volumePopup = document.getElementById('volumePopup');
-    const volumeControl = document.getElementById('volumeControl');
-
-    bgMusic.volume = 0.15;
-
-    function startMusic() {
-      bgMusic.play().catch(() => {});
-    }
-
-    window.addEventListener('click', startMusic, { once: true });
-
-    volumeBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      volumePopup.classList.toggle('open');
-    });
-
-    volumeControl.addEventListener('input', (e) => {
-      bgMusic.volume = e.target.value;
-    });
-
-    document.addEventListener('click', () => {
-      volumePopup.classList.remove('open');
-    });
-
-    // Sound FX System
+    // System Sound Effects
     let audioCtx = null;
 
     function initAudio() {
@@ -824,7 +788,7 @@
       osc.stop(audioCtx.currentTime + 0.07);
     }
 
-    // Boot Screen
+    // Boot Screen Logic
     const bootProgress = document.getElementById('bootProgress');
     const bootScreen = document.getElementById('bootScreen');
     let progress = 0;
@@ -869,12 +833,19 @@
       startButton.classList.remove('active');
     });
 
-    // Window Management & Z-Index
+    // Window & Z-Index Management
     let highestZ = 100;
 
     function bringToFront(win) {
       highestZ++;
       win.style.zIndex = highestZ;
+    }
+
+    function getTaskBtn(id) {
+      if (id === 'mainWindow') return document.getElementById('taskMain');
+      if (id === 'donateWindow') return document.getElementById('taskHelp');
+      if (id === 'playerWindow') return document.getElementById('taskPlayer');
+      return null;
     }
 
     function openWindow(id) {
@@ -883,8 +854,8 @@
       win.classList.add('open');
       bringToFront(win);
 
-      const taskBtn = id === 'mainWindow' ? document.getElementById('taskMain') : document.getElementById('taskHelp');
-      taskBtn.classList.add('visible', 'active');
+      const taskBtn = getTaskBtn(id);
+      if (taskBtn) taskBtn.classList.add('visible', 'active');
     }
 
     function closeWindow(id) {
@@ -892,28 +863,28 @@
       const win = document.getElementById(id);
       win.classList.remove('open');
 
-      const taskBtn = id === 'mainWindow' ? document.getElementById('taskMain') : document.getElementById('taskHelp');
-      taskBtn.classList.remove('visible', 'active');
+      const taskBtn = getTaskBtn(id);
+      if (taskBtn) taskBtn.classList.remove('visible', 'active');
     }
 
     function toggleTask(id) {
       playClickSound();
       const win = document.getElementById(id);
-      const taskBtn = id === 'mainWindow' ? document.getElementById('taskMain') : document.getElementById('taskHelp');
+      const taskBtn = getTaskBtn(id);
 
       if (win.classList.contains('open')) {
         win.classList.remove('open');
-        taskBtn.classList.remove('active');
+        if (taskBtn) taskBtn.classList.remove('active');
         playWindowSound(false);
       } else {
         win.classList.add('open');
-        taskBtn.classList.add('active');
+        if (taskBtn) taskBtn.classList.add('active');
         bringToFront(win);
         playWindowSound(true);
       }
     }
 
-    // Drag and Drop Windows Implementation
+    // Draggable Windows Setup
     function makeDraggable(win) {
       const titleBar = win.querySelector('.title-bar');
       let isDragging = false;
@@ -949,6 +920,7 @@
 
     makeDraggable(document.getElementById('mainWindow'));
     makeDraggable(document.getElementById('donateWindow'));
+    makeDraggable(document.getElementById('playerWindow'));
   </script>
 </body>
 </html>
