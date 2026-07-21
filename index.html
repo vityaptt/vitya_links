@@ -621,6 +621,25 @@
       background: #d4d4d4;
     }
 
+    /* Компактный режим на телефоне при открытии > 3 окон */
+    .taskbar.compact-tasks .task-item {
+      width: 26px;
+      max-width: 26px;
+      padding: 0;
+      justify-content: center;
+    }
+    .taskbar.compact-tasks .task-item span-text,
+    .taskbar.compact-tasks .task-item {
+      overflow: hidden;
+    }
+    /* Скрываем текст внутри кнопок таскбара, оставляя только иконку */
+    .taskbar.compact-tasks .task-item {
+      font-size: 0;
+    }
+    .taskbar.compact-tasks .task-item img {
+      margin: 0;
+    }
+
     .tray {
       border: 1px solid;
       border-color: #808080 #fff #fff #808080;
@@ -1429,6 +1448,21 @@
       return null;
     }
 
+    // Проверка количества открытых окон и ширины экрана для мобилок
+    function updateTaskbarMode() {
+      const isMobile = window.innerWidth <= 768;
+      if (!isMobile) {
+        taskbar.classList.remove('compact-tasks');
+        return;
+      }
+      const visibleTasks = document.querySelectorAll('.task-item.visible').length;
+      if (visibleTasks > 3) {
+        taskbar.classList.add('compact-tasks');
+      } else {
+        taskbar.classList.remove('compact-tasks');
+      }
+    }
+
     function bringToFront(winId) {
       highestZ++;
       const win = document.getElementById(winId);
@@ -1446,6 +1480,7 @@
       bringToFront(id);
       const taskBtn = getTaskBtn(id);
       if (taskBtn) taskBtn.classList.add('visible');
+      updateTaskbarMode();
     }
 
     function closeWindow(id) {
@@ -1455,10 +1490,10 @@
       const taskBtn = getTaskBtn(id);
       if (taskBtn) taskBtn.classList.remove('visible', 'active');
 
-      // Если закрывается окно плеера — останавливаем музыку
       if (id === 'playerWindow') {
         stopAudio();
       }
+      updateTaskbarMode();
     }
 
     function toggleTask(id) {
@@ -1477,6 +1512,7 @@
       } else {
         openWindow(id);
       }
+      updateTaskbarMode();
     }
 
     function escapeHtml(str) {
@@ -1522,6 +1558,7 @@
     makeDraggable(document.getElementById('playerWindow'));
     makeDraggable(document.getElementById('guestbookWindow'));
     bringToFront('mainWindow');
+    updateTaskbarMode();
   </script>
 </body>
 </html>
