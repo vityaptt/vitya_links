@@ -633,7 +633,7 @@
       flex-shrink: 0;
     }
 
-    /* Полностью прячем стандартный контейнер iframe Spotify, оставляя логику работы живой */
+    /* Прячем стандартный iframe плеер Spotify */
     #embed-iframe {
       width: 0px !important;
       height: 0px !important;
@@ -769,7 +769,7 @@
         
         <!-- Зеленый экран дисплея трека -->
         <div style="width: 100%; background: #000; color: #00ff00; font-family: 'Courier New', monospace; font-size: 11px; padding: 6px; border: 2px solid; border-color: #808080 #fff #fff #808080; min-height: 42px; display: flex; flex-direction: column; justify-content: center;">
-          <div id="spotifyTrackName" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;">Подключение к Spotify...</div>
+          <div id="spotifyTrackName" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;">Инициализация...</div>
           <div id="spotifyArtistName" style="color: #00aa00; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10px;">Плейлист vityaptt</div>
         </div>
 
@@ -779,27 +779,27 @@
             <span id="currentTime">0:00</span>
             <span id="totalTime">0:00</span>
           </div>
-          <input type="range" id="trackTimeline" min="0" max="100" value="0" style="width: 100%; cursor: pointer;" oninput="seekTrack(this.value)">
+          <input type="range" id="trackTimeline" min="0" max="1000" value="0" style="width: 100%; cursor: pointer;" oninput="onTimelineInput(this.value)" onchange="onTimelineChange(this.value)">
         </div>
 
         <!-- Кнопки управления -->
         <div style="display: flex; gap: 4px; width: 100%; justify-content: center;">
           <button class="win-button" style="width: auto; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); if(spotifyController) spotifyController.previousTrack()">⏮</button>
-          <button class="win-button" id="spotifyPlayBtn" style="flex: 1; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); if(spotifyController) spotifyController.togglePlay()">Play / Pause</button>
+          <button class="win-button" id="spotifyPlayBtn" style="flex: 1; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); togglePlayState()">Play / Pause</button>
           <button class="win-button" style="width: auto; padding: 4px 12px; justify-content: center;" onclick="playClickSound(); if(spotifyController) spotifyController.nextTrack()">⏭</button>
         </div>
 
         <!-- Громкость -->
         <div style="display: flex; gap: 6px; width: 100%; align-items: center; font-size: 11px;">
-          <span style="font-size: 10px; font-weight: bold;">🔊</span>
-          <input type="range" id="volumeSlider" min="0" max="100" value="70" style="flex: 1; cursor: pointer;" oninput="changeVolume(this.value)" title="Громкость">
+          <span style="font-size: 10px; font-weight: bold;" id="volumeIcon">🔊</span>
+          <input type="range" id="volumeSlider" min="0" max="100" value="80" style="flex: 1; cursor: pointer;" oninput="changeVolume(this.value)" title="Громкость плеера">
         </div>
 
         <!-- Скрытый контейнер для Spotify API -->
         <div id="embed-iframe"></div>
 
         <div class="status-bar" style="margin-top: 2px;">
-          <div class="status-bar-field" style="flex: 1;">Spotify API Ready</div>
+          <div class="status-bar-field" style="flex: 1;" id="spotifyStatusText">Spotify API Ready</div>
           <div class="status-bar-field">Win95 UI</div>
         </div>
       </div>
@@ -1126,7 +1126,8 @@
   <script>
     let spotifyController = null;
     let trackDurationMs = 0;
-    let isSeeking = false;
+    let currentPositionMs = 0;
+    let isUserSeeking = false;
 
     window.onSpotifyIframeApiReady = (IFrameAPI) => {
       const element = document.getElementById('embed-iframe');
@@ -1139,31 +1140,37 @@
         spotifyController = EmbedController;
         
         EmbedController.addListener('playback_update', e => {
-          if (e.data && e.data.track) {
-            const track = e.data.track;
-            const artistsStr = track.artists ? track.artists.map(a => a.name).join(', ') : "vityaptt";
-            
-            // Вывод Артист - Название на зеленый дисплей
-            document.getElementById('spotifyTrackName').innerText = track.name;
-            document.getElementById('spotifyArtistName').innerText = artistsStr;
+          if (e.data) {
+            if (e.data.track) {
+              const track = e.data.track;
+              const artistsStr = track.artists ? track.artists.map(a => a.name).join(', ') : "vityaptt";
+              
+              // Выводим имя трека и исполнителя на зеленый дисплей
+              document.getElementById('spotifyTrackName').innerText = track.name;
+              document.getElementById('spotifyArtistName').innerText = artistsStr;
+            }
             
             trackDurationMs = e.data.duration || 0;
-            const positionMs = e.data.position || 0;
+            if (!isUserSeeking) {
+              currentPositionMs = e.data.position || 0;
+            }
             
             document.getElementById('totalTime').innerText = formatTime(trackDurationMs);
-            document.getElementById('currentTime').innerText = formatTime(positionMs);
+            document.getElementById('currentTime').innerText = formatTime(currentPositionMs);
             
-            if (trackDurationMs > 0 && !isSeeking) {
-              const progressPercent = (positionMs / trackDurationMs) * 100;
+            if (trackDurationMs > 0 && !isUserSeeking) {
+              const progressPercent = (currentPositionMs / trackDurationMs) * 1000;
               document.getElementById('trackTimeline').value = progressPercent;
             }
           }
         });
 
         setTimeout(() => {
-          document.getElementById('spotifyTrackName').innerText = "Плейлист готов к работе";
-          document.getElementById('spotifyArtistName').innerText = "vityaptt";
-        }, 1500);
+          if (document.getElementById('spotifyTrackName').innerText === "Инициализация...") {
+            document.getElementById('spotifyTrackName').innerText = "Плейлист готов";
+            document.getElementById('spotifyArtistName').innerText = "vityaptt";
+          }
+        }, 2000);
       };
 
       IFrameAPI.createController(element, options, callback);
@@ -1176,39 +1183,53 @@
       return m + ':' + (s < 10 ? '0' : '') + s;
     }
 
-    const timelineInput = document.getElementById('trackTimeline');
-    timelineInput.addEventListener('mousedown', () => { isSeeking = true; });
-    timelineInput.addEventListener('touchstart', () => { isSeeking = true; });
-
-    timelineInput.addEventListener('mouseup', (e) => {
-      isSeeking = false;
-      if (spotifyController && trackDurationMs > 0) {
-        const val = e.target.value;
-        const targetMs = (val / 100) * trackDurationMs;
-        spotifyController.seek(targetMs);
+    function togglePlayState() {
+      if (spotifyController) {
+        spotifyController.togglePlay();
       }
-    });
+    }
 
-    timelineInput.addEventListener('touchend', (e) => {
-      isSeeking = false;
-      if (spotifyController && trackDurationMs > 0) {
-        const val = e.target.value;
-        const targetMs = (val / 100) * trackDurationMs;
-        spotifyController.seek(targetMs);
-      }
-    });
-
-    function seekTrack(val) {
+    function onTimelineInput(val) {
+      isUserSeeking = true;
       if (trackDurationMs > 0) {
-        const targetMs = (val / 100) * trackDurationMs;
+        const targetMs = (val / 1000) * trackDurationMs;
+        currentPositionMs = targetMs;
         document.getElementById('currentTime').innerText = formatTime(targetMs);
       }
     }
 
-    function changeVolume(val) {
-      if (spotifyController && spotifyController.setVolume) {
-        spotifyController.setVolume(val / 100);
+    function onTimelineChange(val) {
+      isUserSeeking = false;
+      if (spotifyController && trackDurationMs > 0) {
+        const targetMs = (val / 1000) * trackDurationMs;
+        try {
+          spotifyController.seek(targetMs);
+        } catch(err) {
+          console.log("Seek restricted by Spotify API");
+        }
       }
+    }
+
+    function changeVolume(val) {
+      const icon = document.getElementById('volumeIcon');
+      const statusText = document.getElementById('spotifyStatusText');
+      if (val == 0) {
+        icon.innerText = "🔇";
+      } else if (val < 40) {
+        icon.innerText = "🔉";
+      } else {
+        icon.innerText = "🔊";
+      }
+      
+      if (spotifyController && spotifyController.setVolume) {
+        try {
+          spotifyController.setVolume(val / 100);
+        } catch(e) {}
+      }
+      statusText.innerText = `Громкость: ${val}%`;
+      setTimeout(() => {
+        statusText.innerText = "Spotify API Ready";
+      }, 1500);
     }
   </script>
 
