@@ -285,7 +285,6 @@
       visibility: visible;
     }
 
-    /* Заголовок окна по умолчанию (неактивное) */
     .title-bar {
       background: linear-gradient(90deg, #7a7a7a, #b5b5b5);
       padding: 3px 2px 3px 3px;
@@ -295,7 +294,6 @@
       cursor: grab;
     }
 
-    /* Активное окно: яркий синий градиент */
     .window.active .title-bar {
       background: linear-gradient(90deg, #000080, #1084d0);
     }
@@ -644,24 +642,6 @@
     }
 
     /* Стили для Гостевой книги (Notepad) */
-    .notepad-menu-bar {
-      display: flex;
-      gap: 12px;
-      padding: 2px 4px;
-      font-size: 11px;
-      background: #c0c0c0;
-      border-bottom: 1px solid #808080;
-      width: 100%;
-    }
-    .notepad-menu-item {
-      padding: 1px 4px;
-      cursor: default;
-    }
-    .notepad-menu-item:hover {
-      background: #000080;
-      color: #fff;
-    }
-
     .guestbook-content {
       background: #fff;
       border: 2px solid;
@@ -915,12 +895,6 @@
           <button aria-label="Close" onclick="closeWindow('guestbookWindow')"></button>
         </div>
       </div>
-      <div class="notepad-menu-bar">
-        <div class="notepad-menu-item">Файл</div>
-        <div class="notepad-menu-item">Правка</div>
-        <div class="notepad-menu-item">Формат</div>
-        <div class="notepad-menu-item">Справка</div>
-      </div>
       <div class="window-body" style="gap: 10px; padding: 10px;">
         <!-- Стена сообщений -->
         <div class="guestbook-content" id="guestbookMessages">
@@ -1057,7 +1031,6 @@
       osc.stop(audioCtx.currentTime + 0.07);
     }
 
-    // Логика нажатия и наведения для курсора
     const startOverlay = document.getElementById('startOverlay');
     const launchButton = document.getElementById('launchButton');
     const launcherWrapper = document.getElementById('launcherWrapper');
@@ -1115,7 +1088,6 @@
       }, 120);
     }
 
-    // Live Clock
     function updateClock() {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
@@ -1125,7 +1097,6 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Start Menu Toggle Logic
     const startButton = document.getElementById('startButton');
     const startMenu = document.getElementById('startMenu');
 
@@ -1151,7 +1122,6 @@
       }
     });
 
-    // Initial Windows Positioning
     function initWindowPositions() {
       const isMobile = window.innerWidth <= 768;
       
@@ -1293,7 +1263,6 @@
       }
     }
 
-    // --- Логика гостевой книги ---
     function loadGuestbookMessages() {
       const container = document.getElementById('guestbookMessages');
       let messages = [];
@@ -1348,7 +1317,6 @@
       }
 
       messages.push({ author, text, date: dateStr });
-      // Ограничим до 50 сообщений, чтобы не забивать память
       if (messages.length > 50) messages.shift();
 
       localStorage.setItem('vityaptt_guestbook', JSON.stringify(messages));
@@ -1363,7 +1331,6 @@
       );
     }
 
-    // Загружаем сообщения при старте
     loadGuestbookMessages();
 
     function makeDraggable(win) {
