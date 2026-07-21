@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ВИТЯ - Desktop</title>
+  <title>ВИТЯ 02 - Desktop</title>
   
   <!-- Favicon (Windows Logo) -->
   <link rel="icon" href="https://win98icons.alexmeub.com/icons/png/windows-0.png" type="image/png">
 
-  <!-- 98.css for authentic Windows 95 / 98 UI elements -->
+  <!-- 98.css for authentic Windows UI elements -->
   <link rel="stylesheet" href="https://unpkg.com/98.css" />
   <style>
     * {
@@ -29,13 +29,76 @@
       user-select: none;
     }
 
+    /* Boot Screen Overlay */
+    #bootScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #008080;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: opacity 0.5s ease;
+    }
+
+    .boot-logo-container {
+      background: #c0c0c0;
+      border: 3px solid #000;
+      box-shadow: inset -2px -2px #808080, inset 2px 2px #fff;
+      padding: 30px 40px;
+      text-align: center;
+      color: #000;
+      max-width: 90vw;
+    }
+
+    .boot-title {
+      font-family: Arial, sans-serif;
+      font-weight: 900;
+      font-size: 56px;
+      letter-spacing: 3px;
+      transform: scaleY(1.3);
+      display: inline-block;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 0px #fff;
+    }
+
+    .boot-subtitle {
+      font-size: 14px;
+      font-weight: bold;
+      color: #000080;
+      margin-bottom: 20px;
+    }
+
+    /* Win95 Loading Bar */
+    .progress-bar-container {
+      width: 260px;
+      height: 20px;
+      border: 2px solid;
+      border-color: #808080 #fff #fff #808080;
+      background: #fff;
+      padding: 2px;
+      margin: 0 auto;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: #000080;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
     /* Desktop layout area */
     .desktop {
       flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding-bottom: 40px; /* Leave room for taskbar */
+      padding-bottom: 40px;
       position: relative;
     }
 
@@ -48,14 +111,14 @@
       z-index: 10;
     }
 
-    /* Donate Window - Positioned to slightly overlap the main window on the right */
+    /* Donate Window */
     #donateWindow {
-      display: none; /* Hidden by default */
+      display: none;
       width: 360px;
       max-width: 90vw;
       position: absolute;
       top: 30px;
-      left: calc(50% + 40px); /* Смещено вправо от центра */
+      left: calc(50% + 40px);
       z-index: 20;
     }
 
@@ -98,7 +161,6 @@
       background-color: #c0c0c0;
     }
 
-    /* Custom Name Styling: "ВИТЯ" in black Arial, stretched vertically */
     .site-title {
       font-family: Arial, sans-serif;
       font-weight: 900;
@@ -107,12 +169,11 @@
       text-transform: uppercase;
       letter-spacing: 2px;
       display: inline-block;
-      transform: scaleY(1.4); /* Vertical stretch */
+      transform: scaleY(1.4);
       margin: 10px 0 14px 0;
       text-shadow: 1px 1px 0px #ffffff;
     }
 
-    /* Profile Box / Screen Area */
     .status-field {
       width: 100%;
       background: #ffffff;
@@ -144,7 +205,6 @@
       line-height: 1.3;
     }
 
-    /* Buttons Container */
     .links-container {
       width: 100%;
       display: flex;
@@ -152,7 +212,6 @@
       gap: 10px;
     }
 
-    /* Windows 95 Styled Link Buttons */
     .win-button {
       display: flex;
       align-items: center;
@@ -182,55 +241,50 @@
       display: inline-block;
     }
 
-    /* DonationAlerts Header Box */
+    /* DonationAlerts Box */
     .da-header {
       width: 100%;
       border: 2px solid;
       border-color: #808080 #fff #fff #808080;
-      background: linear-gradient(135deg, #f37023, #ffc000);
+      background: linear-gradient(135deg, #000080, #1084d0);
       position: relative;
-      height: 70px;
+      height: 65px;
       display: flex;
-      align-items: flex-end;
-      padding: 8px;
+      align-items: center;
+      padding: 8px 12px;
+      gap: 12px;
     }
 
     .da-avatar-container {
-      position: absolute;
-      bottom: -15px;
-      left: 12px;
-      width: 50px;
-      height: 50px;
-      border: 2px solid #000;
-      background: #fff;
-      box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
-      overflow: hidden;
+      width: 42px;
+      height: 42px;
+      border: 2px solid;
+      border-color: #808080 #fff #fff #808080;
+      background: #c0c0c0;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
 
     .da-avatar {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      width: 32px;
+      height: 32px;
     }
 
     .da-user-info {
-      margin-left: 60px;
       color: #fff;
-      text-shadow: 1px 1px 2px #000;
       font-weight: bold;
-      font-size: 13px;
+      font-size: 14px;
+      text-shadow: 1px 1px 1px #000;
     }
 
-    /* Donate Form Styling */
     .donate-form {
       width: 100%;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-top: 10px;
+      margin-top: 5px;
     }
 
     .field-group {
@@ -298,7 +352,14 @@
       box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
     }
 
-    /* Footer Info / Status bar inside window */
+    .copy-hint {
+      font-size: 10px;
+      color: #000080;
+      text-align: center;
+      display: none;
+      font-weight: bold;
+    }
+
     .status-bar {
       width: 100%;
       display: flex;
@@ -353,7 +414,6 @@
       box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
     }
 
-    /* Windows 95 Start Menu Pop-up */
     .start-menu {
       display: none;
       position: absolute;
@@ -436,7 +496,6 @@
       gap: 4px;
     }
 
-    /* Taskbar Buttons - Raised (like Start button) by default */
     .task-item {
       display: flex;
       align-items: center;
@@ -452,7 +511,6 @@
       border: none;
     }
 
-    /* Pressed state when window is open */
     .task-item.active {
       box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
       background: #e0e0e0;
@@ -472,8 +530,19 @@
 </head>
 <body>
 
+  <!-- Boot Screen Animation -->
+  <div id="bootScreen">
+    <div class="boot-logo-container">
+      <div class="boot-title">ВИТЯ 02</div>
+      <div class="boot-subtitle">Microsoft Windows Edition</div>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="bootProgress"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="desktop">
-    <!-- Main Windows 95 Window -->
+    <!-- Main Window -->
     <div class="window" id="mainWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -487,10 +556,8 @@
       </div>
 
       <div class="window-body">
-        <!-- Main stretched Arial Title -->
         <div class="site-title">ВИТЯ</div>
 
-        <!-- Status Card -->
         <div class="status-field">
           <div class="status-icon">V</div>
           <div class="status-text">
@@ -499,7 +566,6 @@
           </div>
         </div>
 
-        <!-- Link Buttons -->
         <div class="links-container">
           <a href="https://t.me/datizaebalsuca" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
             <img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" class="button-icon" alt="Telegram">
@@ -522,7 +588,6 @@
           </a>
         </div>
 
-        <!-- Bottom status bar -->
         <div class="status-bar">
           <div class="status-bar-field" style="flex: 1;">4 объекта(ов)</div>
           <div class="status-bar-field">Win95 Edition</div>
@@ -530,7 +595,7 @@
       </div>
     </div>
 
-    <!-- Donate / Help Window (Slightly overlapping main window on the right) -->
+    <!-- Donate Window -->
     <div class="window" id="donateWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -543,17 +608,15 @@
       </div>
 
       <div class="window-body">
-        <!-- DonationAlerts Header & Avatar -->
         <div class="da-header">
           <div class="da-avatar-container">
-            <img src="https://images.weserv.nl/?url=static.donationalerts.ru/uploads/images/avatars/4096057/399066fba040bfa15259cf5c66eac2fa.jpg" class="da-avatar" alt="vityaptt avatar" onerror="this.onerror=null; this.src='https://win98icons.alexmeub.com/icons/png/user_headset-0.png';">
+            <img src="https://win98icons.alexmeub.com/icons/png/user_headset-0.png" class="da-avatar" alt="vityaptt avatar">
           </div>
           <div class="da-user-info">
             vityaptt
           </div>
         </div>
 
-        <!-- Donate Interactive Form -->
         <div class="donate-form">
           <div class="field-group">
             <label for="donorAmount">Сумма доната:</label>
@@ -565,7 +628,6 @@
                 <option value="EUR">EUR</option>
               </select>
             </div>
-            <!-- Quick Presets -->
             <div class="amount-presets">
               <button class="preset-btn" type="button" onclick="setAmount(50)">50 ₽</button>
               <button class="preset-btn" type="button" onclick="setAmount(100)">100 ₽</button>
@@ -583,9 +645,12 @@
             <img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" width="16" height="16" alt="Send">
             Отправить донат
           </button>
+          
+          <div class="copy-hint" id="copyHint">
+            Сообщение скопировано! Нажмите Ctrl+V при вставке.
+          </div>
         </div>
 
-        <!-- Bottom status bar -->
         <div class="status-bar">
           <div class="status-bar-field" style="flex: 1;">DonationAlerts Link</div>
           <div class="status-bar-field">vityaptt</div>
@@ -594,17 +659,15 @@
     </div>
   </div>
 
-  <!-- Windows 95 Taskbar -->
+  <!-- Windows Taskbar -->
   <div class="taskbar">
     <div style="display: flex; align-items: center;">
       <div class="start-container">
-        <!-- Start Button -->
         <button class="start-button" id="startButton">
           <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" width="14" height="14" alt="Start">
           <strong>Пуск</strong>
         </button>
 
-        <!-- Start Menu Pop-up -->
         <div class="start-menu" id="startMenu">
           <div class="start-menu-side">прив чд</div>
           <div class="start-menu-items">
@@ -627,14 +690,12 @@
 
       <div class="taskbar-divider"></div>
       
-      <!-- Taskbar Window Buttons -->
       <div class="taskbar-tasks">
         <button class="task-item active" id="taskMain">
           <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="12" height="12" alt="App">
           ВИТЯ - Links
         </button>
 
-        <!-- "Помощь" Button - Raised by default -->
         <button class="task-item" id="taskHelp">
           <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="12" height="12" alt="Help">
           Помощь
@@ -645,55 +706,86 @@
   </div>
 
   <script>
-    // Web Audio Sound Generator for Windows 95 UI SFX
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // Audio System Setup
+    let audioCtx = null;
 
-    function playClickSound() {
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
       if (audioCtx.state === 'suspended') {
         audioCtx.resume();
       }
+    }
+
+    window.addEventListener('click', initAudio, { once: true });
+    window.addEventListener('keydown', initAudio, { once: true });
+
+    function playClickSound() {
+      initAudio();
+      if (!audioCtx) return;
+
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.04);
-      
-      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
-      
+
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.03);
+
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.03);
+
       osc.connect(gain);
       gain.connect(audioCtx.destination);
-      
+
       osc.start();
-      osc.stop(audioCtx.currentTime + 0.04);
+      osc.stop(audioCtx.currentTime + 0.03);
     }
 
     function playWindowSound(isOpen) {
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      initAudio();
+      if (!audioCtx) return;
+
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
 
-      const startFreq = isOpen ? 440 : 880;
-      const endFreq = isOpen ? 880 : 440;
+      const startFreq = isOpen ? 350 : 600;
+      const endFreq = isOpen ? 600 : 350;
 
-      osc.type = 'square';
+      osc.type = 'triangle';
       osc.frequency.setValueAtTime(startFreq, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(endFreq, audioCtx.currentTime + 0.08);
+      osc.frequency.exponentialRampToValueAtTime(endFreq, audioCtx.currentTime + 0.07);
 
-      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.07);
 
       osc.connect(gain);
       gain.connect(audioCtx.destination);
 
       osc.start();
-      osc.stop(audioCtx.currentTime + 0.08);
+      osc.stop(audioCtx.currentTime + 0.07);
     }
 
-    // Live Clock for Windows Taskbar
+    // Boot Screen Animation
+    const bootProgress = document.getElementById('bootProgress');
+    const bootScreen = document.getElementById('bootScreen');
+    let progress = 0;
+
+    const bootInterval = setInterval(() => {
+      progress += 10;
+      bootProgress.style.width = progress + '%';
+      if (progress >= 100) {
+        clearInterval(bootInterval);
+        setTimeout(() => {
+          bootScreen.style.opacity = '0';
+          setTimeout(() => {
+            bootScreen.style.display = 'none';
+          }, 500);
+        }, 300);
+      }
+    }, 120);
+
+    // Live Clock
     function updateClock() {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
@@ -714,7 +806,6 @@
       startButton.classList.toggle('active');
     });
 
-    // Close menu when clicking outside
     document.addEventListener('click', () => {
       startMenu.classList.remove('open');
       startButton.classList.remove('active');
@@ -759,12 +850,21 @@
       document.getElementById('donorAmount').value = val;
     }
 
-    // Redirect to DonationAlerts with exact URL parameters
+    // Redirect + Auto Copy to Clipboard
     document.getElementById('sendDonateBtn').addEventListener('click', () => {
       playClickSound();
       const amount = encodeURIComponent(document.getElementById('donorAmount').value || 100);
       const currency = encodeURIComponent(document.getElementById('donorCurrency').value);
-      const message = encodeURIComponent(document.getElementById('donorMessage').value.trim());
+      const rawMessage = document.getElementById('donorMessage').value.trim();
+      const message = encodeURIComponent(rawMessage);
+
+      if (rawMessage) {
+        navigator.clipboard.writeText(rawMessage).then(() => {
+          const hint = document.getElementById('copyHint');
+          hint.style.display = 'block';
+          setTimeout(() => hint.style.display = 'none', 4000);
+        }).catch(() => {});
+      }
 
       let targetUrl = `https://www.donationalerts.com/r/vityaptt?amount=${amount}&currency=${currency}`;
       if (message) {
