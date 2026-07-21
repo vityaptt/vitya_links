@@ -55,7 +55,7 @@
       max-width: 90vw;
       position: absolute;
       top: 30px;
-      left: calc(50% + 40px); /* Смещено вправо от центра: перекрывает правый край основного окна */
+      left: calc(50% + 40px); /* Смещено вправо от центра */
       z-index: 20;
     }
 
@@ -205,6 +205,9 @@
       background: #fff;
       box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .da-avatar {
@@ -478,8 +481,8 @@
           C:\WINDOWS\Personal\VITYA.exe
         </div>
         <div class="title-bar-controls">
-          <button aria-label="Minimize"></button>
-          <button aria-label="Maximize"></button>
+          <button aria-label="Minimize" onclick="playClickSound()"></button>
+          <button aria-label="Maximize" onclick="playClickSound()"></button>
         </div>
       </div>
 
@@ -498,22 +501,22 @@
 
         <!-- Link Buttons -->
         <div class="links-container">
-          <a href="https://t.me/datizaebalsuca" target="_blank" rel="noopener" class="win-button">
+          <a href="https://t.me/datizaebalsuca" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
             <img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" class="button-icon" alt="Telegram">
             Telegram
           </a>
 
-          <a href="https://www.twitch.tv/vityaptt" target="_blank" rel="noopener" class="win-button">
+          <a href="https://www.twitch.tv/vityaptt" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
             <img src="https://win98icons.alexmeub.com/icons/png/display_properties-2.png" class="button-icon" alt="Twitch">
             Twitch
           </a>
 
-          <a href="https://boosty.to/viteapotatkafm" target="_blank" rel="noopener" class="win-button">
+          <a href="https://boosty.to/viteapotatkafm" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
             <img src="https://win98icons.alexmeub.com/icons/png/key_padlock-0.png" class="button-icon" alt="Boosty">
             Boosty
           </a>
 
-          <a href="https://www.youtube.com/@potatkadwg/featured" target="_blank" rel="noopener" class="win-button">
+          <a href="https://www.youtube.com/@potatkadwg/featured" target="_blank" rel="noopener" class="win-button" onclick="playClickSound()">
             <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" class="button-icon" alt="YouTube">
             YouTube
           </a>
@@ -543,7 +546,7 @@
         <!-- DonationAlerts Header & Avatar -->
         <div class="da-header">
           <div class="da-avatar-container">
-            <img src="https://static.donationalerts.ru/uploads/images/avatars/4096057/399066fba040bfa15259cf5c66eac2fa.jpg" class="da-avatar" alt="vityaptt avatar" onerror="this.src='https://win98icons.alexmeub.com/icons/png/user_headset-0.png'">
+            <img src="https://images.weserv.nl/?url=static.donationalerts.ru/uploads/images/avatars/4096057/399066fba040bfa15259cf5c66eac2fa.jpg" class="da-avatar" alt="vityaptt avatar" onerror="this.onerror=null; this.src='https://win98icons.alexmeub.com/icons/png/user_headset-0.png';">
           </div>
           <div class="da-user-info">
             vityaptt
@@ -605,16 +608,16 @@
         <div class="start-menu" id="startMenu">
           <div class="start-menu-side">прив чд</div>
           <div class="start-menu-items">
-            <a href="https://open.spotify.com/user/gtahh91k0wd62si8reaw9c0w5?si=da4a95cad13442c1" target="_blank" rel="noopener" class="start-menu-item">
+            <a href="https://open.spotify.com/user/gtahh91k0wd62si8reaw9c0w5?si=da4a95cad13442c1" target="_blank" rel="noopener" class="start-menu-item" onclick="playClickSound()">
               <img src="https://win98icons.alexmeub.com/icons/png/media_player-0.png" alt="Spotify">
               Spotify
             </a>
-            <a href="https://t.me/potatka" target="_blank" rel="noopener" class="start-menu-item">
+            <a href="https://t.me/potatka" target="_blank" rel="noopener" class="start-menu-item" onclick="playClickSound()">
               <img src="https://win98icons.alexmeub.com/icons/png/address_book-0.png" alt="Telegram">
               Личный Telegram
             </a>
             <div class="start-menu-divider"></div>
-            <a href="https://t.me/InYourEyesVault" target="_blank" rel="noopener" class="start-menu-item">
+            <a href="https://t.me/InYourEyesVault" target="_blank" rel="noopener" class="start-menu-item" onclick="playClickSound()">
               <img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png" alt="Memes">
               Мемы (Vault)
             </a>
@@ -642,6 +645,54 @@
   </div>
 
   <script>
+    // Web Audio Sound Generator for Windows 95 UI SFX
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playClickSound() {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.04);
+      
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
+      
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.04);
+    }
+
+    function playWindowSound(isOpen) {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      const startFreq = isOpen ? 440 : 880;
+      const endFreq = isOpen ? 880 : 440;
+
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(startFreq, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(endFreq, audioCtx.currentTime + 0.08);
+
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.08);
+    }
+
     // Live Clock for Windows Taskbar
     function updateClock() {
       const now = new Date();
@@ -658,6 +709,7 @@
 
     startButton.addEventListener('click', (e) => {
       e.stopPropagation();
+      playClickSound();
       startMenu.classList.toggle('open');
       startButton.classList.toggle('active');
     });
@@ -676,17 +728,14 @@
 
     function toggleDonateWindow() {
       const isOpen = donateWindow.classList.contains('open');
+      playWindowSound(!isOpen);
       if (isOpen) {
-        // Закрываем окно "Помощь"
         donateWindow.classList.remove('open');
         taskHelp.classList.remove('active');
-        // Возвращаем активность главной кнопке
         taskMain.classList.add('active');
       } else {
-        // Открываем окно "Помощь"
         donateWindow.classList.add('open');
         taskHelp.classList.add('active');
-        // Делаем главную кнопку неактивной (выпуклой)
         taskMain.classList.remove('active');
       }
     }
@@ -694,22 +743,25 @@
     taskHelp.addEventListener('click', toggleDonateWindow);
     closeDonateBtn.addEventListener('click', toggleDonateWindow);
 
-    // Клик по основной кнопке также переключает фокус назад
     taskMain.addEventListener('click', () => {
+      playClickSound();
       if (donateWindow.classList.contains('open')) {
         donateWindow.classList.remove('open');
         taskHelp.classList.remove('active');
         taskMain.classList.add('active');
+        playWindowSound(false);
       }
     });
 
     // Preset Amount Helper
     function setAmount(val) {
+      playClickSound();
       document.getElementById('donorAmount').value = val;
     }
 
-    // Redirect to DonationAlerts with exact params
+    // Redirect to DonationAlerts with exact URL parameters
     document.getElementById('sendDonateBtn').addEventListener('click', () => {
+      playClickSound();
       const amount = encodeURIComponent(document.getElementById('donorAmount').value || 100);
       const currency = encodeURIComponent(document.getElementById('donorCurrency').value);
       const message = encodeURIComponent(document.getElementById('donorMessage').value.trim());
