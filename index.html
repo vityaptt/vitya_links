@@ -97,17 +97,18 @@
       padding-top: 2px;
     }
 
-    /* Медленно крутящийся ретро-курсор вокруг кнопки */
+    /* Вращающийся курсор ожидания (песочные часы Win98) */
     .orbiting-cursor {
       position: absolute;
-      width: 24px;
-      height: 24px;
-      background-image: url('https://win98icons.alexmeub.com/icons/png/help_bubble-0.png'); /* Иконка указателя или курсора */
+      width: 20px;
+      height: 20px;
+      background-image: url('https://win98icons.alexmeub.com/icons/png/help_bubble-0.png');
       background-size: contain;
       background-repeat: no-repeat;
       pointer-events: none;
       animation: orbit 4s linear infinite;
       z-index: 10;
+      transition: opacity 0.3s ease;
     }
 
     @keyframes orbit {
@@ -187,6 +188,7 @@
       position: relative;
       padding-bottom: 30px;
       overflow: hidden;
+      display: none; /* Скрыто до окончания загрузки */
     }
 
     .desktop-wallpaper {
@@ -491,6 +493,7 @@
       padding: 2px 4px;
       justify-content: space-between;
       z-index: 9999;
+      display: none; /* Скрыто до окончания загрузки */
     }
 
     .start-container {
@@ -652,7 +655,7 @@
 </head>
 <body>
 
-  <!-- Стартовый экран с большой кнопкой и крутящимся курсором -->
+  <!-- Стартовый экран с кнопкой и плавающим курсором -->
   <div id="startOverlay">
     <div class="start-prompt-window">
       <div class="title-bar">
@@ -664,7 +667,7 @@
       <div class="start-prompt-body">
         <div class="start-prompt-title">Нажмите кнопку для запуска системы:</div>
         <div class="launcher-wrapper">
-          <div class="orbiting-cursor"></div>
+          <div class="orbiting-cursor" id="orbitCursor"></div>
           <button class="launcher-btn" id="launchButton">
             <img src="https://win98icons.alexmeub.com/icons/png/computer_explorer-0.png" width="20" height="20" alt="PC">
             Запустить систему
@@ -840,7 +843,7 @@
   </div>
 
   <!-- Windows Taskbar -->
-  <div class="taskbar">
+  <div class="taskbar" id="taskbar">
     <div style="display: flex; align-items: center; overflow: hidden; flex: 1;">
       <div class="start-container">
         <button class="start-button" id="startButton">
@@ -929,19 +932,24 @@
     // Логика нажатия на стартовую кнопку
     const startOverlay = document.getElementById('startOverlay');
     const launchButton = document.getElementById('launchButton');
+    const orbitCursor = document.getElementById('orbitCursor');
     const bootScreen = document.getElementById('bootScreen');
     const bootProgress = document.getElementById('bootProgress');
     const startupSound = document.getElementById('startupSound');
+    const desktop = document.getElementById('desktop');
+    const taskbar = document.getElementById('taskbar');
 
     launchButton.addEventListener('click', () => {
       initAudio();
       playClickSound();
 
-      // Убираем окно с кнопкой
+      // Моментально гасим курсор вокруг кнопки при клике
+      orbitCursor.style.opacity = '0';
+
+      // Убираем окно с кнопкой и сразу показываем boot-экран (без мерцания рабочего стола)
       startOverlay.style.opacity = '0';
       setTimeout(() => {
         startOverlay.style.display = 'none';
-        // Показываем boot-экран и запускаем прогресс
         bootScreen.style.display = 'flex';
         startBootSequence();
       }, 300);
@@ -955,7 +963,7 @@
         if (progress >= 100) {
           clearInterval(bootInterval);
           
-          // Проигрываем ваш стартовый звук window-open.mp3
+          // Проигрываем стартовый звук window-open.mp3
           if (startupSound) {
             startupSound.currentTime = 0;
             startupSound.volume = 0.5;
@@ -966,6 +974,9 @@
             bootScreen.style.opacity = '0';
             setTimeout(() => {
               bootScreen.style.display = 'none';
+              // Включаем отображение рабочего стола и панели задач только после загрузки
+              desktop.style.display = 'block';
+              taskbar.style.display = 'flex';
             }, 500);
           }, 300);
         }
