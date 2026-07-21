@@ -212,7 +212,7 @@
       top: 10px;
       right: 10px;
       z-index: 100;
-      width: 335px;
+      width: 380px;
     }
 
     .desktop-icons {
@@ -777,10 +777,10 @@
 
         <!-- Кнопки управления -->
         <div style="display: flex; gap: 4px; width: 100%; justify-content: space-between;">
-          <button class="win-button" style="width: 50px; height: 26px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); prevTrack()" title="Предыдущий">⏮</button>
-          <button class="win-button" id="audioPlayBtn" style="width: 115px; height: 26px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); toggleAudioPlay()">▶ Play</button>
-          <button class="win-button" style="width: 50px; height: 26px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); nextTrack()" title="Следующий">⏭</button>
-          <button class="win-button" style="width: 50px; height: 26px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); stopAudio()" title="Стоп">
+          <button class="win-button" style="width: 60px; height: 26px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); prevTrack()" title="Предыдущий">⏮</button>
+          <button class="win-button" id="audioPlayBtn" style="min-width: 125px; height: 26px; padding: 0 8px; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); toggleAudioPlay()">▶ Play</button>
+          <button class="win-button" style="width: 60px; height: 26px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); nextTrack()" title="Следующий">⏭</button>
+          <button class="win-button" style="width: 60px; height: 26px; padding: 0; justify-content: center; flex-shrink: 0;" onclick="playClickSound(); stopAudio()" title="Стоп">
             <span style="display:inline-block; width:8px; height:8px; background:#000;"></span>
           </button>
         </div>
@@ -794,7 +794,7 @@
 
         <!-- Громкость -->
         <div style="display: flex; gap: 6px; width: 100%; align-items: center; font-size: 11px;">
-          <img src="https://win98icons.alexmeub.com/icons/png/volume-0.png" width="16" height="16" alt="Volume" id="volumeIcon" style="image-rendering: pixelated; flex-shrink: 0;">
+          <span id="volumeIcon" style="font-size: 14px; flex-shrink: 0;" title="Громкость">🔊</span>
           <input type="range" id="volumeSlider" min="0" max="1" value="0.8" step="0.01" style="flex: 1; cursor: pointer;" oninput="changeVolume(this.value)" title="Громкость плеера">
         </div>
 
@@ -1154,9 +1154,9 @@
       audio.volume = val;
       const icon = document.getElementById('volumeIcon');
       if (val == 0) {
-        icon.src = "https://win98icons.alexmeub.com/icons/png/volume_muted-0.png";
+        icon.textContent = "🔇";
       } else {
-        icon.src = "https://win98icons.alexmeub.com/icons/png/volume-0.png";
+        icon.textContent = "🔊";
       }
     }
 
@@ -1413,7 +1413,7 @@
       } else {
         mainWin.style.left = 'calc(50% - 180px)'; mainWin.style.top = '150px';
         donateWin.style.left = 'calc(50% + 175px)'; donateWin.style.top = '180px';
-        playerWin.style.left = 'auto'; playerWin.style.right = '10px'; playerWin.style.top = '10px'; playerWin.style.width = '335px';
+        playerWin.style.left = 'auto'; playerWin.style.right = '10px'; playerWin.style.top = '10px'; playerWin.style.width = '380px';
         guestbookWin.style.left = 'calc(50% - 320px)'; guestbookWin.style.top = '220px';
       }
     }
