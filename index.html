@@ -1236,7 +1236,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, addDoc, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCKo0rXgyP_DU1BNG9iqQfmm8h49twimVE",
@@ -1249,7 +1249,11 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    
+    // Включаем надежное локальное кэширование для мобильных сетей
+    const db = initializeFirestore(app, {
+      localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
+    });
 
     window.postGuestbookMessage = async function(e) {
       e.preventDefault();
@@ -1274,9 +1278,25 @@
 
     function listenGuestbook() {
       const container = document.getElementById('guestbookMessages');
+      
+      // Защита от долгой загрузки на мобильном интернете (таймаут 7 секунд)
+      let isFirstResponseReceived = false;
+      const loadTimeout = setTimeout(() => {
+        if (!isFirstResponseReceived) {
+          container.innerHTML = `
+            <div class="guestbook-msg">
+              <span class="author">Система</span>
+              <div class="text" style="color: #a00;">Медленное соединение. Проверьте интернет или обновите страницу.</div>
+            </div>`;
+        }
+      }, 7000);
+
       const q = query(collection(db, "messages"), orderBy("timestamp", "asc"), limit(50));
 
       onSnapshot(q, (snapshot) => {
+        isFirstResponseReceived = true;
+        clearTimeout(loadTimeout);
+
         let messages = [];
         snapshot.forEach((doc) => {
           const data = doc.data();
@@ -1305,6 +1325,15 @@
           </div>
         `).join('');
         container.scrollTop = container.scrollHeight;
+      }, (error) => {
+        isFirstResponseReceived = true;
+        clearTimeout(loadTimeout);
+        console.error("Ошибка слушателя Firebase:", error);
+        container.innerHTML = `
+          <div class="guestbook-msg">
+            <span class="author">Система</span>
+            <div class="text" style="color: #a00;">Ошибка синхронизации с облаком.</div>
+          </div>`;
       });
     }
 
