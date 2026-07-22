@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ВИТЯ 02 - Desktop</title>
   
+  <!-- Open Graph / Превью для Telegram и соцсетей -->
+  <meta property="og:title" content="ВИТЯ 02 — Персональная система" />
+  <meta property="og:description" content="Классический интерфейс, музыка, ссылки и гостевая книга." />
+  <meta property="og:image" content="https://i.imgur.com/sOxw8Mn.png" />
+  <meta property="og:url" content="https://vitya.space/" />
+  <meta property="og:type" content="website" />
+
   <link rel="icon" href="https://win98icons.alexmeub.com/icons/png/windows-0.png" type="image/png">
   <link rel="stylesheet" href="https://unpkg.com/98.css" />
 
@@ -603,7 +610,7 @@
       font-size: 11px;
       padding: 2px 10px;
       height: 22px;
-      flex: 0 0 auto; /* На ПК кнопки не растягиваются на всю ширину, а имеют фиксированный размер под контент */
+      flex: 0 0 auto;
       min-width: 120px;
       max-width: 160px;
       background: #c0c0c0;
@@ -636,7 +643,6 @@
       background: #d4d4d4;
     }
 
-    /* Адаптивное сжатие только для мобильных устройств при открытии > 3 окон */
     @media (max-width: 768px) {
       .taskbar.compact-tasks .task-item {
         flex: unset;
@@ -775,7 +781,7 @@
   <div class="desktop" id="desktop">
     <div class="desktop-wallpaper">ВИТЯ 02</div>
 
-    <!-- Classic Audio Player Window (Playlist from muzlo) -->
+    <!-- Classic Audio Player Window -->
     <div class="window top-right-player" id="playerWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -788,16 +794,13 @@
       </div>
       <div class="window-body" style="padding: 10px; gap: 8px;">
         
-        <!-- Аудио элемент -->
         <audio id="audioTrack" preload="auto"></audio>
 
-        <!-- Экран дисплея трека -->
         <div style="width: 100%; background: #000; color: #00ff00; font-family: 'Courier New', monospace; font-size: 11px; padding: 6px; border: 2px solid; border-color: #808080 #fff #fff #808080; min-height: 42px; display: flex; flex-direction: column; justify-content: center;">
           <div id="currentTrackTitle" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;">Загрузка...</div>
           <div id="currentTrackSub" style="color: #00aa00; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10px;">Папка /muzlo/</div>
         </div>
 
-        <!-- Таймлайн -->
         <div style="width: 100%; display: flex; flex-direction: column; gap: 2px;">
           <div style="display: flex; justify-content: space-between; font-size: 9px; font-family: 'Courier New', monospace;">
             <span id="currentTime">0:00</span>
@@ -806,7 +809,6 @@
           <input type="range" id="trackTimeline" min="0" max="100" value="0" step="0.1" style="width: 100%; cursor: pointer;" oninput="onTimelineInput(this.value)" onchange="onTimelineChange(this.value)">
         </div>
 
-        <!-- Кнопки управления -->
         <div style="display: flex; gap: 4px; width: 100%; justify-content: space-between;">
           <button class="win-button" style="width: 52px; height: 24px; padding: 0; justify-content: center; flex-shrink: 0; font-size: 11px;" onclick="playClickSound(); prevTrack()" title="Предыдущий">⏮</button>
           <button class="win-button" id="audioPlayBtn" style="flex: 1; height: 24px; padding: 0 4px; justify-content: center; flex-shrink: 0; font-size: 11px;" onclick="playClickSound(); toggleAudioPlay()">▶ Play</button>
@@ -816,14 +818,11 @@
           </button>
         </div>
 
-        <!-- Выпадающий список треков -->
         <div style="width: 100%; display: flex; gap: 4px; align-items: center;">
           <select id="playlistSelect" style="width: 100%; font-family: 'MS Sans Serif', Arial; font-size: 11px; background: #fff; border: 2px solid; border-color: #808080 #fff #fff #808080; padding: 2px;" onchange="selectTrackFromDropdown(this.value)">
-            <!-- Заполняется автоматически через JS -->
           </select>
         </div>
 
-        <!-- Громкость -->
         <div style="display: flex; gap: 6px; width: 100%; align-items: center; font-size: 11px;">
           <span id="volumeIcon" style="font-size: 14px; flex-shrink: 0;" title="Громкость">🔊</span>
           <input type="range" id="volumeSlider" min="0" max="1" value="0.8" step="0.01" style="flex: 1; cursor: pointer;" oninput="changeVolume(this.value)" title="Громкость плеера">
@@ -1048,7 +1047,6 @@
     </div>
   </div>
 
-  <!-- Полный плейлист из папки muzlo -->
   <script>
     const playlist = [
       { title: "track.mp3", src: "muzlo/track.mp3" },
@@ -1200,7 +1198,6 @@
     initPlaylist();
   </script>
 
-  <!-- Firebase & Twitch Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -1302,7 +1299,6 @@
     setInterval(checkTwitchStatus, 60000);
   </script>
 
-  <!-- Интерфейс и Звуки -->
   <script>
     let audioCtx = null;
 
