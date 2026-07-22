@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ВИТЯ 02 - Desktop</title>
   
-  <!-- Open Graph / Превью для Telegram (только картинка) -->
   <meta property="og:title" content="" />
   <meta property="og:description" content="" />
   <meta property="og:image" content="https://raw.githubusercontent.com/vityaptt/vitya_links/refs/heads/main/vitya.png" />
@@ -34,7 +33,7 @@
       user-select: none;
     }
 
-    /* Скроллбар для ПК (с классическими стрелочками) */
+    /* Кастомный ретро-скроллбар с явными кнопками-стрелками */
     @media (min-width: 769px) {
       ::-webkit-scrollbar {
         width: 16px;
@@ -50,36 +49,22 @@
       }
       ::-webkit-scrollbar-button:vertical:start:decrement,
       ::-webkit-scrollbar-button:vertical:end:increment {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background: #c0c0c0;
         border: 1px solid;
         border-color: #fff #808080 #808080 #fff;
         height: 16px;
-        position: relative;
+        font-size: 9px;
+        color: #000;
+        line-height: 1;
       }
-      /* Стрелка вверх на верхней кнопке */
-      ::-webkit-scrollbar-button:vertical:start:decrement::after {
-        content: "";
-        position: absolute;
-        top: 5px;
-        left: 4px;
-        width: 0;
-        height: 0;
-        border-left: 3px solid transparent;
-        border-right: 3px solid transparent;
-        border-bottom: 4px solid #000;
+      ::-webkit-scrollbar-button:vertical:start:decrement::before {
+        content: "▲";
       }
-      /* Стрелка вниз на нижней кнопке */
-      ::-webkit-scrollbar-button:vertical:end:increment::after {
-        content: "";
-        position: absolute;
-        top: 6px;
-        left: 4px;
-        width: 0;
-        height: 0;
-        border-left: 3px solid transparent;
-        border-right: 3px solid transparent;
-        border-top: 4px solid #000;
+      ::-webkit-scrollbar-button:vertical:end:increment::before {
+        content: "▼";
       }
       ::-webkit-scrollbar-button:vertical:start:increment,
       ::-webkit-scrollbar-button:vertical:end:decrement {
@@ -1269,6 +1254,9 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    let isInitialLoad = true;
+    let lastMessageCount = 0;
+
     window.postGuestbookMessage = async function(e) {
       e.preventDefault();
       const authorInput = document.getElementById('gbAuthor');
@@ -1285,6 +1273,9 @@
           timestamp: new Date()
         });
         textInput.value = '';
+        // Принудительно скроллим вниз при отправке своего сообщения
+        const container = document.getElementById('guestbookMessages');
+        container.scrollTop = container.scrollHeight;
       } catch (err) {
         console.error("Ошибка отправки сообщения: ", err);
       }
@@ -1323,10 +1314,14 @@
           </div>
         `).join('');
 
-        // Скроллим в самый низ с небольшой задержкой для надежности рендеринга
-        setTimeout(() => {
-          container.scrollTop = container.scrollHeight;
-        }, 50);
+        // Скроллим в самый низ при самом первом открытии или если добавилось новое сообщение
+        if (isInitialLoad || messages.length > lastMessageCount) {
+          setTimeout(() => {
+            container.scrollTop = container.scrollHeight;
+          }, 50);
+          isInitialLoad = false;
+        }
+        lastMessageCount = messages.length;
       });
     }
 
