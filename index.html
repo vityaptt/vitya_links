@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ВИТЯ 02 - Desktop</title>
   
-  <meta property="og:title" content="" />
-  <meta property="og:description" content="" />
   <meta property="og:image" content="https://raw.githubusercontent.com/vityaptt/vitya_links/refs/heads/main/vitya.png" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -1111,13 +1109,9 @@
     audio.volume = 0.8;
 
     function initPlaylist() {
-      playlistSelect.innerHTML = '';
-      playlist.forEach((track, index) => {
-        const option = document.createElement('option');
-        option.value = index;
-        option.textContent = `${index + 1}. ${track.title}`;
-        playlistSelect.appendChild(option);
-      });
+      playlistSelect.innerHTML = playlist.map((track, index) => 
+        `<option value="${index}">${index + 1}. ${track.title}</option>`
+      ).join('');
       loadTrack(currentTrackIndex);
     }
 
@@ -1250,7 +1244,6 @@
 
     const app = initializeApp(firebaseConfig);
     
-    // Включаем надежное локальное кэширование для мобильных сетей
     const db = initializeFirestore(app, {
       localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
     });
@@ -1279,7 +1272,6 @@
     function listenGuestbook() {
       const container = document.getElementById('guestbookMessages');
       
-      // Защита от долгой загрузки на мобильном интернете (таймаут 7 секунд)
       let isFirstResponseReceived = false;
       const loadTimeout = setTimeout(() => {
         if (!isFirstResponseReceived) {
@@ -1483,10 +1475,15 @@
       else startButton.classList.remove('active');
     });
 
+    // Оптимизированное закрытие меню Пуск при клике вне его
     document.addEventListener('click', (e) => {
-      if (!startMenu.contains(e.target) && e.target !== startButton && !startButton.contains(e.target)) {
-        startMenu.classList.remove('open');
-        startButton.classList.remove('active');
+      if (!startMenu.classList.contains('open')) return;
+
+      if (!startMenu.contains(e.target) && !startButton.contains(e.target)) {
+        if (e.target.closest('.window, .desktop-icon, .task-item')) {
+          startMenu.classList.remove('open');
+          startButton.classList.remove('active');
+        }
       }
     });
 
@@ -1513,12 +1510,17 @@
     initWindowPositions();
 
     let highestZ = 100;
+
+    // Словарь связки ID окон с ID элементов в таскбаре (убраны лишние условия if/else)
+    const windowTaskMap = {
+      'mainWindow': 'taskMain',
+      'donateWindow': 'taskHelp',
+      'playerWindow': 'taskPlayer',
+      'guestbookWindow': 'taskGuestbook'
+    };
+
     function getTaskBtn(id) {
-      if (id === 'mainWindow') return document.getElementById('taskMain');
-      if (id === 'donateWindow') return document.getElementById('taskHelp');
-      if (id === 'playerWindow') return document.getElementById('taskPlayer');
-      if (id === 'guestbookWindow') return document.getElementById('taskGuestbook');
-      return null;
+      return document.getElementById(windowTaskMap[id]);
     }
 
     function updateTaskbarMode() {
@@ -1625,10 +1627,10 @@
       });
     }
 
-    makeDraggable(document.getElementById('mainWindow'));
-    makeDraggable(document.getElementById('donateWindow'));
-    makeDraggable(document.getElementById('playerWindow'));
-    makeDraggable(document.getElementById('guestbookWindow'));
+    // Инициализация перетаскивания всех окон через компактный цикл
+    Object.keys(windowTaskMap).forEach(id => {
+      makeDraggable(document.getElementById(id));
+    });
     
     openWindow('mainWindow');
   </script>
