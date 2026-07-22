@@ -34,6 +34,66 @@
       user-select: none;
     }
 
+    /* Кастомный ретро-скроллбар с одной кнопкой сверху и одной снизу (как в примере) */
+    @media (min-width: 769px) {
+      .guestbook-content::-webkit-scrollbar {
+        width: 16px;
+      }
+      .guestbook-content::-webkit-scrollbar-track {
+        background: #dfdfdf;
+        border-left: 1px solid #808080;
+        /* Убираем стандартные кнопки браузера */
+        background-image: 
+          linear-gradient(to bottom, #c0c0c0, #c0c0c0),
+          linear-gradient(to bottom, #c0c0c0, #c0c0c0);
+        background-size: 16px 16px, 16px 16px;
+        background-repeat: no-repeat;
+        background-position: top center, bottom center;
+      }
+      .guestbook-content::-webkit-scrollbar-thumb {
+        background: #c0c0c0;
+        box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
+        border: none;
+        min-height: 24px;
+      }
+      .guestbook-content::-webkit-scrollbar-button:start:decrement {
+        display: block;
+        height: 16px;
+        background-color: #c0c0c0;
+        box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><polygon points='4,0 8,6 0,6' fill='black'/></svg>");
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      .guestbook-content::-webkit-scrollbar-button:start:decrement:active {
+        box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+      }
+      .guestbook-content::-webkit-scrollbar-button:end:increment {
+        display: block;
+        height: 16px;
+        background-color: #c0c0c0;
+        box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><polygon points='0,0 8,0 4,6' fill='black'/></svg>");
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      .guestbook-content::-webkit-scrollbar-button:end:increment:active {
+        box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+      }
+      /* Убираем дублирующие кнопки вверху/внизу трека */
+      .guestbook-content::-webkit-scrollbar-button:start:increment,
+      .guestbook-content::-webkit-scrollbar-button:end:decrement {
+        display: none;
+      }
+    }
+
+    /* Скрытие слайдера громкости на мобильных устройствах */
+    @media (max-width: 768px) {
+      .mobile-hide-volume {
+        display: none !important;
+      }
+    }
+
     /* Start Overlay */
     #startOverlay {
       position: fixed;
@@ -824,7 +884,8 @@
           </select>
         </div>
 
-        <div style="display: flex; gap: 6px; width: 100%; align-items: center; font-size: 11px;">
+        <!-- Блок громкости (скрывается на мобильных устройствах, остается на ПК) -->
+        <div class="mobile-hide-volume" style="width: 100%; display: flex; gap: 6px; align-items: center; font-size: 11px;">
           <span id="volumeIcon" style="font-size: 14px; flex-shrink: 0;" title="Громкость">🔊</span>
           <input type="range" id="volumeSlider" min="0" max="1" value="0.8" step="0.01" style="flex: 1; cursor: pointer;" oninput="changeVolume(this.value)" title="Громкость плеера">
         </div>
@@ -1183,10 +1244,12 @@
     function changeVolume(val) {
       audio.volume = val;
       const icon = document.getElementById('volumeIcon');
-      if (val == 0) {
-        icon.textContent = "🔇";
-      } else {
-        icon.textContent = "🔊";
+      if (icon) {
+        if (val == 0) {
+          icon.textContent = "🔇";
+        } else {
+          icon.textContent = "🔊";
+        }
       }
     }
 
@@ -1478,7 +1541,7 @@
       document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
       document.querySelectorAll('.task-item').forEach(t => t.classList.remove('active'));
       win.classList.add('active');
-      const taskBtn = getTaskBtn(winId);
+      const taskBtn = getTaskBtn(winId); ро
       if (taskBtn) taskBtn.classList.add('active');
     }
 
