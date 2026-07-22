@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ВИТЯ 02 - Desktop</title>
   
-  <!-- Open Graph / Превью для Telegram (только картинка) -->
   <meta property="og:title" content="" />
   <meta property="og:description" content="" />
   <meta property="og:image" content="https://raw.githubusercontent.com/vityaptt/vitya_links/refs/heads/main/vitya.png" />
@@ -34,7 +33,7 @@
       user-select: none;
     }
 
-    /* Кастомный ретро-скроллбар с одной кнопкой сверху и одной снизу (как в примере) */
+    /* Кастомный ретро-скроллбар с одной кнопкой сверху и одной снизу */
     @media (min-width: 769px) {
       .guestbook-content::-webkit-scrollbar {
         width: 16px;
@@ -42,13 +41,7 @@
       .guestbook-content::-webkit-scrollbar-track {
         background: #dfdfdf;
         border-left: 1px solid #808080;
-        /* Убираем стандартные кнопки браузера */
-        background-image: 
-          linear-gradient(to bottom, #c0c0c0, #c0c0c0),
-          linear-gradient(to bottom, #c0c0c0, #c0c0c0);
-        background-size: 16px 16px, 16px 16px;
-        background-repeat: no-repeat;
-        background-position: top center, bottom center;
+        background-image: none;
       }
       .guestbook-content::-webkit-scrollbar-thumb {
         background: #c0c0c0;
@@ -56,45 +49,37 @@
         border: none;
         min-height: 24px;
       }
-      .guestbook-content::-webkit-scrollbar-button:start:decrement {
-        display: block;
-        height: 16px;
-        background-color: #c0c0c0;
-        box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><polygon points='4,0 8,6 0,6' fill='black'/></svg>");
-        background-repeat: no-repeat;
-        background-position: center;
-      }
-      .guestbook-content::-webkit-scrollbar-button:start:decrement:active {
-        box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
-      }
+      .guestbook-content::-webkit-scrollbar-button:start:decrement,
       .guestbook-content::-webkit-scrollbar-button:end:increment {
         display: block;
         height: 16px;
         background-color: #c0c0c0;
         box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><polygon points='0,0 8,0 4,6' fill='black'/></svg>");
         background-repeat: no-repeat;
         background-position: center;
       }
+      .guestbook-content::-webkit-scrollbar-button:start:decrement {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><polygon points='4,0 8,6 0,6' fill='black'/></svg>");
+      }
+      .guestbook-content::-webkit-scrollbar-button:end:increment {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><polygon points='0,0 8,0 4,6' fill='black'/></svg>");
+      }
+      .guestbook-content::-webkit-scrollbar-button:start:decrement:active,
       .guestbook-content::-webkit-scrollbar-button:end:increment:active {
         box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
       }
-      /* Убираем дублирующие кнопки вверху/внизу трека */
       .guestbook-content::-webkit-scrollbar-button:start:increment,
       .guestbook-content::-webkit-scrollbar-button:end:decrement {
         display: none;
       }
     }
 
-    /* Скрытие слайдера громкости на мобильных устройствах */
     @media (max-width: 768px) {
       .mobile-hide-volume {
         display: none !important;
       }
     }
 
-    /* Start Overlay */
     #startOverlay {
       position: fixed;
       top: 0;
@@ -187,7 +172,6 @@
       100% { opacity: 1; }
     }
 
-    /* Boot Screen */
     #bootScreen {
       position: fixed;
       top: 0;
@@ -249,7 +233,6 @@
       transition: width 0.1s linear;
     }
 
-    /* Desktop */
     .desktop {
       flex: 1;
       position: relative;
@@ -543,7 +526,6 @@
       color: #404040;
     }
 
-    /* Taskbar */
     .taskbar {
       position: fixed;
       bottom: 0;
@@ -745,13 +727,14 @@
       flex-shrink: 0;
     }
 
-    /* Guestbook */
     .guestbook-content {
       background: #fff;
       border: 2px solid;
       border-color: #808080 #fff #fff #808080;
       width: 100%;
-      height: 160px;
+      flex: 1;
+      min-height: 140px;
+      max-height: 250px;
       overflow-y: auto;
       padding: 6px;
       font-family: "Courier New", Courier, monospace;
@@ -803,10 +786,8 @@
 </head>
 <body>
 
-  <!-- Аудио элементы для UI -->
   <audio id="windowOpenAudio" src="window-open.mp3" preload="auto"></audio>
 
-  <!-- Start Overlay -->
   <div id="startOverlay">
     <div class="start-prompt-window">
       <div class="title-bar">
@@ -828,7 +809,6 @@
     </div>
   </div>
 
-  <!-- Boot Screen -->
   <div id="bootScreen">
     <div class="boot-logo-container">
       <div class="boot-title">ВИТЯ 02</div>
@@ -842,7 +822,6 @@
   <div class="desktop" id="desktop">
     <div class="desktop-wallpaper">ВИТЯ 02</div>
 
-    <!-- Classic Audio Player Window -->
     <div class="window top-right-player" id="playerWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -884,7 +863,6 @@
           </select>
         </div>
 
-        <!-- Блок громкости (скрывается на мобильных устройствах, остается на ПК) -->
         <div class="mobile-hide-volume" style="width: 100%; display: flex; gap: 6px; align-items: center; font-size: 11px;">
           <span id="volumeIcon" style="font-size: 14px; flex-shrink: 0;" title="Громкость">🔊</span>
           <input type="range" id="volumeSlider" min="0" max="1" value="0.8" step="0.01" style="flex: 1; cursor: pointer;" oninput="changeVolume(this.value)" title="Громкость плеера">
@@ -897,7 +875,6 @@
       </div>
     </div>
 
-    <!-- Desktop Shortcuts -->
     <div class="desktop-icons">
       <div class="desktop-icon" onclick="playClickSound(); openWindow('mainWindow')">
         <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" alt="VITYA.exe">
@@ -917,7 +894,6 @@
       </div>
     </div>
 
-    <!-- Main Window -->
     <div class="window open" id="mainWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -965,7 +941,6 @@
       </div>
     </div>
 
-    <!-- Donate Window -->
     <div class="window" id="donateWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -1009,7 +984,6 @@
       </div>
     </div>
 
-    <!-- Guestbook Window -->
     <div class="window" id="guestbookWindow" style="width: 380px;">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -1020,7 +994,7 @@
           <button aria-label="Close" onclick="closeWindow('guestbookWindow')"></button>
         </div>
       </div>
-      <div class="window-body" style="gap: 10px; padding: 10px;">
+      <div class="window-body" style="gap: 8px; padding: 10px; height: 320px; box-sizing: border-box;">
         <div class="guestbook-content" id="guestbookMessages">
           <div class="guestbook-msg">
             <span class="author">Система</span>
@@ -1045,7 +1019,6 @@
     </div>
   </div>
 
-  <!-- Start Menu -->
   <div class="start-menu" id="startMenu">
     <div class="start-menu-side">прив чд</div>
     <div class="start-menu-items">
@@ -1065,7 +1038,6 @@
     </div>
   </div>
 
-  <!-- Taskbar -->
   <div class="taskbar" id="taskbar">
     <div style="display: flex; align-items: center; overflow: hidden; flex: 1;">
       <div class="start-container">
@@ -1618,7 +1590,7 @@
       });
       titleBar.addEventListener('pointerup', (e) => {
         if (isDragging) {
-          isDragging, isDragging = false;
+          isDragging = false;
           try { titleBar.releasePointerCapture(e.pointerId); } catch (err) {}
         }
       });
@@ -1629,7 +1601,6 @@
     makeDraggable(document.getElementById('playerWindow'));
     makeDraggable(document.getElementById('guestbookWindow'));
     
-    // Инициализация стартового состояния окон: открываем только главное окно, остальные делаем скрытыми на панели
     openWindow('mainWindow');
   </script>
 </body>
