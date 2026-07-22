@@ -34,7 +34,7 @@
       user-select: none;
     }
 
-    /* Скроллбар для ПК (только внешние стрелки) */
+    /* Скроллбар для ПК (с классическими стрелочками) */
     @media (min-width: 769px) {
       ::-webkit-scrollbar {
         width: 16px;
@@ -55,6 +55,31 @@
         border: 1px solid;
         border-color: #fff #808080 #808080 #fff;
         height: 16px;
+        position: relative;
+      }
+      /* Стрелка вверх на верхней кнопке */
+      ::-webkit-scrollbar-button:vertical:start:decrement::after {
+        content: "";
+        position: absolute;
+        top: 5px;
+        left: 4px;
+        width: 0;
+        height: 0;
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+        border-bottom: 4px solid #000;
+      }
+      /* Стрелка вниз на нижней кнопке */
+      ::-webkit-scrollbar-button:vertical:end:increment::after {
+        content: "";
+        position: absolute;
+        top: 6px;
+        left: 4px;
+        width: 0;
+        height: 0;
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+        border-top: 4px solid #000;
       }
       ::-webkit-scrollbar-button:vertical:start:increment,
       ::-webkit-scrollbar-button:vertical:end:decrement {
@@ -1298,8 +1323,10 @@
           </div>
         `).join('');
 
-        // Скроллим в самый низ к новым сообщениям
-        container.scrollTop = container.scrollHeight;
+        // Скроллим в самый низ с небольшой задержкой для надежности рендеринга
+        setTimeout(() => {
+          container.scrollTop = container.scrollHeight;
+        }, 50);
       });
     }
 
