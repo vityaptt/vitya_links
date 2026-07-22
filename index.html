@@ -696,7 +696,7 @@
     }
 
     .task-item.visible {
-      display: flex;
+      display: flex !important;
     }
 
     .task-item.active {
@@ -715,7 +715,7 @@
         font-size: 0;
       }
       .taskbar.compact-tasks .task-item span {
-        display: none;
+        display: none !important;
       }
       .taskbar.compact-tasks .task-item img {
         margin: 0;
@@ -1078,7 +1078,7 @@
       <div class="taskbar-divider"></div>
       
       <div class="taskbar-tasks">
-        <button class="task-item visible active" id="taskMain" onclick="toggleTask('mainWindow')">
+        <button class="task-item" id="taskMain" onclick="toggleTask('mainWindow')">
           <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="12" height="12" alt="App">
           <span>ВИТЯ - Links</span>
         </button>
@@ -1541,7 +1541,7 @@
       document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
       document.querySelectorAll('.task-item').forEach(t => t.classList.remove('active'));
       win.classList.add('active');
-      const taskBtn = getTaskBtn(winId); ро
+      const taskBtn = getTaskBtn(winId);
       if (taskBtn) taskBtn.classList.add('active');
     }
 
@@ -1618,7 +1618,7 @@
       });
       titleBar.addEventListener('pointerup', (e) => {
         if (isDragging) {
-          isDragging = false;
+          isDragging, isDragging = false;
           try { titleBar.releasePointerCapture(e.pointerId); } catch (err) {}
         }
       });
@@ -1628,8 +1628,9 @@
     makeDraggable(document.getElementById('donateWindow'));
     makeDraggable(document.getElementById('playerWindow'));
     makeDraggable(document.getElementById('guestbookWindow'));
-    bringToFront('mainWindow');
-    updateTaskbarMode();
+    
+    // Инициализация стартового состояния окон: открываем только главное окно, остальные делаем скрытыми на панели
+    openWindow('mainWindow');
   </script>
 </body>
 </html>
