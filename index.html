@@ -556,6 +556,13 @@
       display: flex;
       gap: 4px;
       overflow-x: auto;
+      /* 98.css рисует win95-скроллбар глобально; в 30px-таскбаре он неуместен.
+         Вернуть родной браузерный после глобальной стилизации нельзя, поэтому прячем —
+         скролл пальцем/колесом продолжает работать, как и выглядит дефолт на мобиле. */
+      scrollbar-width: none;
+    }
+    .taskbar-tasks::-webkit-scrollbar {
+      display: none;
     }
     .task-item {
       display: none;
@@ -751,7 +758,9 @@
       height: 24px;
       padding: 0;
       justify-content: center;
-      flex-shrink: 0;
+      flex-shrink: 1;
+      min-width: 0;
+      overflow: hidden;
       font-size: 11px;
     }
     .player-btn-nav {
@@ -803,6 +812,60 @@
     .player-status-bar {
       margin-top: 2px;
     }
+    .context-menu {
+      display: none;
+      position: fixed;
+      min-width: 165px;
+      background: silver;
+      border: 2px solid;
+      border-color: var(--border-outset);
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
+      padding: 2px;
+      z-index: 20000;
+    }
+    .context-menu.open {
+      display: block;
+    }
+    .context-menu-item {
+      padding: 5px 26px 5px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #000;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .context-menu-item:hover {
+      background: navy;
+      color: #fff;
+    }
+    .context-menu-divider {
+      height: 1px;
+      background: grey;
+      border-bottom: 1px solid #fff;
+      margin: 3px 1px;
+    }
+    .selection-box {
+      display: none;
+      position: absolute;
+      border: 1px dotted #fff;
+      background: rgba(255, 255, 255, .1);
+      pointer-events: none;
+      z-index: 50;
+    }
+    .desktop-icon.selected {
+      border-color: rgba(255, 255, 255, .6);
+    }
+    .desktop-icon.selected img {
+      filter: brightness(.75) saturate(1.4);
+    }
+    .desktop-icon.selected span {
+      background: navy;
+      color: #fff;
+      text-shadow: none;
+    }
+    .desktop, .desktop-icon {
+      -webkit-touch-callout: none;
+    }
     /* iOS Safari принудительно зумит страницу при фокусе в поле со шрифтом меньше 16px
        и не возвращает масштаб обратно. Блок должен идти последним в стилях,
        иначе его перебивают объявления выше по файлу. */
@@ -846,6 +909,7 @@
   </div>
   <div class="desktop" id="desktop">
     <div class="desktop-wallpaper">ВИТЯ 02</div>
+    <div class="selection-box" id="selectionBox"></div>
     <div class="window top-right-player" id="playerWindow">
       <div class="title-bar">
         <div class="title-bar-text">
@@ -887,16 +951,16 @@
       </div>
     </div>
     <div class="desktop-icons">
-      <div class="desktop-icon" role="button" tabindex="0" onclick='openWindow("mainWindow")'>
+      <div class="desktop-icon" role="button" tabindex="0" data-window="mainWindow" onclick='openWindow("mainWindow")'>
         <img src="assets/icons/user_world-0.png" alt="VITYA.exe"> <span>ВИТЯ.exe</span>
       </div>
-      <div class="desktop-icon" role="button" tabindex="0" onclick='openWindow("donateWindow")'>
+      <div class="desktop-icon" role="button" tabindex="0" data-window="donateWindow" onclick='openWindow("donateWindow")'>
         <img src="assets/icons/help_sheet-0.png" alt="Donate"> <span>Донат</span>
       </div>
-      <div class="desktop-icon" role="button" tabindex="0" onclick='openWindow("playerWindow")'>
+      <div class="desktop-icon" role="button" tabindex="0" data-window="playerWindow" onclick='openWindow("playerWindow")'>
         <img src="assets/icons/cd_audio_cd_a-2.png" alt="Player"> <span>Плеер</span>
       </div>
-      <div class="desktop-icon" role="button" tabindex="0" onclick='openWindow("guestbookWindow")'>
+      <div class="desktop-icon" role="button" tabindex="0" data-window="guestbookWindow" onclick='openWindow("guestbookWindow")'>
         <img src="assets/icons/notepad-0.png" alt="Guestbook"> <span>Гостевая.txt</span>
       </div>
     </div>
@@ -1014,6 +1078,7 @@
       </a>
     </div>
   </div>
+  <div class="context-menu" id="contextMenu"></div>
   <div class="taskbar" id="taskbar">
     <div style="display:flex;align-items:center;overflow:hidden;flex:1">
       <div class="start-container">
@@ -1577,7 +1642,7 @@
         return;
       }
       const visibleCount = document.querySelectorAll(".task-item.visible").length;
-      taskbar.classList.toggle("compact-tasks", visibleCount > 3);
+      taskbar.classList.toggle("compact-tasks", visibleCount > 2);
     }
 
     function bringToFront(windowId) {
@@ -1599,8 +1664,8 @@
       updateTaskbarMode();
     }
 
-    function closeWindow(windowId) {
-      playCloseSound();
+    function closeWindow(windowId, silent) {
+      if (!silent) playCloseSound();
       document.getElementById(windowId).classList.remove("open", "active");
       const taskBtn = getTaskBtn(windowId);
       if (taskBtn) taskBtn.classList.remove("visible", "active");
@@ -1680,6 +1745,7 @@
     // ===== Перепозиционирование при смене мобилка <-> десктоп =====
     let wasMobile = isMobile(), resizeTimer;
     window.addEventListener("resize", () => {
+      hideContextMenu();
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         if (isMobile() !== wasMobile) {
@@ -1716,9 +1782,203 @@
       });
     })();
 
+    // ===== Выделение ярлыков рамкой (как на рабочем столе Windows) =====
+    const selectionBox = document.getElementById("selectionBox");
+    let selecting = false, selStartX = 0, selStartY = 0;
+
+    function clearIconSelection() {
+      document.querySelectorAll(".desktop-icon.selected").forEach(icon => icon.classList.remove("selected"));
+    }
+
+    function selectOnlyIcon(icon) {
+      clearIconSelection();
+      icon.classList.add("selected");
+    }
+
+    desktop.addEventListener("pointerdown", event => {
+      // Рамка тянется только мышью и только с пустого места рабочего стола
+      if (event.pointerType !== "mouse" || event.button !== 0) return;
+      if (event.target.closest(".window, .desktop-icon")) return;
+      const rect = desktop.getBoundingClientRect();
+      selecting = true;
+      selStartX = event.clientX - rect.left;
+      selStartY = event.clientY - rect.top;
+      selectionBox.style.left = selStartX + "px";
+      selectionBox.style.top = selStartY + "px";
+      selectionBox.style.width = "0px";
+      selectionBox.style.height = "0px";
+      selectionBox.style.display = "block";
+      clearIconSelection();
+      desktop.setPointerCapture(event.pointerId);
+    });
+
+    desktop.addEventListener("pointermove", event => {
+      if (!selecting) return;
+      const rect = desktop.getBoundingClientRect(),
+            x = event.clientX - rect.left,
+            y = event.clientY - rect.top,
+            left = Math.min(x, selStartX),
+            top = Math.min(y, selStartY),
+            width = Math.abs(x - selStartX),
+            height = Math.abs(y - selStartY);
+      selectionBox.style.left = left + "px";
+      selectionBox.style.top = top + "px";
+      selectionBox.style.width = width + "px";
+      selectionBox.style.height = height + "px";
+
+      // Подсвечиваем ярлыки, которые пересекаются с рамкой
+      const boxLeft = rect.left + left, boxTop = rect.top + top,
+            boxRight = boxLeft + width, boxBottom = boxTop + height;
+      document.querySelectorAll(".desktop-icon").forEach(icon => {
+        const r = icon.getBoundingClientRect(),
+              intersects = !(r.right < boxLeft || r.left > boxRight || r.bottom < boxTop || r.top > boxBottom);
+        icon.classList.toggle("selected", intersects);
+      });
+    });
+
+    function endSelection(event) {
+      if (!selecting) return;
+      selecting = false;
+      selectionBox.style.display = "none";
+      try {
+        desktop.releasePointerCapture(event.pointerId);
+      } catch (error) {}
+    }
+    desktop.addEventListener("pointerup", endSelection);
+    desktop.addEventListener("pointercancel", endSelection);
+
+    // ===== Контекстное меню (ПКМ, на телефоне — долгий тап) =====
+    const contextMenu = document.getElementById("contextMenu"),
+          desktopIcons = document.querySelector(".desktop-icons");
+
+    function refreshDesktop() {
+      clearIconSelection();
+      desktopIcons.style.visibility = "hidden";
+      setTimeout(() => {
+        desktopIcons.style.visibility = "visible";
+      }, 160);
+    }
+
+    function closeAllWindows() {
+      const openIds = Object.keys(windowTaskMap)
+        .filter(id => document.getElementById(id).classList.contains("open"));
+      if (openIds.length === 0) return;
+      playCloseSound();
+      openIds.forEach(id => closeWindow(id, true));
+    }
+
+    function showContextMenu(x, y, windowId) {
+      if (windowId) {
+        contextMenu.innerHTML = '<div class="context-menu-item" data-action="open">Открыть приложение</div>';
+        contextMenu.dataset.window = windowId;
+      } else {
+        contextMenu.innerHTML =
+          '<div class="context-menu-item" data-action="refresh">Обновить</div>' +
+          '<div class="context-menu-divider"></div>' +
+          '<div class="context-menu-item" data-action="closeAll">Закрыть все окна</div>';
+        delete contextMenu.dataset.window;
+      }
+      contextMenu.style.left = x + "px";
+      contextMenu.style.top = y + "px";
+      contextMenu.classList.add("open");
+      // Не даём меню вылезти за границы экрана
+      const rect = contextMenu.getBoundingClientRect();
+      if (rect.right > window.innerWidth - 4) {
+        contextMenu.style.left = Math.max(2, window.innerWidth - rect.width - 4) + "px";
+      }
+      if (rect.bottom > window.innerHeight - 34) {
+        contextMenu.style.top = Math.max(2, window.innerHeight - rect.height - 34) + "px";
+      }
+    }
+
+    function hideContextMenu() {
+      contextMenu.classList.remove("open");
+    }
+
+    desktop.addEventListener("contextmenu", event => {
+      const icon = event.target.closest(".desktop-icon");
+      // Внутри окон оставляем родное меню браузера (копирование текста и т.п.)
+      if (!icon && event.target.closest(".window")) return;
+      event.preventDefault();
+      if (icon) {
+        selectOnlyIcon(icon);
+      } else {
+        clearIconSelection();
+      }
+      showContextMenu(event.clientX, event.clientY, icon ? icon.dataset.window : null);
+    });
+
+    contextMenu.addEventListener("click", event => {
+      const item = event.target.closest(".context-menu-item");
+      if (!item) return;
+      const action = item.dataset.action,
+            windowId = contextMenu.dataset.window;
+      hideContextMenu();
+      if (action === "refresh") refreshDesktop();
+      else if (action === "closeAll") closeAllWindows();
+      else if (action === "open" && windowId) openWindow(windowId);
+    });
+
+    document.addEventListener("pointerdown", event => {
+      if (contextMenu.classList.contains("open") && !contextMenu.contains(event.target)) {
+        hideContextMenu();
+      }
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") hideContextMenu();
+    });
+    window.addEventListener("blur", hideContextMenu);
+
+    // Долгий тап на телефоне = правый клик
+    let longPressTimer = null, longPressX = 0, longPressY = 0, suppressNextClick = false;
+
+    function cancelLongPress() {
+      if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+      }
+    }
+
+    desktop.addEventListener("pointerdown", event => {
+      if (event.pointerType === "mouse") return;
+      if (event.target.closest(".window")) return;
+      const icon = event.target.closest(".desktop-icon");
+      longPressX = event.clientX;
+      longPressY = event.clientY;
+      longPressTimer = setTimeout(() => {
+        longPressTimer = null;
+        suppressNextClick = true;
+        if (icon) {
+          selectOnlyIcon(icon);
+        } else {
+          clearIconSelection();
+        }
+        playClickSound();
+        showContextMenu(longPressX, longPressY, icon ? icon.dataset.window : null);
+      }, 500);
+    });
+
+    desktop.addEventListener("pointermove", event => {
+      if (!longPressTimer) return;
+      if (Math.abs(event.clientX - longPressX) > 10 || Math.abs(event.clientY - longPressY) > 10) {
+        cancelLongPress();
+      }
+    });
+    desktop.addEventListener("pointerup", cancelLongPress);
+    desktop.addEventListener("pointercancel", cancelLongPress);
+
+    // После долгого тапа гасим клик, чтобы ярлык не открылся сам собой
+    document.addEventListener("click", event => {
+      if (suppressNextClick) {
+        suppressNextClick = false;
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    }, true);
+
     // ===== Звук клика на кнопках и иконках =====
     document.addEventListener("click", event => {
-      if (event.target.closest(".win-button, .desktop-icon, .start-menu-item")) {
+      if (event.target.closest(".win-button, .desktop-icon, .start-menu-item, .context-menu-item")) {
         playClickSound();
       }
     });
