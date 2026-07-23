@@ -48,6 +48,8 @@
     }
     @media (max-width: 768px) {
       .mobile-hide-volume { display: none !important; }
+      /* iOS Safari автоматически зумит в поля со шрифтом < 16px и не отзумливает обратно */
+      .guestbook-form input, .guestbook-form textarea { font-size: 16px; }
     }
     #startOverlay {
       position: fixed;
@@ -1374,6 +1376,20 @@
         console.error("Twitch check error:", error);
       }
     }
+
+    // Enter в поле текста отправляет сообщение (Shift+Enter — перенос строки).
+    // requestSubmit прогоняет нативную валидацию required-полей.
+    document.getElementById("gbText").addEventListener("keydown", event => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        const form = event.target.closest("form");
+        if (form.requestSubmit) {
+          form.requestSubmit();
+        } else {
+          form.dispatchEvent(new Event("submit", { cancelable: true }));
+        }
+      }
+    });
 
     listenGuestbook();
     checkTwitchStatus();
