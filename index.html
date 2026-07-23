@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ВИТЯ 02 - Desktop</title>
   <meta property="og:image" content="https://raw.githubusercontent.com/vityaptt/vitya_links/refs/heads/main/vitya.png">
   <meta property="og:type" content="website">
@@ -17,8 +17,21 @@
       --border-inset: #808080 #fff #fff #808080;
       --border-outset: #fff #808080 #808080 #fff;
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background-color: teal; font-family: "MS Sans Serif", Arial, sans-serif; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; user-select: none; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: teal;
+      font-family: "MS Sans Serif", Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      user-select: none;
+    }
     @media (min-width: 769px) {
       .guestbook-content::-webkit-scrollbar { width: 16px; }
       .guestbook-content::-webkit-scrollbar-track { background: #dfdfdf; border-left: 1px solid grey; background-image: none; }
@@ -29,73 +42,551 @@
       .guestbook-content::-webkit-scrollbar-button:end:increment:active, .guestbook-content::-webkit-scrollbar-button:start:decrement:active { box-shadow: var(--bevel-pressed); }
       .guestbook-content::-webkit-scrollbar-button:end:decrement, .guestbook-content::-webkit-scrollbar-button:start:increment { display: none; }
     }
-    @media (max-width: 768px) { .mobile-hide-volume { display: none !important; } }
-    #startOverlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: teal; z-index: 999999; display: flex; align-items: center; justify-content: center; transition: opacity .5s ease; }
-    .start-prompt-window { width: 340px; background: silver; box-shadow: var(--bevel-raised); padding: 3px; }
-    .start-prompt-body { padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
-    .start-prompt-title { font-weight: 700; font-size: 13px; color: #000; }
-    .launcher-wrapper { position: relative; width: 220px; height: 60px; margin: 10px auto; display: flex; align-items: center; justify-content: center; }
-    .launcher-btn { width: 100%; height: 100%; background: silver; box-shadow: var(--bevel-raised); border: none; font-family: "MS Sans Serif", Arial, sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: #000; }
-    .launcher-btn:active { box-shadow: var(--bevel-pressed); padding-top: 2px; }
-    .orbiting-cursor { position: absolute; width: 24px; height: 24px; background-image: url('cursor.png'); background-size: contain; background-repeat: no-repeat; pointer-events: none; animation: orbit 4s steps(56, end) infinite; z-index: 10; transition: opacity .3s ease; }
-    @keyframes orbit { 0% { transform: rotate(0) translate(130px) rotate(0); } 100% { transform: rotate(360deg) translate(130px) rotate(-360deg); } }
-    @keyframes blink { 0% { opacity: 1; } 50% { opacity: .2; } 100% { opacity: 1; } }
-    #bootScreen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: teal; z-index: 99999; display: none; flex-direction: column; align-items: center; justify-content: center; color: #fff; transition: opacity .5s ease; }
-    .boot-logo-container { background: silver; border: 3px solid #000; box-shadow: inset -2px -2px grey, inset 2px 2px #fff; padding: 30px 40px; text-align: center; color: #000; max-width: 90vw; }
-    .boot-title { font-family: Arial, sans-serif; font-weight: 900; font-size: 56px; letter-spacing: 3px; transform: scaleY(1.3); display: inline-block; margin-bottom: 10px; text-shadow: 2px 2px 0 #fff; }
-    .boot-subtitle { font-size: 14px; font-weight: 700; color: navy; margin-bottom: 20px; }
-    .progress-bar-container { width: 260px; height: 20px; border: 2px solid; border-color: var(--border-inset); background: #fff; padding: 2px; margin: 0 auto; }
-    .progress-bar-fill { height: 100%; background: navy; width: 0%; transition: width .1s linear; }
-    .desktop { flex: 1; position: relative; padding-bottom: 30px; overflow: hidden; display: none; }
-    .desktop-wallpaper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: Arial, sans-serif; font-weight: 900; font-size: 80px; color: rgba(255,255,255,.18); letter-spacing: 6px; text-transform: uppercase; pointer-events: none; text-align: center; line-height: 1; white-space: nowrap; }
-    .top-right-player { position: absolute; top: 10px; right: 10px; z-index: 100; width: 360px; }
-    .desktop-icons { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 20px; z-index: 5; }
-    .desktop-icon { display: flex; flex-direction: column; align-items: center; width: 75px; cursor: pointer; padding: 4px; border: 1px transparent dashed; }
-    .desktop-icon:hover { border-color: rgba(255,255,255,.5); }
-    .desktop-icon img { width: 32px; height: 32px; margin-bottom: 4px; image-rendering: pixelated; }
-    .desktop-icon span { color: #fff; font-size: 11px; text-align: center; text-shadow: 1px 1px 1px #000; word-wrap: break-word; line-height: 1.2; }
-    .window { width: 360px; max-width: 95vw; box-shadow: var(--bevel-raised); position: absolute; touch-action: none; display: block; opacity: 0; transform: scale(.7); pointer-events: none; visibility: hidden; transition: opacity .35s steps(4, end), transform .35s steps(4, end); }
-    .window.open { opacity: 1; transform: scale(1); pointer-events: auto; visibility: visible; }
-    .title-bar { background: linear-gradient(90deg, #7a7a7a, #b5b5b5); padding: 3px 2px 3px 3px; display: flex; align-items: center; justify-content: space-between; cursor: grab; }
-    .window.active .title-bar { background: linear-gradient(90deg, navy, #1084d0); }
-    .title-bar:active { cursor: grabbing; }
-    .title-bar-text { color: #fff; font-weight: 700; letter-spacing: .5px; display: flex; align-items: center; gap: 6px; font-size: 12px; }
-    .window-body { padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 16px; background-color: silver; position: relative; }
-    .money-bg { position: relative; overflow: hidden; }
-    .money-bg::before { content: "$  $  $  $\n$  $  $  $\n$  $  $  $"; position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; opacity: .12; font-family: "Courier New", monospace; font-size: 52px; font-weight: 900; line-height: 58px; color: #000; pointer-events: none; word-wrap: break-word; white-space: pre-wrap; }
-    .site-title { font-family: Arial, sans-serif; font-weight: 900; font-size: 38px; color: #000; text-transform: uppercase; letter-spacing: 2px; display: inline-block; transform: scaleY(1.4); margin: 10px 0 14px 0; text-shadow: 1px 1px 0 #fff; }
-    .status-field { width: 100%; background: #fff; border: 2px solid; border-color: var(--border-inset); padding: 8px 12px; font-size: 11px; display: flex; align-items: center; gap: 10px; z-index: 2; }
-    .status-icon { width: 32px; height: 32px; background-color: navy; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 18px; border: 1px solid #000; flex-shrink: 0; }
-    .status-text { color: #000; line-height: 1.3; }
-    .links-container { width: 100%; display: flex; flex-direction: column; gap: 10px; z-index: 2; }
-    .win-button { display: flex; align-items: center; justify-content: flex-start; gap: 10px; width: 100%; padding: 8px 12px; text-decoration: none; color: #000 !important; font-weight: 700; font-size: 13px; background: silver; box-shadow: var(--bevel-raised); cursor: pointer; border: none; outline: 0; }
-    .win-button:active { box-shadow: var(--bevel-pressed); padding: 9px 11px 7px 13px; }
-    .button-icon { width: 20px; height: 20px; object-fit: contain; image-rendering: pixelated; }
-    .da-header { width: 100%; border: 2px solid; border-color: var(--border-inset); background: linear-gradient(90deg, #f60, #f93); position: relative; height: 65px; display: flex; align-items: center; padding: 8px 12px; gap: 12px; z-index: 2; }
-    .da-avatar-container { width: 42px; height: 42px; border: 2px solid; border-color: var(--border-inset); background: silver; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
-    .da-avatar { width: 28px; height: 28px; object-fit: contain; image-rendering: pixelated; }
-    .da-user-info { color: #fff; font-weight: 700; font-size: 16px; text-shadow: 1px 1px 2px #000; letter-spacing: .5px; }
-    .status-bar { width: 100%; display: flex; gap: 2px; margin-top: 4px; z-index: 2; }
-    .status-bar-field { background: silver; border: 1px solid; border-color: var(--border-inset); padding: 2px 6px; font-size: 11px; color: #404040; }
-    .taskbar { position: fixed; bottom: 0; left: 0; right: 0; height: 30px; background: silver; border-top: 2px solid #fff; align-items: center; padding: 2px 4px; justify-content: space-between; z-index: 9999; display: none; }
-    .start-container { position: relative; }
-    .start-button { display: flex; align-items: center; gap: 4px; font-weight: 700; font-size: 12px; padding: 2px 6px; height: 22px; box-shadow: var(--bevel-raised); background: silver; border: none; cursor: pointer; }
-    .start-button.active, .start-button:active { box-shadow: var(--bevel-pressed); }
-    .start-menu { display: none; position: fixed; bottom: 34px; left: 4px; width: 220px; background: silver; border: 2px solid; border-color: var(--border-outset); box-shadow: 2px 2px 5px rgba(0,0,0,.5); z-index: 10000; }
-    .start-menu.open { display: flex; }
-    .start-menu-side { width: 26px; background: linear-gradient(0deg, navy, #1084d0); writing-mode: vertical-rl; transform: rotate(180deg); color: #fff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: flex-end; padding: 8px 4px; letter-spacing: 1px; }
-    .start-menu-items { flex: 1; display: flex; flex-direction: column; padding: 2px; }
-    .start-menu-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; text-decoration: none; color: #000; font-size: 11px; font-weight: 700; }
-    .start-menu-item:hover { background-color: navy; color: #fff; }
-    .start-menu-item img { width: 16px; height: 16px; }
-    .start-menu-divider { height: 1px; background: grey; border-bottom: 1px solid #fff; margin: 2px 0; }
-    .taskbar-divider { width: 2px; height: 20px; background: grey; border-right: 1px solid #fff; margin: 0 4px; }
-    .taskbar-tasks { flex: 1; display: flex; gap: 4px; overflow-x: auto; }
-    .task-item { display: none; align-items: center; gap: 4px; font-size: 11px; padding: 2px 10px; height: 22px; flex: 0 0 auto; min-width: 120px; max-width: 160px; background: silver; box-shadow: var(--bevel-raised); font-weight: 700; cursor: pointer; border: none; white-space: nowrap; overflow: hidden; }
-    .task-item img { flex-shrink: 0; }
-    .task-item span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; width: 100%; }
-    .task-item.visible { display: flex !important; }
-    .task-item.active { box-shadow: var(--bevel-pressed); background: #d4d4d4; }
+    @media (max-width: 768px) {
+      .mobile-hide-volume { display: none !important; }
+    }
+    #startOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: teal;
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity .5s ease;
+    }
+    .start-prompt-window {
+      width: 340px;
+      background: silver;
+      box-shadow: var(--bevel-raised);
+      padding: 3px;
+    }
+    .start-prompt-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+    }
+    .start-prompt-title {
+      font-weight: 700;
+      font-size: 13px;
+      color: #000;
+    }
+    .launcher-wrapper {
+      position: relative;
+      width: 220px;
+      height: 60px;
+      margin: 10px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .launcher-btn {
+      width: 100%;
+      height: 100%;
+      background: silver;
+      box-shadow: var(--bevel-raised);
+      border: none;
+      font-family: "MS Sans Serif", Arial, sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #000;
+    }
+    .launcher-btn:active {
+      box-shadow: var(--bevel-pressed);
+      padding-top: 2px;
+    }
+    .orbiting-cursor {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background-image: url('cursor.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      animation: orbit 4s steps(56, end) infinite;
+      z-index: 10;
+      transition: opacity .3s ease;
+    }
+    @keyframes orbit {
+      0% { transform: rotate(0) translate(130px) rotate(0); }
+      100% { transform: rotate(360deg) translate(130px) rotate(-360deg); }
+    }
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: .2; }
+      100% { opacity: 1; }
+    }
+    #bootScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: teal;
+      z-index: 99999;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      transition: opacity .5s ease;
+    }
+    .boot-logo-container {
+      background: silver;
+      border: 3px solid #000;
+      box-shadow: inset -2px -2px grey, inset 2px 2px #fff;
+      padding: 30px 40px;
+      text-align: center;
+      color: #000;
+      max-width: 90vw;
+    }
+    .boot-title {
+      font-family: Arial, sans-serif;
+      font-weight: 900;
+      font-size: 56px;
+      letter-spacing: 3px;
+      transform: scaleY(1.3);
+      display: inline-block;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 0 #fff;
+    }
+    .boot-subtitle {
+      font-size: 14px;
+      font-weight: 700;
+      color: navy;
+      margin-bottom: 20px;
+    }
+    .progress-bar-container {
+      width: 260px;
+      height: 20px;
+      border: 2px solid;
+      border-color: var(--border-inset);
+      background: #fff;
+      padding: 2px;
+      margin: 0 auto;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: navy;
+      width: 0%;
+      transition: width .1s linear;
+    }
+    .desktop {
+      flex: 1;
+      position: relative;
+      padding-bottom: 30px;
+      overflow: hidden;
+      display: none;
+    }
+    .desktop-wallpaper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: Arial, sans-serif;
+      font-weight: 900;
+      font-size: 80px;
+      color: rgba(255, 255, 255, .18);
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      pointer-events: none;
+      text-align: center;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .top-right-player {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 100;
+      width: 360px;
+    }
+    .desktop-icons {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 5;
+    }
+    .desktop-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 75px;
+      cursor: pointer;
+      padding: 4px;
+      border: 1px transparent dashed;
+    }
+    .desktop-icon:hover {
+      border-color: rgba(255, 255, 255, .5);
+    }
+    .desktop-icon img {
+      width: 32px;
+      height: 32px;
+      margin-bottom: 4px;
+      image-rendering: pixelated;
+    }
+    .desktop-icon span {
+      color: #fff;
+      font-size: 11px;
+      text-align: center;
+      text-shadow: 1px 1px 1px #000;
+      word-wrap: break-word;
+      line-height: 1.2;
+    }
+    .window {
+      width: 360px;
+      max-width: 95vw;
+      box-shadow: var(--bevel-raised);
+      position: absolute;
+      touch-action: none;
+      display: block;
+      opacity: 0;
+      transform: scale(.7);
+      pointer-events: none;
+      visibility: hidden;
+      transition: opacity .35s steps(4, end), transform .35s steps(4, end);
+    }
+    .window.open {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+      visibility: visible;
+    }
+    .title-bar {
+      background: linear-gradient(90deg, #7a7a7a, #b5b5b5);
+      padding: 3px 2px 3px 3px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: grab;
+    }
+    .window.active .title-bar {
+      background: linear-gradient(90deg, navy, #1084d0);
+    }
+    .title-bar:active {
+      cursor: grabbing;
+    }
+    .title-bar-text {
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: .5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+    .window-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      background-color: silver;
+      position: relative;
+    }
+    .money-bg {
+      position: relative;
+      overflow: hidden;
+    }
+    .money-bg::before {
+      content: "$  $  $  $\n$  $  $  $\n$  $  $  $";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      opacity: .12;
+      font-family: "Courier New", monospace;
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 58px;
+      color: #000;
+      pointer-events: none;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+    .site-title {
+      font-family: Arial, sans-serif;
+      font-weight: 900;
+      font-size: 38px;
+      color: #000;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      display: inline-block;
+      transform: scaleY(1.4);
+      margin: 10px 0 14px 0;
+      text-shadow: 1px 1px 0 #fff;
+    }
+    .status-field {
+      width: 100%;
+      background: #fff;
+      border: 2px solid;
+      border-color: var(--border-inset);
+      padding: 8px 12px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 2;
+    }
+    .status-icon {
+      width: 32px;
+      height: 32px;
+      background-color: navy;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 18px;
+      border: 1px solid #000;
+      flex-shrink: 0;
+    }
+    .status-text {
+      color: #000;
+      line-height: 1.3;
+    }
+    .links-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 2;
+    }
+    .win-button {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      width: 100%;
+      padding: 8px 12px;
+      text-decoration: none;
+      color: #000 !important;
+      font-weight: 700;
+      font-size: 13px;
+      background: silver;
+      box-shadow: var(--bevel-raised);
+      cursor: pointer;
+      border: none;
+      outline: 0;
+    }
+    .win-button:active {
+      box-shadow: var(--bevel-pressed);
+      padding: 9px 11px 7px 13px;
+    }
+    .button-icon {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      image-rendering: pixelated;
+    }
+    .da-header {
+      width: 100%;
+      border: 2px solid;
+      border-color: var(--border-inset);
+      background: linear-gradient(90deg, #f60, #f93);
+      position: relative;
+      height: 65px;
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      gap: 12px;
+      z-index: 2;
+    }
+    .da-avatar-container {
+      width: 42px;
+      height: 42px;
+      border: 2px solid;
+      border-color: var(--border-inset);
+      background: silver;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .da-avatar {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      image-rendering: pixelated;
+    }
+    .da-user-info {
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      text-shadow: 1px 1px 2px #000;
+      letter-spacing: .5px;
+    }
+    .status-bar {
+      width: 100%;
+      display: flex;
+      gap: 2px;
+      margin-top: 4px;
+      z-index: 2;
+    }
+    .status-bar-field {
+      background: silver;
+      border: 1px solid;
+      border-color: var(--border-inset);
+      padding: 2px 6px;
+      font-size: 11px;
+      color: #404040;
+    }
+    .taskbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 30px;
+      background: silver;
+      border-top: 2px solid #fff;
+      align-items: center;
+      padding: 2px 4px;
+      justify-content: space-between;
+      z-index: 9999;
+      display: none;
+    }
+    .start-container {
+      position: relative;
+    }
+    .start-button {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 2px 6px;
+      height: 22px;
+      box-shadow: var(--bevel-raised);
+      background: silver;
+      border: none;
+      cursor: pointer;
+    }
+    .start-button.active, .start-button:active {
+      box-shadow: var(--bevel-pressed);
+    }
+    .start-menu {
+      display: none;
+      position: fixed;
+      bottom: 34px;
+      left: 4px;
+      width: 220px;
+      background: silver;
+      border: 2px solid;
+      border-color: var(--border-outset);
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
+      z-index: 10000;
+    }
+    .start-menu.open {
+      display: flex;
+    }
+    .start-menu-side {
+      width: 26px;
+      background: linear-gradient(0deg, navy, #1084d0);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 8px 4px;
+      letter-spacing: 1px;
+    }
+    .start-menu-items {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 2px;
+    }
+    .start-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-decoration: none;
+      color: #000;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .start-menu-item:hover {
+      background-color: navy;
+      color: #fff;
+    }
+    .start-menu-item img {
+      width: 16px;
+      height: 16px;
+    }
+    .start-menu-divider {
+      height: 1px;
+      background: grey;
+      border-bottom: 1px solid #fff;
+      margin: 2px 0;
+    }
+    .taskbar-divider {
+      width: 2px;
+      height: 20px;
+      background: grey;
+      border-right: 1px solid #fff;
+      margin: 0 4px;
+    }
+    .taskbar-tasks {
+      flex: 1;
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+    }
+    .task-item {
+      display: none;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      padding: 2px 10px;
+      height: 22px;
+      flex: 0 0 auto;
+      min-width: 120px;
+      max-width: 160px;
+      background: silver;
+      box-shadow: var(--bevel-raised);
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .task-item img {
+      flex-shrink: 0;
+    }
+    .task-item span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+      width: 100%;
+    }
+    .task-item.visible {
+      display: flex !important;
+    }
+    .task-item.active {
+      box-shadow: var(--bevel-pressed);
+      background: #d4d4d4;
+    }
     @media (max-width: 768px) {
       .taskbar.compact-tasks .task-item { flex: unset; width: 26px; min-width: 26px; max-width: 26px; padding: 0; justify-content: center; font-size: 0; }
       .taskbar.compact-tasks .task-item span { display: none !important; }
@@ -103,38 +594,208 @@
       .desktop-wallpaper { font-size: 40px; letter-spacing: 2px; }
       .desktop-icons { flex-direction: row; flex-wrap: wrap; top: 10px; left: 10px; gap: 10px; }
     }
-    .tray { border: 1px solid; border-color: var(--border-inset); padding: 2px 6px; font-size: 11px; height: 22px; display: flex; align-items: center; background: silver; flex-shrink: 0; }
-    .guestbook-content { background: #fff; border: 2px solid; border-color: var(--border-inset); width: 100%; flex: 1; min-height: 140px; max-height: 250px; overflow-y: auto; padding: 6px; font-family: "Courier New", Courier, monospace; font-size: 12px; display: flex; flex-direction: column; gap: 6px; }
-    .guestbook-msg { border-bottom: 1px dashed #ccc; padding-bottom: 4px; }
-    .guestbook-msg .author { font-weight: 700; color: navy; }
-    .guestbook-msg .date { font-size: 9px; color: #666; float: right; }
-    .guestbook-msg .text { margin-top: 2px; word-break: break-word; }
-    .guestbook-form { width: 100%; display: flex; flex-direction: column; gap: 6px; }
-    .guestbook-form input, .guestbook-form textarea { background: #fff; border: 2px solid; border-color: var(--border-inset); padding: 4px; font-family: "MS Sans Serif", Arial, sans-serif; font-size: 11px; outline: 0; width: 100%; }
-    .guestbook-form textarea { resize: none; height: 45px; }
-    .guestbook-submit-btn { justify-content: center; height: 26px; }
-    .load-older-btn { display: none; justify-content: center; font-size: 11px; padding: 4px; margin-bottom: 6px; flex-shrink: 0; }
-    .load-older-btn.visible { display: flex; }
-    .load-older-btn:disabled { cursor: default; opacity: .7; }
-    .player-body { padding: 10px; gap: 8px; }
-    .player-screen { width: 100%; background: #000; color: #0f0; font-family: "Courier New", monospace; font-size: 11px; padding: 6px; border: 2px solid; border-color: var(--border-inset); min-height: 42px; display: flex; flex-direction: column; justify-content: center; }
-    .player-screen .title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; }
-    .player-screen .subtitle { color: #0a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10px; }
-    .player-timeline { width: 100%; display: flex; flex-direction: column; gap: 2px; }
-    .player-timeline .time-row { display: flex; justify-content: space-between; font-size: 9px; font-family: "Courier New", monospace; }
-    .player-timeline input[type=range] { width: 100%; cursor: pointer; }
-    .player-controls { display: flex; gap: 4px; width: 100%; justify-content: space-between; }
-    .player-btn { height: 24px; padding: 0; justify-content: center; flex-shrink: 0; font-size: 11px; }
-    .player-btn-nav { width: 52px; }
-    .player-btn-play { flex: 1; padding: 0 4px; }
-    .player-btn-stop { width: 42px; }
-    .player-btn-stop .stop-icon { display: inline-block; width: 7px; height: 7px; background: #000; }
-    .player-playlist-row { width: 100%; display: flex; gap: 4px; align-items: center; }
-    .player-playlist-row select { width: 100%; font-family: "MS Sans Serif", Arial, sans-serif; font-size: 11px; background: #fff; border: 2px solid; border-color: var(--border-inset); padding: 2px; }
-    .player-volume-row { width: 100%; display: flex; gap: 6px; align-items: center; font-size: 11px; }
-    .player-volume-row .volume-icon { font-size: 14px; flex-shrink: 0; }
-    .player-volume-row input[type=range] { flex: 1; cursor: pointer; }
-    .player-status-bar { margin-top: 2px; }
+    .tray {
+      border: 1px solid;
+      border-color: var(--border-inset);
+      padding: 2px 6px;
+      font-size: 11px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      background: silver;
+      flex-shrink: 0;
+    }
+    .guestbook-content {
+      background: #fff;
+      border: 2px solid;
+      border-color: var(--border-inset);
+      width: 100%;
+      flex: 1;
+      min-height: 140px;
+      max-height: 250px;
+      overflow-y: auto;
+      padding: 6px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .guestbook-msg {
+      border-bottom: 1px dashed #ccc;
+      padding-bottom: 4px;
+    }
+    .guestbook-msg .author {
+      font-weight: 700;
+      color: navy;
+    }
+    .guestbook-msg .date {
+      font-size: 9px;
+      color: #666;
+      float: right;
+    }
+    .guestbook-msg .text {
+      margin-top: 2px;
+      word-break: break-word;
+    }
+    .guestbook-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .guestbook-form input, .guestbook-form textarea {
+      background: #fff;
+      border: 2px solid;
+      border-color: var(--border-inset);
+      padding: 4px;
+      font-family: "MS Sans Serif", Arial, sans-serif;
+      font-size: 11px;
+      outline: 0;
+      width: 100%;
+    }
+    .guestbook-form textarea {
+      resize: none;
+      height: 45px;
+    }
+    .guestbook-submit-btn {
+      justify-content: center;
+      height: 26px;
+    }
+    .gb-form-error {
+      display: none;
+      color: #a00;
+      font-size: 10px;
+      font-family: "MS Sans Serif", Arial, sans-serif;
+      line-height: 1.3;
+    }
+    .gb-form-error.visible {
+      display: block;
+    }
+    .load-older-btn {
+      display: none;
+      justify-content: center;
+      font-size: 11px;
+      padding: 4px;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+    .load-older-btn.visible {
+      display: flex;
+    }
+    .load-older-btn:disabled {
+      cursor: default;
+      opacity: .7;
+    }
+    .player-body {
+      padding: 10px;
+      gap: 8px;
+    }
+    .player-screen {
+      width: 100%;
+      background: #000;
+      color: #0f0;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      padding: 6px;
+      border: 2px solid;
+      border-color: var(--border-inset);
+      min-height: 42px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .player-screen .title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 700;
+    }
+    .player-screen .subtitle {
+      color: #0a0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 10px;
+    }
+    .player-timeline {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .player-timeline .time-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      font-family: "Courier New", monospace;
+    }
+    .player-timeline input[type=range] {
+      width: 100%;
+      cursor: pointer;
+    }
+    .player-controls {
+      display: flex;
+      gap: 4px;
+      width: 100%;
+      justify-content: space-between;
+    }
+    .player-btn {
+      height: 24px;
+      padding: 0;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 11px;
+    }
+    .player-btn-nav {
+      width: 52px;
+    }
+    .player-btn-play {
+      flex: 1;
+      padding: 0 4px;
+    }
+    .player-btn-stop {
+      width: 42px;
+    }
+    .player-btn-stop .stop-icon {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: #000;
+    }
+    .player-playlist-row {
+      width: 100%;
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .player-playlist-row select {
+      width: 100%;
+      font-family: "MS Sans Serif", Arial, sans-serif;
+      font-size: 11px;
+      background: #fff;
+      border: 2px solid;
+      border-color: var(--border-inset);
+      padding: 2px;
+    }
+    .player-volume-row {
+      width: 100%;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      font-size: 11px;
+    }
+    .player-volume-row .volume-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .player-volume-row input[type=range] {
+      flex: 1;
+      cursor: pointer;
+    }
+    .player-status-bar {
+      margin-top: 2px;
+    }
   </style>
 </head>
 <body>
@@ -235,15 +896,16 @@
         <div class="site-title">ВИТЯ</div>
         <div class="status-field">
           <div class="status-icon">V</div>
-          <div class="status-text"><strong>Состояние:</strong> Online<br><span>Нажми на ссылку ниже для перехода</span></div>
+          <div class="status-text">
+            <strong>Состояние:</strong> Online<br><span>Нажми на ссылку ниже для перехода</span>
+          </div>
         </div>
         <div class="links-container">
           <a href="https://t.me/datizaebalsuca" target="_blank" rel="noopener" class="win-button">
             <img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" class="button-icon" alt="Telegram"> Telegram
           </a>
           <a href="https://www.twitch.tv/vityaptt" target="_blank" rel="noopener" class="win-button">
-            <img src="https://win98icons.alexmeub.com/icons/png/display_properties-2.png" class="button-icon" alt="Twitch"> Twitch
-            <span id="twitchBtnBadge" style="display:none;background:red;color:#fff;font-size:9px;padding:1px 4px;margin-left:auto;font-weight:700">LIVE</span>
+            <img src="https://win98icons.alexmeub.com/icons/png/display_properties-2.png" class="button-icon" alt="Twitch"> Twitch <span id="twitchBtnBadge" style="display:none;background:red;color:#fff;font-size:9px;padding:1px 4px;margin-left:auto;font-weight:700">LIVE</span>
           </a>
           <a href="https://www.youtube.com/@potatkadwg/featured" target="_blank" rel="noopener" class="win-button">
             <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" class="button-icon" alt="YouTube"> YouTube
@@ -310,6 +972,7 @@
         <form class="guestbook-form" onsubmit="postGuestbookMessage(event)">
           <input type="text" id="gbAuthor" placeholder="Ваш ник / имя..." maxlength="25" required>
           <textarea id="gbText" placeholder="Оставьте весточку для Вити и гостей..." maxlength="180" required></textarea>
+          <div id="gbFormError" class="gb-form-error"></div>
           <button type="submit" class="win-button guestbook-submit-btn">Оставить запись</button>
         </form>
         <div class="status-bar" style="margin-top:0">
@@ -366,18 +1029,18 @@
   </div>
   <script>
     const playlist = [
-      {title:"track.mp3", src:"muzlo/track.mp3"},
-      {title:"Agent 007.mp3", src:"muzlo/Agent 007.mp3"},
-      {title:"First Contact.mp3", src:"muzlo/First Contact.mp3"},
-      {title:"Get Wild.mp3", src:"muzlo/Get Wild.mp3"},
-      {title:"Iceberg.mp3", src:"muzlo/Iceberg.mp3"},
-      {title:"Judgement Day.mp3", src:"muzlo/Judgement Day.mp3"},
-      {title:"Monolith.mp3", src:"muzlo/Monolith.mp3"},
-      {title:"Quagmire.mp3", src:"muzlo/Quagmire.mp3"},
-      {title:"Spasm.mp3", src:"muzlo/Spasm.mp3"},
-      {title:"Spectre - Mixed.mp3", src:"muzlo/Spectre - Mixed.mp3"},
-      {title:"T Minus - Mixed.mp3", src:"muzlo/T Minus - Mixed.mp3"},
-      {title:"Winner Takes All - Mixed.mp3", src:"muzlo/Winner Takes All - Mixed.mp3"}
+      {title: "track.mp3", src: "muzlo/track.mp3"},
+      {title: "Agent 007.mp3", src: "muzlo/Agent 007.mp3"},
+      {title: "First Contact.mp3", src: "muzlo/First Contact.mp3"},
+      {title: "Get Wild.mp3", src: "muzlo/Get Wild.mp3"},
+      {title: "Iceberg.mp3", src: "muzlo/Iceberg.mp3"},
+      {title: "Judgement Day.mp3", src: "muzlo/Judgement Day.mp3"},
+      {title: "Monolith.mp3", src: "muzlo/Monolith.mp3"},
+      {title: "Quagmire.mp3", src: "muzlo/Quagmire.mp3"},
+      {title: "Spasm.mp3", src: "muzlo/Spasm.mp3"},
+      {title: "Spectre - Mixed.mp3", src: "muzlo/Spectre - Mixed.mp3"},
+      {title: "T Minus - Mixed.mp3", src: "muzlo/T Minus - Mixed.mp3"},
+      {title: "Winner Takes All - Mixed.mp3", src: "muzlo/Winner Takes All - Mixed.mp3"}
     ];
     let currentTrackIndex = 0;
     const audio = document.getElementById("audioTrack"),
@@ -388,9 +1051,9 @@
           statusText = document.getElementById("audioStatusText"),
           titleEl = document.getElementById("currentTrackTitle"),
           playlistSelect = document.getElementById("playlistSelect");
-    let isSeeking = false;
+    let isSeeking = !1;
     function initPlaylist() {
-      playlistSelect.innerHTML = playlist.map((t, e) => `<option value="${e}">${e+1}. ${t.title}</option>`).join("");
+      playlistSelect.innerHTML = playlist.map((t, e) => `<option value="${e}">${e + 1}. ${t.title}</option>`).join("");
       loadTrack(currentTrackIndex);
     }
     function loadTrack(t) {
@@ -436,7 +1099,7 @@
       playCurrent();
     }
     function onTimelineInput(t) {
-      if (isSeeking = true, audio.duration) {
+      if (isSeeking = !0, audio.duration) {
         const e = t / 100 * audio.duration;
         currentTimeEl.textContent = formatTime(e);
       }
@@ -446,7 +1109,7 @@
         const e = t / 100 * audio.duration;
         audio.currentTime = e;
       }
-      isSeeking = false;
+      isSeeking = !1;
     }
     function changeVolume(t) {
       audio.volume = t;
@@ -458,7 +1121,9 @@
       return e + ":" + (n < 10 ? "0" : "") + n;
     }
     audio.volume = .8;
-    audio.addEventListener("loadedmetadata", () => { totalTimeEl.textContent = formatTime(audio.duration); });
+    audio.addEventListener("loadedmetadata", () => {
+      totalTimeEl.textContent = formatTime(audio.duration);
+    });
     audio.addEventListener("timeupdate", () => {
       if (!isSeeking && audio.duration) {
         const t = audio.currentTime / audio.duration * 100;
@@ -466,7 +1131,9 @@
         currentTimeEl.textContent = formatTime(audio.currentTime);
       }
     });
-    audio.addEventListener("ended", () => { nextTrack(); });
+    audio.addEventListener("ended", () => {
+      nextTrack();
+    });
     initPlaylist();
   </script>
   <script type="module">
@@ -482,20 +1149,33 @@
       measurementId: "G-CBGCJ1MFE0"
     },
     app = initializeApp(firebaseConfig),
-    db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
+    db = initializeFirestore(app, {
+      localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
+    });
     window.postGuestbookMessage = async function(e) {
       e.preventDefault();
       const t = document.getElementById("gbAuthor"),
             s = document.getElementById("gbText"),
-            a = t.value.trim(),
-            o = s.value.trim();
-      if (a && o) try {
-        await addDoc(collection(db, "messages"), { author: a, text: o, timestamp: new Date });
+            a = document.getElementById("gbFormError"),
+            o = t.value.trim(),
+            i = s.value.trim();
+      if (!o || !i) return;
+      const n = Array.from(allMessagesById.values()).sort((e, t) => t.millis - e.millis)[0];
+      if (n && n.author === o && n.text === i) return a.textContent = "Вы уже отправили это сообщение — нельзя повторять его подряд.", void a.classList.add("visible");
+      a.classList.remove("visible");
+      try {
+        await addDoc(collection(db, "messages"), {
+          author: o,
+          text: i,
+          timestamp: new Date
+        });
         s.value = "";
-      } catch (e) { console.error("Ошибка отправки сообщения: ", e); }
+      } catch (e) {
+        console.error("Ошибка отправки сообщения: ", e);
+      }
     };
     const PAGE_SIZE = 50, allMessagesById = new Map;
-    let latestLiveDocs = [], paginationCursor = null, hasMoreOlder = true, loadingOlder = false, paginationStarted = false;
+    let latestLiveDocs = [], paginationCursor = null, hasMoreOlder = !0, loadingOlder = !1, paginationStarted = !1;
     const messagesList = document.getElementById("guestbookMessagesList"),
           loadOlderBtn = document.getElementById("loadOlderBtn");
     function docToMessage(e) {
@@ -506,7 +1186,12 @@
         s = e.getTime();
         a = String(e.getDate()).padStart(2, "0") + "." + String(e.getMonth() + 1).padStart(2, "0") + "." + e.getFullYear() + " " + String(e.getHours()).padStart(2, "0") + ":" + String(e.getMinutes()).padStart(2, "0");
       }
-      return { author: t.author, text: t.text, date: a, millis: s };
+      return {
+        author: t.author,
+        text: t.text,
+        date: a,
+        millis: s
+      };
     }
     function updateLoadOlderButton() {
       hasMoreOlder ? (loadOlderBtn.classList.add("visible"), loadOlderBtn.disabled = loadingOlder, loadOlderBtn.textContent = loadingOlder ? "Загрузка..." : "↑ Показать более старые сообщения") : loadOlderBtn.classList.remove("visible");
@@ -526,7 +1211,7 @@
       t.scrollTop = e ? a + (t.scrollHeight - s) : t.scrollHeight;
     }
     function listenGuestbook() {
-      let e = false;
+      let e = !1;
       const t = setTimeout(() => {
         e || (messagesList.innerHTML = `
             <div class="guestbook-msg">
@@ -537,14 +1222,14 @@
       s = query(collection(db, "messages"), orderBy("timestamp", "desc"), limit(50));
       onSnapshot(s, s => {
         const a = !e;
-        e = true;
+        e = !0;
         clearTimeout(t);
         latestLiveDocs = s.docs;
         s.docs.forEach(e => allMessagesById.set(e.id, docToMessage(e)));
         a && !paginationStarted && (hasMoreOlder = 50 === s.docs.length, updateLoadOlderButton());
-        renderMessages(false);
+        renderMessages(!1);
       }, s => {
-        e = true;
+        e = !0;
         clearTimeout(t);
         console.error("Ошибка слушателя Firebase:", s);
         messagesList.innerHTML = `
@@ -561,28 +1246,30 @@
               s = document.getElementById("twitchTrayBadge"),
               a = document.getElementById("twitchBtnBadge");
         t && !t.includes("offline") && !t.includes("does not exist") && t.length > 1 ? (s && (s.style.display = "flex"), a && (a.style.display = "inline-block")) : (s && (s.style.display = "none"), a && (a.style.display = "none"));
-      } catch (e) { console.error("Twitch check error:", e); }
+      } catch (e) {
+        console.error("Twitch check error:", e);
+      }
     }
     window.loadOlderMessages = async function() {
       if (loadingOlder || !hasMoreOlder) return;
-      loadingOlder = true;
-      paginationStarted = true;
+      loadingOlder = !0;
+      paginationStarted = !0;
       updateLoadOlderButton();
       const e = paginationCursor || latestLiveDocs[latestLiveDocs.length - 1];
-      if (!e) return loadingOlder = false, hasMoreOlder = false, void updateLoadOlderButton();
+      if (!e) return loadingOlder = !1, hasMoreOlder = !1, void updateLoadOlderButton();
       try {
         const t = query(collection(db, "messages"), orderBy("timestamp", "desc"), startAfter(e), limit(50)),
               s = await getDocs(t);
         s.docs.forEach(e => allMessagesById.set(e.id, docToMessage(e)));
         s.docs.length > 0 && (paginationCursor = s.docs[s.docs.length - 1]);
-        s.docs.length < 50 && (hasMoreOlder = false);
+        s.docs.length < 50 && (hasMoreOlder = !1);
       } catch (e) {
         console.error("Ошибка загрузки старых сообщений:", e);
-        hasMoreOlder = false;
+        hasMoreOlder = !1;
       } finally {
-        loadingOlder = false;
+        loadingOlder = !1;
         updateLoadOlderButton();
-        renderMessages(true);
+        renderMessages(!0);
       }
     };
     listenGuestbook();
@@ -592,12 +1279,13 @@
   <script>
     let audioCtx = null;
     function initAudio() {
-      audioCtx || (audioCtx = new (window.AudioContext || window.webkitAudioContext));
+      audioCtx || (audioCtx = new(window.AudioContext || window.webkitAudioContext));
       "suspended" === audioCtx.state && audioCtx.resume();
     }
     function playClickSound() {
       if (initAudio(), !audioCtx) return;
-      const t = audioCtx.createOscillator(), e = audioCtx.createGain();
+      const t = audioCtx.createOscillator(),
+            e = audioCtx.createGain();
       t.type = "square";
       t.frequency.setValueAtTime(800, audioCtx.currentTime);
       t.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + .03);
@@ -610,7 +1298,8 @@
     }
     function playCloseSound() {
       if (!audioCtx) return;
-      const t = audioCtx.createOscillator(), e = audioCtx.createGain();
+      const t = audioCtx.createOscillator(),
+            e = audioCtx.createGain();
       t.type = "triangle";
       t.frequency.setValueAtTime(600, audioCtx.currentTime);
       t.frequency.exponentialRampToValueAtTime(350, audioCtx.currentTime + .07);
@@ -672,7 +1361,9 @@
     updateClock();
     const startButton = document.getElementById("startButton"),
           startMenu = document.getElementById("startMenu");
-    function isMobile() { return window.innerWidth <= 768; }
+    function isMobile() {
+      return window.innerWidth <= 768;
+    }
     function initWindowPositions() {
       const t = document.getElementById("mainWindow"),
             e = document.getElementById("donateWindow"),
@@ -704,8 +1395,15 @@
     });
     initWindowPositions();
     let highestZ = 100;
-    const windowTaskMap = { mainWindow: "taskMain", donateWindow: "taskHelp", playerWindow: "taskPlayer", guestbookWindow: "taskGuestbook" };
-    function getTaskBtn(t) { return document.getElementById(windowTaskMap[t]); }
+    const windowTaskMap = {
+      mainWindow: "taskMain",
+      donateWindow: "taskHelp",
+      playerWindow: "taskPlayer",
+      guestbookWindow: "taskGuestbook"
+    };
+    function getTaskBtn(t) {
+      return document.getElementById(windowTaskMap[t]);
+    }
     function updateTaskbarMode() {
       if (!isMobile()) return void taskbar.classList.remove("compact-tasks");
       document.querySelectorAll(".task-item.visible").length > 3 ? taskbar.classList.add("compact-tasks") : taskbar.classList.remove("compact-tasks");
@@ -737,20 +1435,27 @@
     }
     function toggleTask(t) {
       playClickSound();
-      const e = document.getElementById(t), n = getTaskBtn(t);
+      const e = document.getElementById(t),
+            n = getTaskBtn(t);
       e.classList.contains("open") ? e.classList.contains("active") ? (e.classList.remove("active"), n && n.classList.remove("active")) : (e.classList.add("open"), n && n.classList.add("visible"), bringToFront(t)) : openWindow(t);
       updateTaskbarMode();
     }
     function escapeHtml(t) {
-      return t.replace(/[&<>'"]/g, t => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[t] || t));
+      return t.replace(/[&<>'"]/g, t => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "'": "&#39;",
+        '"': "&quot;"
+      }[t] || t));
     }
     function makeDraggable(t) {
       const e = t.querySelector(".title-bar");
-      let n = false, o = 0, a = 0;
+      let n = !1, o = 0, a = 0;
       t.addEventListener("pointerdown", () => bringToFront(t.id));
       e.addEventListener("pointerdown", i => {
         if ("button" === i.target.tagName.toLowerCase()) return;
-        n = true;
+        n = !0;
         const s = t.getBoundingClientRect();
         o = i.clientX - s.left;
         a = i.clientY - s.top;
@@ -764,7 +1469,8 @@
       });
       e.addEventListener("pointermove", e => {
         if (!n) return;
-        let i = e.clientX - o, s = e.clientY - a;
+        let i = e.clientX - o,
+            s = e.clientY - a;
         s < 0 && (s = 0);
         s > window.innerHeight - 60 && (s = window.innerHeight - 60);
         t.style.left = i + "px";
@@ -772,13 +1478,19 @@
       });
       e.addEventListener("pointerup", t => {
         if (n) {
-          n = false;
-          try { e.releasePointerCapture(t.pointerId); } catch (t) {}
+          n = !1;
+          try {
+            e.releasePointerCapture(t.pointerId);
+          } catch (t) {}
         }
       });
     }
-    Object.keys(windowTaskMap).forEach(t => { makeDraggable(document.getElementById(t)); });
-    document.addEventListener("click", t => { t.target.closest(".win-button, .desktop-icon, .start-menu-item") && playClickSound(); });
+    Object.keys(windowTaskMap).forEach(t => {
+      makeDraggable(document.getElementById(t));
+    });
+    document.addEventListener("click", t => {
+      t.target.closest(".win-button, .desktop-icon, .start-menu-item") && playClickSound();
+    });
     openWindow("mainWindow");
   </script>
 </body>
