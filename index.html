@@ -4,12 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ВИТЯ 02 - Desktop</title>
-  <meta property="og:image" content="https://raw.githubusercontent.com/vityaptt/vitya_links/refs/heads/main/vitya.png">
+  <meta name="description" content="Витя (vityaptt) — все ссылки в одном месте: Twitch, YouTube, Telegram, донаты и гостевая книга. Сайт-визитка в стиле Windows 95.">
+  <meta property="og:title" content="ВИТЯ 02 — Desktop">
+  <meta property="og:description" content="Twitch, YouTube, Telegram, донаты и гостевая книга — всё в одном месте, в стиле Windows 95.">
+  <meta property="og:image" content="https://vitya.space/vitya.png">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vitya.space/">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://raw.githubusercontent.com/vityaptt/vitya_links/refs/heads/main/vitya.png">
-  <link rel="icon" href="https://win98icons.alexmeub.com/icons/png/windows-0.png" type="image/png">
-  <link rel="stylesheet" href="https://unpkg.com/98.css">
+  <meta name="twitter:image" content="https://vitya.space/vitya.png">
+  <link rel="icon" href="assets/icons/windows-0.png" type="image/png">
+  <link rel="stylesheet" href="assets/98.css">
   <style>
     :root {
       --bevel-raised: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
@@ -230,8 +234,9 @@
       padding: 4px;
       border: 1px transparent dashed;
     }
-    .desktop-icon:hover {
+    .desktop-icon:hover, .desktop-icon:focus-visible {
       border-color: rgba(255, 255, 255, .5);
+      outline: none;
     }
     .desktop-icon img {
       width: 32px;
@@ -606,6 +611,8 @@
       flex-shrink: 0;
     }
     .guestbook-content {
+      user-select: text;
+      -webkit-user-select: text;
       background: #fff;
       border: 2px solid;
       border-color: var(--border-inset);
@@ -804,7 +811,7 @@
     <div class="start-prompt-window">
       <div class="title-bar">
         <div class="title-bar-text">
-          <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" width="14" height="14" alt="icon"> ВИТЯ 02 - Setup
+          <img src="assets/icons/windows-0.png" width="14" height="14" alt="icon"> ВИТЯ 02 - Setup
         </div>
       </div>
       <div class="start-prompt-body">
@@ -812,7 +819,7 @@
         <div class="launcher-wrapper" id="launcherWrapper">
           <div class="orbiting-cursor" id="orbitCursor"></div>
           <button class="launcher-btn" id="launchButton">
-            <img src="https://win98icons.alexmeub.com/icons/png/computer_explorer-0.png" width="20" height="20" alt="PC"> Запустить систему
+            <img src="assets/icons/computer_explorer-0.png" width="20" height="20" alt="PC"> Запустить систему
           </button>
         </div>
       </div>
@@ -832,7 +839,7 @@
     <div class="window top-right-player" id="playerWindow">
       <div class="title-bar">
         <div class="title-bar-text">
-          <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" width="14" height="14" alt="Media Player"> Media Player - Плейлист
+          <img src="assets/icons/cd_audio_cd_a-2.png" width="14" height="14" alt="Media Player"> Media Player - Плейлист
         </div>
         <div class="title-bar-controls">
           <button aria-label="Close" onclick='closeWindow("playerWindow")'></button>
@@ -870,23 +877,23 @@
       </div>
     </div>
     <div class="desktop-icons">
-      <div class="desktop-icon" onclick='openWindow("mainWindow")'>
-        <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" alt="VITYA.exe"> <span>ВИТЯ.exe</span>
+      <div class="desktop-icon" role="button" tabindex="0" onclick='openWindow("mainWindow")'>
+        <img src="assets/icons/user_world-0.png" alt="VITYA.exe"> <span>ВИТЯ.exe</span>
       </div>
-      <div class="desktop-icon" onclick='openWindow("donateWindow")'>
-        <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" alt="Donate"> <span>Донат</span>
+      <div class="desktop-icon" role="button" tabindex="0" onclick='openWindow("donateWindow")'>
+        <img src="assets/icons/help_sheet-0.png" alt="Donate"> <span>Донат</span>
       </div>
-      <div class="desktop-icon" onclick='openWindow("playerWindow")'>
-        <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" alt="Player"> <span>Плеер</span>
+      <div class="desktop-icon" role="button" tabindex="0" onclick='openWindow("playerWindow")'>
+        <img src="assets/icons/cd_audio_cd_a-2.png" alt="Player"> <span>Плеер</span>
       </div>
-      <div class="desktop-icon" onclick='openWindow("guestbookWindow")'>
-        <img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png" alt="Guestbook"> <span>Гостевая.txt</span>
+      <div class="desktop-icon" role="button" tabindex="0" onclick='openWindow("guestbookWindow")'>
+        <img src="assets/icons/notepad-0.png" alt="Guestbook"> <span>Гостевая.txt</span>
       </div>
     </div>
     <div class="window open" id="mainWindow">
       <div class="title-bar">
         <div class="title-bar-text">
-          <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="14" height="14" alt="icon"> C:\WINDOWS\Personal\VITYA.exe
+          <img src="assets/icons/user_world-0.png" width="14" height="14" alt="icon"> C:\WINDOWS\Personal\VITYA.exe
         </div>
         <div class="title-bar-controls">
           <button aria-label="Close" onclick='closeWindow("mainWindow")'></button>
@@ -902,13 +909,13 @@
         </div>
         <div class="links-container">
           <a href="https://t.me/datizaebalsuca" target="_blank" rel="noopener" class="win-button">
-            <img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" class="button-icon" alt="Telegram"> Telegram
+            <img src="assets/icons/envelope_closed-0.png" class="button-icon" alt="Telegram"> Telegram
           </a>
           <a href="https://www.twitch.tv/vityaptt" target="_blank" rel="noopener" class="win-button">
-            <img src="https://win98icons.alexmeub.com/icons/png/display_properties-2.png" class="button-icon" alt="Twitch"> Twitch <span id="twitchBtnBadge" style="display:none;background:red;color:#fff;font-size:9px;padding:1px 4px;margin-left:auto;font-weight:700">LIVE</span>
+            <img src="assets/icons/display_properties-2.png" class="button-icon" alt="Twitch"> Twitch <span id="twitchBtnBadge" style="display:none;background:red;color:#fff;font-size:9px;padding:1px 4px;margin-left:auto;font-weight:700">LIVE</span>
           </a>
           <a href="https://www.youtube.com/@potatkadwg/featured" target="_blank" rel="noopener" class="win-button">
-            <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" class="button-icon" alt="YouTube"> YouTube
+            <img src="assets/icons/cd_audio_cd_a-2.png" class="button-icon" alt="YouTube"> YouTube
           </a>
         </div>
         <div class="status-bar">
@@ -920,7 +927,7 @@
     <div class="window" id="donateWindow">
       <div class="title-bar">
         <div class="title-bar-text">
-          <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="14" height="14" alt="Donate"> C:\WINDOWS\System\DonateWizard.exe
+          <img src="assets/icons/help_sheet-0.png" width="14" height="14" alt="Donate"> C:\WINDOWS\System\DonateWizard.exe
         </div>
         <div class="title-bar-controls">
           <button aria-label="Close" onclick='closeWindow("donateWindow")'></button>
@@ -934,14 +941,14 @@
           <div class="da-user-info">vityaptt</div>
         </div>
         <div class="links-container">
-          <a href="https://www.donationalerts.com/r/vityaptt?amount=100&currency=RUB&comment=dbffgggsdrgerg" target="_blank" rel="noopener" class="win-button">
-            <img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" class="button-icon" alt="DA"> DonationAlerts
+          <a href="https://www.donationalerts.com/r/vityaptt" target="_blank" rel="noopener" class="win-button">
+            <img src="assets/icons/envelope_closed-0.png" class="button-icon" alt="DA"> DonationAlerts
           </a>
           <a href="https://web.tribute.tg/d/NvR" target="_blank" rel="noopener" class="win-button">
             <img src="recycle_bin.png" class="button-icon" alt="Tribute"> Tribute
           </a>
           <a href="https://boosty.to/viteapotatkafm" target="_blank" rel="noopener" class="win-button">
-            <img src="https://win98icons.alexmeub.com/icons/png/key_padlock-0.png" class="button-icon" alt="Boosty"> Boosty
+            <img src="assets/icons/key_padlock-0.png" class="button-icon" alt="Boosty"> Boosty
           </a>
         </div>
         <div class="status-bar">
@@ -953,7 +960,7 @@
     <div class="window" id="guestbookWindow" style="width:380px">
       <div class="title-bar">
         <div class="title-bar-text">
-          <img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png" width="14" height="14" alt="Notepad"> Гостевая книга - Блокнот
+          <img src="assets/icons/notepad-0.png" width="14" height="14" alt="Notepad"> Гостевая книга - Блокнот
         </div>
         <div class="title-bar-controls">
           <button aria-label="Close" onclick='closeWindow("guestbookWindow")'></button>
@@ -986,14 +993,14 @@
     <div class="start-menu-side">прив чд</div>
     <div class="start-menu-items">
       <a href="https://open.spotify.com/user/gtahh91k0wd62si8reaw9c0w5?si=da4a95cad13442c1" target="_blank" rel="noopener" class="start-menu-item">
-        <img src="https://win98icons.alexmeub.com/icons/png/media_player-0.png" alt="Spotify"> Spotify
+        <img src="assets/icons/media_player-0.png" alt="Spotify"> Spotify
       </a>
       <a href="https://t.me/potatka" target="_blank" rel="noopener" class="start-menu-item">
-        <img src="https://win98icons.alexmeub.com/icons/png/address_book-0.png" alt="Telegram"> Личный Telegram
+        <img src="assets/icons/address_book-0.png" alt="Telegram"> Личный Telegram
       </a>
       <div class="start-menu-divider"></div>
       <a href="https://t.me/InYourEyesVault" target="_blank" rel="noopener" class="start-menu-item">
-        <img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png" alt="Memes"> Мемы (Vault)
+        <img src="assets/icons/game_solitaire-0.png" alt="Memes"> Мемы (Vault)
       </a>
     </div>
   </div>
@@ -1001,22 +1008,22 @@
     <div style="display:flex;align-items:center;overflow:hidden;flex:1">
       <div class="start-container">
         <button class="start-button" id="startButton">
-          <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" width="14" height="14" alt="Start"> <strong>Пуск</strong>
+          <img src="assets/icons/windows-0.png" width="14" height="14" alt="Start"> <strong>Пуск</strong>
         </button>
       </div>
       <div class="taskbar-divider"></div>
       <div class="taskbar-tasks">
         <button class="task-item" id="taskMain" onclick='toggleTask("mainWindow")'>
-          <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="12" height="12" alt="App"> <span>ВИТЯ - Links</span>
+          <img src="assets/icons/user_world-0.png" width="12" height="12" alt="App"> <span>ВИТЯ - Links</span>
         </button>
         <button class="task-item" id="taskHelp" onclick='toggleTask("donateWindow")'>
-          <img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="12" height="12" alt="Help"> <span>Донат</span>
+          <img src="assets/icons/help_sheet-0.png" width="12" height="12" alt="Help"> <span>Донат</span>
         </button>
         <button class="task-item" id="taskPlayer" onclick='toggleTask("playerWindow")'>
-          <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" width="12" height="12" alt="Player"> <span>Media Player</span>
+          <img src="assets/icons/cd_audio_cd_a-2.png" width="12" height="12" alt="Player"> <span>Media Player</span>
         </button>
         <button class="task-item" id="taskGuestbook" onclick='toggleTask("guestbookWindow")'>
-          <img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png" width="12" height="12" alt="Guestbook"> <span>Гостевая.txt</span>
+          <img src="assets/icons/notepad-0.png" width="12" height="12" alt="Guestbook"> <span>Гостевая.txt</span>
         </button>
       </div>
     </div>
@@ -1028,6 +1035,7 @@
     </div>
   </div>
   <script>
+    // ===== Медиаплеер =====
     const playlist = [
       {title: "track.mp3", src: "muzlo/track.mp3"},
       {title: "Agent 007.mp3", src: "muzlo/Agent 007.mp3"},
@@ -1051,31 +1059,44 @@
           statusText = document.getElementById("audioStatusText"),
           titleEl = document.getElementById("currentTrackTitle"),
           playlistSelect = document.getElementById("playlistSelect");
-    let isSeeking = !1;
+    let isSeeking = false;
+
     function initPlaylist() {
-      playlistSelect.innerHTML = playlist.map((t, e) => `<option value="${e}">${e + 1}. ${t.title}</option>`).join("");
+      playlistSelect.innerHTML = playlist
+        .map((track, index) => `<option value="${index}">${index + 1}. ${track.title}</option>`)
+        .join("");
       loadTrack(currentTrackIndex);
     }
-    function loadTrack(t) {
-      currentTrackIndex = t;
+
+    function loadTrack(index) {
+      currentTrackIndex = index;
       audio.src = playlist[currentTrackIndex].src;
       titleEl.textContent = playlist[currentTrackIndex].title;
       playlistSelect.value = currentTrackIndex;
       timeline.value = 0;
       currentTimeEl.textContent = "0:00";
     }
+
     function playCurrent() {
       audio.play().then(() => {
         playBtn.innerHTML = "❚❚ Pause";
         statusText.textContent = "Воспроизведение...";
-      }).catch(t => {
-        console.error("Ошибка воспроизведения audio:", t);
+      }).catch(error => {
+        console.error("Ошибка воспроизведения audio:", error);
         statusText.textContent = "Ошибка воспроизведения";
       });
     }
+
     function toggleAudioPlay() {
-      audio.paused ? playCurrent() : (audio.pause(), playBtn.innerHTML = "▶ Play", statusText.textContent = "Пауза");
+      if (audio.paused) {
+        playCurrent();
+      } else {
+        audio.pause();
+        playBtn.innerHTML = "▶ Play";
+        statusText.textContent = "Пауза";
+      }
     }
+
     function stopAudio() {
       audio.pause();
       audio.currentTime = 0;
@@ -1084,50 +1105,58 @@
       currentTimeEl.textContent = "0:00";
       statusText.textContent = "Остановлено";
     }
+
     function nextTrack() {
       currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
       loadTrack(currentTrackIndex);
       playCurrent();
     }
+
     function prevTrack() {
       currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
       loadTrack(currentTrackIndex);
       playCurrent();
     }
-    function selectTrackFromDropdown(t) {
-      loadTrack(parseInt(t));
+
+    function selectTrackFromDropdown(value) {
+      loadTrack(parseInt(value));
       playCurrent();
     }
-    function onTimelineInput(t) {
-      if (isSeeking = !0, audio.duration) {
-        const e = t / 100 * audio.duration;
-        currentTimeEl.textContent = formatTime(e);
-      }
-    }
-    function onTimelineChange(t) {
+
+    function onTimelineInput(value) {
+      isSeeking = true;
       if (audio.duration) {
-        const e = t / 100 * audio.duration;
-        audio.currentTime = e;
+        const seconds = value / 100 * audio.duration;
+        currentTimeEl.textContent = formatTime(seconds);
       }
-      isSeeking = !1;
     }
-    function changeVolume(t) {
-      audio.volume = t;
-      const e = document.getElementById("volumeIcon");
-      e && (e.textContent = 0 == t ? "🔇" : "🔊");
+
+    function onTimelineChange(value) {
+      if (audio.duration) {
+        audio.currentTime = value / 100 * audio.duration;
+      }
+      isSeeking = false;
     }
-    function formatTime(t) {
-      const e = Math.floor(t / 60), n = Math.floor(t % 60);
-      return e + ":" + (n < 10 ? "0" : "") + n;
+
+    function changeVolume(value) {
+      audio.volume = value;
+      const icon = document.getElementById("volumeIcon");
+      if (icon) icon.textContent = value == 0 ? "🔇" : "🔊";
     }
-    audio.volume = .8;
+
+    function formatTime(totalSeconds) {
+      const minutes = Math.floor(totalSeconds / 60),
+            seconds = Math.floor(totalSeconds % 60);
+      return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+    }
+
+    audio.volume = 0.8;
     audio.addEventListener("loadedmetadata", () => {
       totalTimeEl.textContent = formatTime(audio.duration);
     });
     audio.addEventListener("timeupdate", () => {
       if (!isSeeking && audio.duration) {
-        const t = audio.currentTime / audio.duration * 100;
-        timeline.value = t;
+        timeline.value = audio.currentTime / audio.duration * 100;
         currentTimeEl.textContent = formatTime(audio.currentTime);
       }
     });
@@ -1137,8 +1166,10 @@
     initPlaylist();
   </script>
   <script type="module">
+    // ===== Гостевая книга (Firebase) и проверка Twitch-эфира =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, addDoc, query, orderBy, limit, onSnapshot, startAfter, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, addDoc, query, orderBy, limit, onSnapshot, startAfter, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyCKo0rXgyP_DU1BNG9iqQfmm8h49twimVE",
       authDomain: "vitya-guestbook.firebaseapp.com",
@@ -1147,91 +1178,141 @@
       messagingSenderId: "446796880365",
       appId: "1:446796880365:web:1e5849eb562645cb0b6fe4",
       measurementId: "G-CBGCJ1MFE0"
-    },
-    app = initializeApp(firebaseConfig),
-    db = initializeFirestore(app, {
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = initializeFirestore(app, {
       localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
     });
-    window.postGuestbookMessage = async function(e) {
-      e.preventDefault();
-      const t = document.getElementById("gbAuthor"),
-            s = document.getElementById("gbText"),
-            a = document.getElementById("gbFormError"),
-            o = t.value.trim(),
-            i = s.value.trim();
-      if (!o || !i) return;
-      const n = Array.from(allMessagesById.values()).sort((e, t) => t.millis - e.millis)[0];
-      if (n && n.author === o && n.text === i) return a.textContent = "Вы уже отправили это сообщение — нельзя повторять его подряд.", void a.classList.add("visible");
-      a.classList.remove("visible");
-      try {
-        await addDoc(collection(db, "messages"), {
-          author: o,
-          text: i,
-          timestamp: new Date
-        });
-        s.value = "";
-      } catch (e) {
-        console.error("Ошибка отправки сообщения: ", e);
-      }
-    };
-    const PAGE_SIZE = 50, allMessagesById = new Map;
-    let latestLiveDocs = [], paginationCursor = null, hasMoreOlder = !0, loadingOlder = !1, paginationStarted = !1;
+
+    const PAGE_SIZE = 50;
+    const allMessagesById = new Map();
+    let latestLiveDocs = [];
+    let paginationCursor = null;
+    let hasMoreOlder = true;
+    let loadingOlder = false;
+    let paginationStarted = false;
+
     const messagesList = document.getElementById("guestbookMessagesList"),
           loadOlderBtn = document.getElementById("loadOlderBtn");
-    function docToMessage(e) {
-      const t = e.data();
-      let s = 0, a = "Только что";
-      if (t.timestamp) {
-        const e = t.timestamp.toDate();
-        s = e.getTime();
-        a = String(e.getDate()).padStart(2, "0") + "." + String(e.getMonth() + 1).padStart(2, "0") + "." + e.getFullYear() + " " + String(e.getHours()).padStart(2, "0") + ":" + String(e.getMinutes()).padStart(2, "0");
+
+    function escapeHtml(text) {
+      return text.replace(/[&<>'"]/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "'": "&#39;",
+        '"': "&quot;"
+      }[char] || char));
+    }
+
+    window.postGuestbookMessage = async function(event) {
+      event.preventDefault();
+      const authorInput = document.getElementById("gbAuthor"),
+            textInput = document.getElementById("gbText"),
+            errorEl = document.getElementById("gbFormError"),
+            author = authorInput.value.trim(),
+            text = textInput.value.trim();
+      if (!author || !text) return;
+
+      // Защита от повторной отправки того же сообщения подряд
+      const newestMessage = Array.from(allMessagesById.values())
+        .sort((a, b) => b.millis - a.millis)[0];
+      if (newestMessage && newestMessage.author === author && newestMessage.text === text) {
+        errorEl.textContent = "Вы уже отправили это сообщение — нельзя повторять его подряд.";
+        errorEl.classList.add("visible");
+        return;
       }
-      return {
-        author: t.author,
-        text: t.text,
-        date: a,
-        millis: s
-      };
+      errorEl.classList.remove("visible");
+
+      try {
+        await addDoc(collection(db, "messages"), {
+          author: author,
+          text: text,
+          timestamp: serverTimestamp()
+        });
+        textInput.value = "";
+      } catch (error) {
+        console.error("Ошибка отправки сообщения: ", error);
+      }
+    };
+
+    function docToMessage(doc) {
+      const data = doc.data();
+      let millis = 0, dateText = "Только что";
+      if (data.timestamp) {
+        const date = data.timestamp.toDate();
+        millis = date.getTime();
+        dateText = String(date.getDate()).padStart(2, "0") + "." +
+                   String(date.getMonth() + 1).padStart(2, "0") + "." +
+                   date.getFullYear() + " " +
+                   String(date.getHours()).padStart(2, "0") + ":" +
+                   String(date.getMinutes()).padStart(2, "0");
+      }
+      return { author: data.author, text: data.text, date: dateText, millis: millis };
     }
+
     function updateLoadOlderButton() {
-      hasMoreOlder ? (loadOlderBtn.classList.add("visible"), loadOlderBtn.disabled = loadingOlder, loadOlderBtn.textContent = loadingOlder ? "Загрузка..." : "↑ Показать более старые сообщения") : loadOlderBtn.classList.remove("visible");
+      if (hasMoreOlder) {
+        loadOlderBtn.classList.add("visible");
+        loadOlderBtn.disabled = loadingOlder;
+        loadOlderBtn.textContent = loadingOlder ? "Загрузка..." : "↑ Показать более старые сообщения";
+      } else {
+        loadOlderBtn.classList.remove("visible");
+      }
     }
-    function renderMessages(e) {
-      const t = document.getElementById("guestbookMessages"),
-            s = t.scrollHeight,
-            a = t.scrollTop,
-            o = Array.from(allMessagesById.values()).sort((e, t) => e.millis - t.millis);
-      0 === o.length ? messagesList.innerHTML = '<div class="guestbook-msg"><span class="author">Система</span><div class="text">Добро пожаловать!</div></div>' : messagesList.innerHTML = o.map(e => `
+
+    function renderMessages(keepScrollPosition) {
+      const container = document.getElementById("guestbookMessages"),
+            prevScrollHeight = container.scrollHeight,
+            prevScrollTop = container.scrollTop,
+            messages = Array.from(allMessagesById.values()).sort((a, b) => a.millis - b.millis);
+
+      if (messages.length === 0) {
+        messagesList.innerHTML = '<div class="guestbook-msg"><span class="author">Система</span><div class="text">Добро пожаловать!</div></div>';
+      } else {
+        messagesList.innerHTML = messages.map(msg => `
           <div class="guestbook-msg">
-            <span class="author">${escapeHtml(e.author)}</span>
-            <span class="date">${e.date}</span>
-            <div class="text">${escapeHtml(e.text)}</div>
+            <span class="author">${escapeHtml(msg.author)}</span>
+            <span class="date">${msg.date}</span>
+            <div class="text">${escapeHtml(msg.text)}</div>
           </div>
         `).join("");
-      t.scrollTop = e ? a + (t.scrollHeight - s) : t.scrollHeight;
+      }
+
+      // При догрузке старых сообщений сохраняем позицию скролла, иначе мотаем вниз
+      container.scrollTop = keepScrollPosition
+        ? prevScrollTop + (container.scrollHeight - prevScrollHeight)
+        : container.scrollHeight;
     }
+
     function listenGuestbook() {
-      let e = !1;
-      const t = setTimeout(() => {
-        e || (messagesList.innerHTML = `
+      let gotFirstSnapshot = false;
+      const slowConnectionTimer = setTimeout(() => {
+        if (!gotFirstSnapshot) {
+          messagesList.innerHTML = `
             <div class="guestbook-msg">
               <span class="author">Система</span>
               <div class="text" style="color: #a00;">Медленное соединение. Проверьте интернет или обновите страницу.</div>
-            </div>`);
-      }, 7e3),
-      s = query(collection(db, "messages"), orderBy("timestamp", "desc"), limit(50));
-      onSnapshot(s, s => {
-        const a = !e;
-        e = !0;
-        clearTimeout(t);
-        latestLiveDocs = s.docs;
-        s.docs.forEach(e => allMessagesById.set(e.id, docToMessage(e)));
-        a && !paginationStarted && (hasMoreOlder = 50 === s.docs.length, updateLoadOlderButton());
-        renderMessages(!1);
-      }, s => {
-        e = !0;
-        clearTimeout(t);
-        console.error("Ошибка слушателя Firebase:", s);
+            </div>`;
+        }
+      }, 7000);
+
+      const liveQuery = query(collection(db, "messages"), orderBy("timestamp", "desc"), limit(PAGE_SIZE));
+      onSnapshot(liveQuery, snapshot => {
+        const isFirstSnapshot = !gotFirstSnapshot;
+        gotFirstSnapshot = true;
+        clearTimeout(slowConnectionTimer);
+        latestLiveDocs = snapshot.docs;
+        snapshot.docs.forEach(doc => allMessagesById.set(doc.id, docToMessage(doc)));
+        if (isFirstSnapshot && !paginationStarted) {
+          hasMoreOlder = snapshot.docs.length === PAGE_SIZE;
+          updateLoadOlderButton();
+        }
+        renderMessages(false);
+      }, error => {
+        gotFirstSnapshot = true;
+        clearTimeout(slowConnectionTimer);
+        console.error("Ошибка слушателя Firebase:", error);
         messagesList.innerHTML = `
           <div class="guestbook-msg">
             <span class="author">Система</span>
@@ -1239,81 +1320,118 @@
           </div>`;
       });
     }
-    async function checkTwitchStatus() {
-      try {
-        const e = await fetch("https://decapi.me/twitch/uptime/vityaptt"),
-              t = await e.text(),
-              s = document.getElementById("twitchTrayBadge"),
-              a = document.getElementById("twitchBtnBadge");
-        t && !t.includes("offline") && !t.includes("does not exist") && t.length > 1 ? (s && (s.style.display = "flex"), a && (a.style.display = "inline-block")) : (s && (s.style.display = "none"), a && (a.style.display = "none"));
-      } catch (e) {
-        console.error("Twitch check error:", e);
-      }
-    }
+
     window.loadOlderMessages = async function() {
       if (loadingOlder || !hasMoreOlder) return;
-      loadingOlder = !0;
-      paginationStarted = !0;
+      loadingOlder = true;
+      paginationStarted = true;
       updateLoadOlderButton();
-      const e = paginationCursor || latestLiveDocs[latestLiveDocs.length - 1];
-      if (!e) return loadingOlder = !1, hasMoreOlder = !1, void updateLoadOlderButton();
-      try {
-        const t = query(collection(db, "messages"), orderBy("timestamp", "desc"), startAfter(e), limit(50)),
-              s = await getDocs(t);
-        s.docs.forEach(e => allMessagesById.set(e.id, docToMessage(e)));
-        s.docs.length > 0 && (paginationCursor = s.docs[s.docs.length - 1]);
-        s.docs.length < 50 && (hasMoreOlder = !1);
-      } catch (e) {
-        console.error("Ошибка загрузки старых сообщений:", e);
-        hasMoreOlder = !1;
-      } finally {
-        loadingOlder = !1;
+
+      const cursorDoc = paginationCursor || latestLiveDocs[latestLiveDocs.length - 1];
+      if (!cursorDoc) {
+        loadingOlder = false;
+        hasMoreOlder = false;
         updateLoadOlderButton();
-        renderMessages(!0);
+        return;
+      }
+
+      try {
+        const olderQuery = query(collection(db, "messages"), orderBy("timestamp", "desc"), startAfter(cursorDoc), limit(PAGE_SIZE));
+        const snapshot = await getDocs(olderQuery);
+        snapshot.docs.forEach(doc => allMessagesById.set(doc.id, docToMessage(doc)));
+        if (snapshot.docs.length > 0) {
+          paginationCursor = snapshot.docs[snapshot.docs.length - 1];
+        }
+        if (snapshot.docs.length < PAGE_SIZE) {
+          hasMoreOlder = false;
+        }
+      } catch (error) {
+        console.error("Ошибка загрузки старых сообщений:", error);
+        hasMoreOlder = false;
+      } finally {
+        loadingOlder = false;
+        updateLoadOlderButton();
+        renderMessages(true);
       }
     };
+
+    async function checkTwitchStatus() {
+      try {
+        const response = await fetch("https://decapi.me/twitch/uptime/vityaptt"),
+              uptimeText = await response.text(),
+              trayBadge = document.getElementById("twitchTrayBadge"),
+              buttonBadge = document.getElementById("twitchBtnBadge");
+        const isLive = uptimeText && !uptimeText.includes("offline") &&
+                       !uptimeText.includes("does not exist") && uptimeText.length > 1;
+        if (isLive) {
+          if (trayBadge) trayBadge.style.display = "flex";
+          if (buttonBadge) buttonBadge.style.display = "inline-block";
+        } else {
+          if (trayBadge) trayBadge.style.display = "none";
+          if (buttonBadge) buttonBadge.style.display = "none";
+        }
+      } catch (error) {
+        console.error("Twitch check error:", error);
+      }
+    }
+
     listenGuestbook();
     checkTwitchStatus();
-    setInterval(checkTwitchStatus, 6e4);
+    setInterval(checkTwitchStatus, 60000);
   </script>
   <script>
+    // ===== Звуки интерфейса (синтез через WebAudio) =====
     let audioCtx = null;
+
     function initAudio() {
-      audioCtx || (audioCtx = new(window.AudioContext || window.webkitAudioContext));
-      "suspended" === audioCtx.state && audioCtx.resume();
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
     }
+
     function playClickSound() {
-      if (initAudio(), !audioCtx) return;
-      const t = audioCtx.createOscillator(),
-            e = audioCtx.createGain();
-      t.type = "square";
-      t.frequency.setValueAtTime(800, audioCtx.currentTime);
-      t.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + .03);
-      e.gain.setValueAtTime(.1, audioCtx.currentTime);
-      e.gain.exponentialRampToValueAtTime(.01, audioCtx.currentTime + .03);
-      t.connect(e);
-      e.connect(audioCtx.destination);
-      t.start();
-      t.stop(audioCtx.currentTime + .03);
+      initAudio();
+      if (!audioCtx) return;
+      const oscillator = audioCtx.createOscillator(),
+            gain = audioCtx.createGain();
+      oscillator.type = "square";
+      oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.03);
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.03);
+      oscillator.connect(gain);
+      gain.connect(audioCtx.destination);
+      oscillator.start();
+      oscillator.stop(audioCtx.currentTime + 0.03);
     }
+
     function playCloseSound() {
       if (!audioCtx) return;
-      const t = audioCtx.createOscillator(),
-            e = audioCtx.createGain();
-      t.type = "triangle";
-      t.frequency.setValueAtTime(600, audioCtx.currentTime);
-      t.frequency.exponentialRampToValueAtTime(350, audioCtx.currentTime + .07);
-      e.gain.setValueAtTime(.12, audioCtx.currentTime);
-      e.gain.exponentialRampToValueAtTime(.01, audioCtx.currentTime + .07);
-      t.connect(e);
-      e.connect(audioCtx.destination);
-      t.start();
-      t.stop(audioCtx.currentTime + .07);
+      const oscillator = audioCtx.createOscillator(),
+            gain = audioCtx.createGain();
+      oscillator.type = "triangle";
+      oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(350, audioCtx.currentTime + 0.07);
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.07);
+      oscillator.connect(gain);
+      gain.connect(audioCtx.destination);
+      oscillator.start();
+      oscillator.stop(audioCtx.currentTime + 0.07);
     }
+
     function playWindowOpenSound() {
-      const t = document.getElementById("windowOpenAudio");
-      t && (t.currentTime = 0, t.play().catch(t => console.log("Audio play blocked:", t)));
+      const audioEl = document.getElementById("windowOpenAudio");
+      if (audioEl) {
+        audioEl.currentTime = 0;
+        audioEl.play().catch(error => console.log("Audio play blocked:", error));
+      }
     }
+
+    // ===== Запуск: оверлей -> boot-экран -> рабочий стол =====
     const startOverlay = document.getElementById("startOverlay"),
           launchButton = document.getElementById("launchButton"),
           launcherWrapper = document.getElementById("launcherWrapper"),
@@ -1322,28 +1440,27 @@
           bootProgress = document.getElementById("bootProgress"),
           desktop = document.getElementById("desktop"),
           taskbar = document.getElementById("taskbar");
+
     function startBootSequence() {
-      let t = 0;
-      const e = setInterval(() => {
-        t += 10;
-        bootProgress.style.width = t + "%";
-        80 === t && playWindowOpenSound();
-        t >= 100 && (clearInterval(e), setTimeout(() => {
-          bootScreen.style.opacity = "0";
+      let progress = 0;
+      const bootInterval = setInterval(() => {
+        progress += 10;
+        bootProgress.style.width = progress + "%";
+        if (progress === 80) playWindowOpenSound();
+        if (progress >= 100) {
+          clearInterval(bootInterval);
           setTimeout(() => {
-            bootScreen.style.display = "none";
-            desktop.style.display = "block";
-            taskbar.style.display = "flex";
-          }, 500);
-        }, 300));
+            bootScreen.style.opacity = "0";
+            setTimeout(() => {
+              bootScreen.style.display = "none";
+              desktop.style.display = "block";
+              taskbar.style.display = "flex";
+            }, 500);
+          }, 300);
+        }
       }, 120);
     }
-    function updateClock() {
-      const t = new Date,
-            e = String(t.getHours()).padStart(2, "0"),
-            n = String(t.getMinutes()).padStart(2, "0");
-      document.getElementById("clock").textContent = e + ":" + n;
-    }
+
     launcherWrapper.addEventListener("mouseenter", () => orbitCursor.style.opacity = "0");
     launcherWrapper.addEventListener("mouseleave", () => orbitCursor.style.opacity = "1");
     launchButton.addEventListener("click", () => {
@@ -1357,43 +1474,67 @@
         startBootSequence();
       }, 300);
     });
-    setInterval(updateClock, 1e3);
+
+    // ===== Часы в трее =====
+    function updateClock() {
+      const now = new Date,
+            hours = String(now.getHours()).padStart(2, "0"),
+            minutes = String(now.getMinutes()).padStart(2, "0");
+      document.getElementById("clock").textContent = hours + ":" + minutes;
+    }
+    setInterval(updateClock, 1000);
     updateClock();
+
+    // ===== Меню «Пуск» =====
     const startButton = document.getElementById("startButton"),
           startMenu = document.getElementById("startMenu");
+
+    startButton.addEventListener("click", event => {
+      event.stopPropagation();
+      playClickSound();
+      if (startMenu.classList.toggle("open")) {
+        startButton.classList.add("active");
+        document.querySelectorAll(".window").forEach(win => win.classList.remove("active"));
+        document.querySelectorAll(".task-item").forEach(item => item.classList.remove("active"));
+      } else {
+        startButton.classList.remove("active");
+      }
+    });
+
+    document.addEventListener("click", event => {
+      if (startMenu.classList.contains("open") &&
+          !startMenu.contains(event.target) &&
+          !startButton.contains(event.target)) {
+        startMenu.classList.remove("open");
+        startButton.classList.remove("active");
+      }
+    });
+
+    // ===== Раскладка окон (мобилка / десктоп) =====
     function isMobile() {
       return window.innerWidth <= 768;
     }
+
     function initWindowPositions() {
-      const t = document.getElementById("mainWindow"),
-            e = document.getElementById("donateWindow"),
-            n = document.getElementById("playerWindow"),
-            o = document.getElementById("guestbookWindow");
-      isMobile() ? (
-        t.style.left = "15px", t.style.top = "145px",
-        e.style.left = "30px", e.style.top = "175px",
-        n.style.left = "15px", n.style.top = "115px", n.style.width = "calc(100vw - 30px)",
-        o.style.left = "20px", o.style.top = "210px", o.style.width = "calc(100vw - 40px)"
-      ) : (
-        t.style.left = "calc(50% - 180px)", t.style.top = "150px",
-        e.style.left = "calc(50% + 175px)", e.style.top = "180px",
-        n.style.left = "auto", n.style.right = "10px", n.style.top = "10px", n.style.width = "360px",
-        o.style.left = "calc(50% - 320px)", o.style.top = "220px"
-      );
+      const mainWin = document.getElementById("mainWindow"),
+            donateWin = document.getElementById("donateWindow"),
+            playerWin = document.getElementById("playerWindow"),
+            guestbookWin = document.getElementById("guestbookWindow");
+      if (isMobile()) {
+        mainWin.style.left = "15px"; mainWin.style.top = "145px";
+        donateWin.style.left = "30px"; donateWin.style.top = "175px";
+        playerWin.style.left = "15px"; playerWin.style.top = "115px"; playerWin.style.width = "calc(100vw - 30px)";
+        guestbookWin.style.left = "20px"; guestbookWin.style.top = "210px"; guestbookWin.style.width = "calc(100vw - 40px)";
+      } else {
+        mainWin.style.left = "calc(50% - 180px)"; mainWin.style.top = "150px";
+        donateWin.style.left = "calc(50% + 175px)"; donateWin.style.top = "180px";
+        playerWin.style.left = "auto"; playerWin.style.right = "10px"; playerWin.style.top = "10px"; playerWin.style.width = "360px";
+        guestbookWin.style.left = "calc(50% - 320px)"; guestbookWin.style.top = "220px";
+      }
     }
-    startButton.addEventListener("click", t => {
-      t.stopPropagation();
-      playClickSound();
-      startMenu.classList.toggle("open") ? (
-        startButton.classList.add("active"),
-        document.querySelectorAll(".window").forEach(t => t.classList.remove("active")),
-        document.querySelectorAll(".task-item").forEach(t => t.classList.remove("active"))
-      ) : startButton.classList.remove("active");
-    });
-    document.addEventListener("click", t => {
-      startMenu.classList.contains("open") && (startMenu.contains(t.target) || startButton.contains(t.target) || (startMenu.classList.remove("open"), startButton.classList.remove("active")));
-    });
     initWindowPositions();
+
+    // ===== Управление окнами и таскбаром =====
     let highestZ = 100;
     const windowTaskMap = {
       mainWindow: "taskMain",
@@ -1401,96 +1542,172 @@
       playerWindow: "taskPlayer",
       guestbookWindow: "taskGuestbook"
     };
-    function getTaskBtn(t) {
-      return document.getElementById(windowTaskMap[t]);
+
+    function getTaskBtn(windowId) {
+      return document.getElementById(windowTaskMap[windowId]);
     }
+
     function updateTaskbarMode() {
-      if (!isMobile()) return void taskbar.classList.remove("compact-tasks");
-      document.querySelectorAll(".task-item.visible").length > 3 ? taskbar.classList.add("compact-tasks") : taskbar.classList.remove("compact-tasks");
+      if (!isMobile()) {
+        taskbar.classList.remove("compact-tasks");
+        return;
+      }
+      const visibleCount = document.querySelectorAll(".task-item.visible").length;
+      taskbar.classList.toggle("compact-tasks", visibleCount > 3);
     }
-    function bringToFront(t) {
+
+    function bringToFront(windowId) {
       highestZ++;
-      const e = document.getElementById(t);
-      e.style.zIndex = highestZ;
-      document.querySelectorAll(".window").forEach(t => t.classList.remove("active"));
-      document.querySelectorAll(".task-item").forEach(t => t.classList.remove("active"));
-      e.classList.add("active");
-      const n = getTaskBtn(t);
-      n && n.classList.add("active");
+      const win = document.getElementById(windowId);
+      win.style.zIndex = highestZ;
+      document.querySelectorAll(".window").forEach(w => w.classList.remove("active"));
+      document.querySelectorAll(".task-item").forEach(item => item.classList.remove("active"));
+      win.classList.add("active");
+      const taskBtn = getTaskBtn(windowId);
+      if (taskBtn) taskBtn.classList.add("active");
     }
-    function openWindow(t) {
-      document.getElementById(t).classList.add("open");
-      bringToFront(t);
-      const e = getTaskBtn(t);
-      e && e.classList.add("visible");
+
+    function openWindow(windowId) {
+      document.getElementById(windowId).classList.add("open");
+      bringToFront(windowId);
+      const taskBtn = getTaskBtn(windowId);
+      if (taskBtn) taskBtn.classList.add("visible");
       updateTaskbarMode();
     }
-    function closeWindow(t) {
+
+    function closeWindow(windowId) {
       playCloseSound();
-      document.getElementById(t).classList.remove("open", "active");
-      const e = getTaskBtn(t);
-      e && e.classList.remove("visible", "active");
-      "playerWindow" === t && stopAudio();
+      document.getElementById(windowId).classList.remove("open", "active");
+      const taskBtn = getTaskBtn(windowId);
+      if (taskBtn) taskBtn.classList.remove("visible", "active");
+      if (windowId === "playerWindow") stopAudio();
       updateTaskbarMode();
     }
-    function toggleTask(t) {
+
+    function toggleTask(windowId) {
       playClickSound();
-      const e = document.getElementById(t),
-            n = getTaskBtn(t);
-      e.classList.contains("open") ? e.classList.contains("active") ? (e.classList.remove("active"), n && n.classList.remove("active")) : (e.classList.add("open"), n && n.classList.add("visible"), bringToFront(t)) : openWindow(t);
+      const win = document.getElementById(windowId),
+            taskBtn = getTaskBtn(windowId);
+      if (win.classList.contains("open")) {
+        if (win.classList.contains("active")) {
+          win.classList.remove("active");
+          if (taskBtn) taskBtn.classList.remove("active");
+        } else {
+          win.classList.add("open");
+          if (taskBtn) taskBtn.classList.add("visible");
+          bringToFront(windowId);
+        }
+      } else {
+        openWindow(windowId);
+      }
       updateTaskbarMode();
     }
-    function escapeHtml(t) {
-      return t.replace(/[&<>'"]/g, t => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        "'": "&#39;",
-        '"': "&quot;"
-      }[t] || t));
-    }
-    function makeDraggable(t) {
-      const e = t.querySelector(".title-bar");
-      let n = !1, o = 0, a = 0;
-      t.addEventListener("pointerdown", () => bringToFront(t.id));
-      e.addEventListener("pointerdown", i => {
-        if ("button" === i.target.tagName.toLowerCase()) return;
-        n = !0;
-        const s = t.getBoundingClientRect();
-        o = i.clientX - s.left;
-        a = i.clientY - s.top;
-        t.style.width = s.width + "px";
-        t.style.left = s.left + "px";
-        t.style.top = s.top + "px";
-        t.style.right = "auto";
-        e.setPointerCapture(i.pointerId);
-        bringToFront(t.id);
-        i.preventDefault();
+
+    // ===== Перетаскивание окон за титлбар =====
+    function makeDraggable(win) {
+      const titleBar = win.querySelector(".title-bar");
+      let dragging = false, offsetX = 0, offsetY = 0;
+
+      win.addEventListener("pointerdown", () => bringToFront(win.id));
+
+      titleBar.addEventListener("pointerdown", event => {
+        if (event.target.tagName.toLowerCase() === "button") return;
+        dragging = true;
+        const rect = win.getBoundingClientRect();
+        offsetX = event.clientX - rect.left;
+        offsetY = event.clientY - rect.top;
+        win.style.width = rect.width + "px";
+        win.style.left = rect.left + "px";
+        win.style.top = rect.top + "px";
+        win.style.right = "auto";
+        titleBar.setPointerCapture(event.pointerId);
+        bringToFront(win.id);
+        event.preventDefault();
       });
-      e.addEventListener("pointermove", e => {
-        if (!n) return;
-        let i = e.clientX - o,
-            s = e.clientY - a;
-        s < 0 && (s = 0);
-        s > window.innerHeight - 60 && (s = window.innerHeight - 60);
-        t.style.left = i + "px";
-        t.style.top = s + "px";
+
+      titleBar.addEventListener("pointermove", event => {
+        if (!dragging) return;
+        let newLeft = event.clientX - offsetX,
+            newTop = event.clientY - offsetY;
+        // Не даём утащить окно за края: минимум 60px остаётся видно
+        const winWidth = win.offsetWidth;
+        if (newLeft < 60 - winWidth) newLeft = 60 - winWidth;
+        if (newLeft > window.innerWidth - 60) newLeft = window.innerWidth - 60;
+        if (newTop < 0) newTop = 0;
+        if (newTop > window.innerHeight - 60) newTop = window.innerHeight - 60;
+        win.style.left = newLeft + "px";
+        win.style.top = newTop + "px";
       });
-      e.addEventListener("pointerup", t => {
-        if (n) {
-          n = !1;
+
+      titleBar.addEventListener("pointerup", event => {
+        if (dragging) {
+          dragging = false;
           try {
-            e.releasePointerCapture(t.pointerId);
-          } catch (t) {}
+            titleBar.releasePointerCapture(event.pointerId);
+          } catch (error) {}
         }
       });
     }
-    Object.keys(windowTaskMap).forEach(t => {
-      makeDraggable(document.getElementById(t));
+
+    Object.keys(windowTaskMap).forEach(windowId => {
+      makeDraggable(document.getElementById(windowId));
     });
-    document.addEventListener("click", t => {
-      t.target.closest(".win-button, .desktop-icon, .start-menu-item") && playClickSound();
+
+    // ===== Перепозиционирование при смене мобилка <-> десктоп =====
+    let wasMobile = isMobile(), resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (isMobile() !== wasMobile) {
+          wasMobile = isMobile();
+          initWindowPositions();
+        }
+        updateTaskbarMode();
+      }, 150);
     });
+
+    // ===== Мобилка: поднимаем окно гостевой над клавиатурой при фокусе =====
+    (function() {
+      const guestbookWin = document.getElementById("guestbookWindow");
+      let savedTop = null;
+
+      function onFieldFocus() {
+        if (isMobile() && savedTop === null) {
+          savedTop = guestbookWin.style.top;
+          guestbookWin.style.top = "5px";
+        }
+      }
+
+      function onFieldBlur() {
+        if (savedTop !== null) {
+          guestbookWin.style.top = savedTop;
+          savedTop = null;
+        }
+      }
+
+      ["gbAuthor", "gbText"].forEach(id => {
+        const field = document.getElementById(id);
+        field.addEventListener("focus", onFieldFocus);
+        field.addEventListener("blur", onFieldBlur);
+      });
+    })();
+
+    // ===== Звук клика на кнопках и иконках =====
+    document.addEventListener("click", event => {
+      if (event.target.closest(".win-button, .desktop-icon, .start-menu-item")) {
+        playClickSound();
+      }
+    });
+
+    // ===== Клавиатура: Enter/Space активируют иконки рабочего стола =====
+    document.addEventListener("keydown", event => {
+      if ((event.key === "Enter" || event.key === " ") &&
+          event.target.classList.contains("desktop-icon")) {
+        event.preventDefault();
+        event.target.click();
+      }
+    });
+
     openWindow("mainWindow");
   </script>
 </body>
