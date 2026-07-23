@@ -48,8 +48,6 @@
     }
     @media (max-width: 768px) {
       .mobile-hide-volume { display: none !important; }
-      /* iOS Safari автоматически зумит в поля со шрифтом < 16px и не отзумливает обратно */
-      .guestbook-form input, .guestbook-form textarea { font-size: 16px; }
     }
     #startOverlay {
       position: fixed;
@@ -804,6 +802,16 @@
     }
     .player-status-bar {
       margin-top: 2px;
+    }
+    /* iOS Safari принудительно зумит страницу при фокусе в поле со шрифтом меньше 16px
+       и не возвращает масштаб обратно. Блок должен идти последним в стилях,
+       иначе его перебивают объявления выше по файлу. */
+    @media (max-width: 768px) {
+      .guestbook-form input,
+      .guestbook-form textarea,
+      .player-playlist-row select {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
