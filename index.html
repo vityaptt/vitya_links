@@ -1,791 +1,169 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ВИТЯ 02 - Desktop</title>
-  <meta property="og:image" content="https://raw.githubusercontent.com/vityaptt/vitya_links/refs/heads/main/vitya.png">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://raw.githubusercontent.com/vityaptt/vitya_links/refs/heads/main/vitya.png">
-  <link rel="icon" href="https://win98icons.alexmeub.com/icons/png/windows-0.png" type="image/png">
-  <link rel="stylesheet" href="https://unpkg.com/98.css">
-  <style>
-    :root {
-      --bevel-raised: inset 1px 1px #fff, inset -1px -1px #0a0a0a, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
-      --bevel-pressed: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
-      --border-inset: #808080 #fff #fff #808080;
-      --border-outset: #fff #808080 #808080 #fff;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background-color: teal;
-      font-family: "MS Sans Serif", Arial, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      overflow: hidden;
-      user-select: none;
-    }
-    @media (min-width: 769px) {
-      .guestbook-content::-webkit-scrollbar { width: 16px; }
-      .guestbook-content::-webkit-scrollbar-track { background: #dfdfdf; border-left: 1px solid grey; background-image: none; }
-      .guestbook-content::-webkit-scrollbar-thumb { background: silver; box-shadow: var(--bevel-raised); border: none; min-height: 24px; }
-      .guestbook-content::-webkit-scrollbar-button:end:increment, .guestbook-content::-webkit-scrollbar-button:start:decrement {
-        display: block; height: 16px; background-color: silver; box-shadow: var(--bevel-raised); background-repeat: no-repeat; background-position: center;
-      }
-      .guestbook-content::-webkit-scrollbar-button:start:decrement {
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><polygon points='4,0 8,6 0,6' fill='black'/></svg>");
-      }
-      .guestbook-content::-webkit-scrollbar-button:end:increment {
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><polygon points='0,0 8,0 4,6' fill='black'/></svg>");
-      }
-      .guestbook-content::-webkit-scrollbar-button:end:increment:active, .guestbook-content::-webkit-scrollbar-button:start:decrement:active {
-        box-shadow: var(--bevel-pressed);
-      }
-      .guestbook-content::-webkit-scrollbar-button:end:decrement, .guestbook-content::-webkit-scrollbar-button:start:increment { display: none; }
-    }
-    @media (max-width: 768px) {
-      .mobile-hide-volume { display: none !important; }
-    }
-    #startOverlay {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background-color: teal; z-index: 999999; display: flex; align-items: center; justify-content: center;
-      transition: opacity .5s ease;
-    }
-    .start-prompt-window { width: 340px; background: silver; box-shadow: var(--bevel-raised); padding: 3px; }
-    .start-prompt-body { padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
-    .start-prompt-title { font-weight: 700; font-size: 13px; color: #000; }
-    .launcher-wrapper { position: relative; width: 220px; height: 60px; margin: 10px auto; display: flex; align-items: center; justify-content: center; }
-    .launcher-btn {
-      width: 100%; height: 100%; background: silver; box-shadow: var(--bevel-raised); border: none;
-      font-family: "MS Sans Serif", Arial, sans-serif; font-weight: 700; font-size: 14px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 8px; color: #000;
-    }
-    .launcher-btn:active { box-shadow: var(--bevel-pressed); padding-top: 2px; }
-    .orbiting-cursor {
-      position: absolute; width: 24px; height: 24px; background-image: url('cursor.png');
-      background-size: contain; background-repeat: no-repeat; pointer-events: none;
-      animation: orbit 4s steps(56, end) infinite; z-index: 10; transition: opacity .3s ease;
-    }
-    @keyframes orbit {
-      0% { transform: rotate(0) translate(130px) rotate(0); }
-      100% { transform: rotate(360deg) translate(130px) rotate(-360deg); }
-    }
-    @keyframes blink {
-      0% { opacity: 1; } 50% { opacity: .2; } 100% { opacity: 1; }
-    }
-    #bootScreen {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background-color: teal; z-index: 99999; display: none; flex-direction: column;
-      align-items: center; justify-content: center; color: #fff; transition: opacity .5s ease;
-    }
-    .boot-logo-container {
-      background: silver; border: 3px solid #000; box-shadow: inset -2px -2px grey, inset 2px 2px #fff;
-      padding: 30px 40px; text-align: center; color: #000; max-width: 90vw;
-    }
-    .boot-title {
-      font-family: Arial, sans-serif; font-weight: 900; font-size: 56px; letter-spacing: 3px;
-      transform: scaleY(1.3); display: inline-block; margin-bottom: 10px; text-shadow: 2px 2px 0 #fff;
-    }
-    .boot-subtitle { font-size: 14px; font-weight: 700; color: navy; margin-bottom: 20px; }
-    .progress-bar-container { width: 260px; height: 20px; border: 2px solid; border-color: var(--border-inset); background: #fff; padding: 2px; margin: 0 auto; }
-    .progress-bar-fill { height: 100%; background: navy; width: 0%; transition: width .1s linear; }
-    .desktop { flex: 1; position: relative; padding-bottom: 30px; overflow: hidden; display: none; }
-    .desktop-wallpaper {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      font-family: Arial, sans-serif; font-weight: 900; font-size: 80px; color: rgba(255,255,255,.18);
-      letter-spacing: 6px; text-transform: uppercase; pointer-events: none; text-align: center; line-height: 1; white-space: nowrap;
-    }
-    .top-right-player { position: absolute; top: 10px; right: 10px; z-index: 100; width: 360px; }
-    .desktop-icons { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 20px; z-index: 5; }
-    .desktop-icon { display: flex; flex-direction: column; align-items: center; width: 75px; cursor: pointer; padding: 4px; border: 1px transparent dashed; }
-    .desktop-icon:hover { border-color: rgba(255,255,255,.5); }
-    .desktop-icon img { width: 32px; height: 32px; margin-bottom: 4px; image-rendering: pixelated; }
-    .desktop-icon span { color: #fff; font-size: 11px; text-align: center; text-shadow: 1px 1px 1px #000; word-wrap: break-word; line-height: 1.2; }
-    .window {
-      width: 360px; max-width: 95vw; box-shadow: var(--bevel-raised); position: absolute;
-      touch-action: none; display: block; opacity: 0; transform: scale(.7);
-      pointer-events: none; visibility: hidden; transition: opacity .35s steps(4, end), transform .35s steps(4, end);
-    }
-    .window.open { opacity: 1; transform: scale(1); pointer-events: auto; visibility: visible; }
-    .title-bar { background: linear-gradient(90deg, #7a7a7a, #b5b5b5); padding: 3px 2px 3px 3px; display: flex; align-items: center; justify-content: space-between; cursor: grab; }
-    .window.active .title-bar { background: linear-gradient(90deg, navy, #1084d0); }
-    .title-bar:active { cursor: grabbing; }
-    .title-bar-text { color: #fff; font-weight: 700; letter-spacing: .5px; display: flex; align-items: center; gap: 6px; font-size: 12px; }
-    .window-body { padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 16px; background-color: silver; position: relative; }
-    .money-bg { position: relative; overflow: hidden; }
-    .money-bg::before {
-      content: "$  $  $  $\n$  $  $  $\n$  $  $  $"; position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
-      opacity: .12; font-family: "Courier New", monospace; font-size: 52px; font-weight: 900; line-height: 58px;
-      color: #000; pointer-events: none; word-wrap: break-word; white-space: pre-wrap;
-    }
-    .site-title { font-family: Arial, sans-serif; font-weight: 900; font-size: 38px; color: #000; text-transform: uppercase; letter-spacing: 2px; display: inline-block; transform: scaleY(1.4); margin: 10px 0 14px 0; text-shadow: 1px 1px 0 #fff; }
-    .status-field { width: 100%; background: #fff; border: 2px solid; border-color: var(--border-inset); padding: 8px 12px; font-size: 11px; display: flex; align-items: center; gap: 10px; z-index: 2; }
-    .status-icon { width: 32px; height: 32px; background-color: navy; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 18px; border: 1px solid #000; flex-shrink: 0; }
-    .status-text { color: #000; line-height: 1.3; }
-    .links-container { width: 100%; display: flex; flex-direction: column; gap: 10px; z-index: 2; }
-    .win-button {
-      display: flex; align-items: center; justify-content: flex-start; gap: 10px; width: 100%;
-      padding: 8px 12px; text-decoration: none; color: #000 !important; font-weight: 700; font-size: 13px;
-      background: silver; box-shadow: var(--bevel-raised); cursor: pointer; border: none; outline: 0;
-    }
-    .win-button:active { box-shadow: var(--bevel-pressed); padding: 9px 11px 7px 13px; }
-    .button-icon { width: 20px; height: 20px; object-fit: contain; image-rendering: pixelated; }
-    .da-header { width: 100%; border: 2px solid; border-color: var(--border-inset); background: linear-gradient(90deg, #f60, #f93); position: relative; height: 65px; display: flex; align-items: center; padding: 8px 12px; gap: 12px; z-index: 2; }
-    .da-avatar-container { width: 42px; height: 42px; border: 2px solid; border-color: var(--border-inset); background: silver; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
-    .da-avatar { width: 28px; height: 28px; object-fit: contain; image-rendering: pixelated; }
-    .da-user-info { color: #fff; font-weight: 700; font-size: 16px; text-shadow: 1px 1px 2px #000; letter-spacing: .5px; }
-    .status-bar { width: 100%; display: flex; gap: 2px; margin-top: 4px; z-index: 2; }
-    .status-bar-field { background: silver; border: 1px solid; border-color: var(--border-inset); padding: 2px 6px; font-size: 11px; color: #404040; }
-    .taskbar { position: fixed; bottom: 0; left: 0; right: 0; height: 30px; background: silver; border-top: 2px solid #fff; align-items: center; padding: 2px 4px; justify-content: space-between; z-index: 9999; display: none; }
-    .start-container { position: relative; }
-    .start-button { display: flex; align-items: center; gap: 4px; font-weight: 700; font-size: 12px; padding: 2px 6px; height: 22px; box-shadow: var(--bevel-raised); background: silver; border: none; cursor: pointer; }
-    .start-button.active, .start-button:active { box-shadow: var(--bevel-pressed); }
-    .start-menu { display: none; position: fixed; bottom: 34px; left: 4px; width: 220px; background: silver; border: 2px solid; border-color: var(--border-outset); box-shadow: 2px 2px 5px rgba(0,0,0,.5); z-index: 10000; }
-    .start-menu.open { display: flex; }
-    .start-menu-side { width: 26px; background: linear-gradient(0deg, navy, #1084d0); writing-mode: vertical-rl; transform: rotate(180deg); color: #fff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: flex-end; padding: 8px 4px; letter-spacing: 1px; }
-    .start-menu-items { flex: 1; display: flex; flex-direction: column; padding: 2px; }
-    .start-menu-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; text-decoration: none; color: #000; font-size: 11px; font-weight: 700; }
-    .start-menu-item:hover { background-color: navy; color: #fff; }
-    .start-menu-item img { width: 16px; height: 16px; }
-    .start-menu-divider { height: 1px; background: grey; border-bottom: 1px solid #fff; margin: 2px 0; }
-    .taskbar-divider { width: 2px; height: 20px; background: grey; border-right: 1px solid #fff; margin: 0 4px; }
-    .taskbar-tasks { flex: 1; display: flex; gap: 4px; overflow-x: auto; }
-    .task-item { display: none; align-items: center; gap: 4px; font-size: 11px; padding: 2px 10px; height: 22px; flex: 0 0 auto; min-width: 120px; max-width: 160px; background: silver; box-shadow: var(--bevel-raised); font-weight: 700; cursor: pointer; border: none; white-space: nowrap; overflow: hidden; }
-    .task-item img { flex-shrink: 0; }
-    .task-item span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; width: 100%; }
-    .task-item.visible { display: flex !important; }
-    .task-item.active { box-shadow: var(--bevel-pressed); background: #d4d4d4; }
-    @media (max-width: 768px) {
-      .taskbar.compact-tasks .task-item { flex: unset; width: 26px; min-width: 26px; max-width: 26px; padding: 0; justify-content: center; font-size: 0; }
-      .taskbar.compact-tasks .task-item span { display: none !important; }
-      .taskbar.compact-tasks .task-item img { margin: 0; }
-      .desktop-wallpaper { font-size: 40px; letter-spacing: 2px; }
-      .desktop-icons { flex-direction: row; flex-wrap: wrap; top: 10px; left: 10px; gap: 10px; }
-    }
-    .tray { border: 1px solid; border-color: var(--border-inset); padding: 2px 6px; font-size: 11px; height: 22px; display: flex; align-items: center; background: silver; flex-shrink: 0; }
-    .guestbook-content { background: #fff; border: 2px solid; border-color: var(--border-inset); width: 100%; flex: 1; min-height: 140px; max-height: 250px; overflow-y: auto; padding: 6px; font-family: "Courier New", Courier, monospace; font-size: 12px; display: flex; flex-direction: column; gap: 6px; }
-    .guestbook-msg { border-bottom: 1px dashed #ccc; padding-bottom: 4px; }
-    .guestbook-msg .author { font-weight: 700; color: navy; }
-    .guestbook-msg .date { font-size: 9px; color: #666; float: right; }
-    .guestbook-msg .text { margin-top: 2px; word-break: break-word; }
-    .guestbook-form { width: 100%; display: flex; flex-direction: column; gap: 6px; }
-    .guestbook-form input, .guestbook-form textarea { background: #fff; border: 2px solid; border-color: var(--border-inset); padding: 4px; font-family: "MS Sans Serif", Arial, sans-serif; font-size: 11px; outline: 0; width: 100%; }
-    .guestbook-form textarea { resize: none; height: 45px; }
-    .guestbook-submit-btn { justify-content: center; height: 26px; }
-    .player-body { padding: 10px; gap: 8px; }
-    .player-screen { width: 100%; background: #000; color: #0f0; font-family: "Courier New", monospace; font-size: 11px; padding: 6px; border: 2px solid; border-color: var(--border-inset); min-height: 42px; display: flex; flex-direction: column; justify-content: center; }
-    .player-screen .title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; }
-    .player-screen .subtitle { color: #0a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10px; }
-    .player-timeline { width: 100%; display: flex; flex-direction: column; gap: 2px; }
-    .player-timeline .time-row { display: flex; justify-content: space-between; font-size: 9px; font-family: "Courier New", monospace; }
-    .player-timeline input[type=range] { width: 100%; cursor: pointer; }
-    .player-controls { display: flex; gap: 4px; width: 100%; justify-content: space-between; }
-    .player-btn { height: 24px; padding: 0; justify-content: center; flex-shrink: 0; font-size: 11px; }
-    .player-btn-nav { width: 52px; }
-    .player-btn-play { flex: 1; padding: 0 4px; }
-    .player-btn-stop { width: 42px; }
-    .player-btn-stop .stop-icon { display: inline-block; width: 7px; height: 7px; background: #000; }
-    .player-playlist-row { width: 100%; display: flex; gap: 4px; align-items: center; }
-    .player-playlist-row select { width: 100%; font-family: "MS Sans Serif", Arial, sans-serif; font-size: 11px; background: #fff; border: 2px solid; border-color: var(--border-inset); padding: 2px; }
-    .player-volume-row { width: 100%; display: flex; gap: 6px; align-items: center; font-size: 11px; }
-    .player-volume-row .volume-icon { font-size: 14px; flex-shrink: 0; }
-    .player-volume-row input[type=range] { flex: 1; cursor: pointer; }
-    .player-status-bar { margin-top: 2px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitya's Portfolio / Guestbook</title>
+    <style>
+        /* Стили можно оставить ваши текущие, главное — логика скрипта ниже */
+        body {
+            font-family: Arial, sans-serif;
+            background: #282c34;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        .window {
+            background: #3a3f4b;
+            border: 1px solid #4f5666;
+            border-radius: 5px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .messages-list {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #21252b;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .message-item {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
+        .message-item strong {
+            color: #61afef;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            background: #1e1e1e;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #98c379;
+            color: #1e1e1e;
+            border: none;
+            padding: 10px 15px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #85b165;
+        }
+    </style>
 </head>
 <body>
-  <audio id="windowOpenAudio" src="window-open.mp3" preload="auto"></audio>
-  <div id="startOverlay">
-    <div class="start-prompt-window">
-      <div class="title-bar">
-        <div class="title-bar-text"><img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" width="14" height="14" alt="icon"> ВИТЯ 02 - Setup</div>
-      </div>
-      <div class="start-prompt-body">
-        <div class="start-prompt-title">Нажмите кнопку для запуска системы:</div>
-        <div class="launcher-wrapper" id="launcherWrapper">
-          <div class="orbiting-cursor" id="orbitCursor"></div>
-          <button class="launcher-btn" id="launchButton"><img src="https://win98icons.alexmeub.com/icons/png/computer_explorer-0.png" width="20" height="20" alt="PC"> Запустить систему</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <div id="bootScreen">
-    <div class="boot-logo-container">
-      <div class="boot-title">ВИТЯ 02</div>
-      <div class="boot-subtitle">Microsoft Windows Edition</div>
-      <div class="progress-bar-container"><div class="progress-bar-fill" id="bootProgress"></div></div>
-    </div>
-  </div>
+    <div class="window">
+        <h2>Гостевая книга</h2>
+        
+        <!-- Список сообщений -->
+        <div id="messagesList" class="messages-list">
+            Загрузка сообщений...
+        </div>
 
-  <div class="desktop" id="desktop">
-    <div class="desktop-wallpaper">ВИТЯ 02</div>
-    
-    <div class="window top-right-player" id="playerWindow">
-      <div class="title-bar">
-        <div class="title-bar-text"><img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" width="14" height="14" alt="Media Player"> Media Player - Плейлист</div>
-        <div class="title-bar-controls"><button aria-label="Close" onclick='closeWindow("playerWindow")'></button></div>
-      </div>
-      <div class="window-body player-body">
-        <audio id="audioTrack" preload="auto"></audio>
-        <div class="player-screen">
-          <div id="currentTrackTitle" class="title">Загрузка...</div>
-          <div id="currentTrackSub" class="subtitle">Папка /muzlo/</div>
-        </div>
-        <div class="player-timeline">
-          <div class="time-row"><span id="currentTime">0:00</span> <span id="totalTime">0:00</span></div>
-          <input type="range" id="trackTimeline" min="0" max="100" value="0" step="0.1" oninput="onTimelineInput(this.value)" onchange="onTimelineChange(this.value)">
-        </div>
-        <div class="player-controls">
-          <button class="win-button player-btn player-btn-nav" onclick="prevTrack()" title="Предыдущий">⏮</button>
-          <button class="win-button player-btn player-btn-play" id="audioPlayBtn" onclick="toggleAudioPlay()">▶ Play</button>
-          <button class="win-button player-btn player-btn-nav" onclick="nextTrack()" title="Следующий">⏭</button>
-          <button class="win-button player-btn player-btn-stop" onclick="stopAudio()" title="Стоп"><span class="stop-icon"></span></button>
-        </div>
-        <div class="player-playlist-row"><select id="playlistSelect" onchange="selectTrackFromDropdown(this.value)"></select></div>
-        <div class="mobile-hide-volume player-volume-row">
-          <span id="volumeIcon" class="volume-icon" title="Громкость">🔊</span>
-          <input type="range" id="volumeSlider" min="0" max="1" value="0.8" step="0.01" oninput="changeVolume(this.value)" title="Громкость плеера">
-        </div>
-        <div class="status-bar player-status-bar">
-          <div class="status-bar-field" style="flex:1" id="audioStatusText">Готов к воспроизведению</div>
-          <div class="status-bar-field">Win95 Audio</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="desktop-icons">
-      <div class="desktop-icon" onclick='openWindow("mainWindow")'><img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" alt="VITYA.exe"> <span>ВИТЯ.exe</span></div>
-      <div class="desktop-icon" onclick='openWindow("donateWindow")'><img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" alt="Donate"> <span>Донат</span></div>
-      <div class="desktop-icon" onclick='openWindow("playerWindow")'><img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" alt="Player"> <span>Плеер</span></div>
-      <div class="desktop-icon" onclick='openWindow("guestbookWindow")'><img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png" alt="Guestbook"> <span>Гостевая.txt</span></div>
-    </div>
-
-    <div class="window open" id="mainWindow">
-      <div class="title-bar">
-        <div class="title-bar-text"><img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="14" height="14" alt="icon"> C:\WINDOWS\Personal\VITYA.exe</div>
-        <div class="title-bar-controls"><button aria-label="Close" onclick='closeWindow("mainWindow")'></button></div>
-      </div>
-      <div class="window-body">
-        <div class="site-title">ВИТЯ</div>
-        <div class="status-field">
-          <div class="status-icon">V</div>
-          <div class="status-text"><strong>Состояние:</strong> Online<br><span>Нажми на ссылку ниже для перехода</span></div>
-        </div>
-        <div class="links-container">
-          <a href="https://t.me/datizaebalsuca" target="_blank" rel="noopener" class="win-button"><img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" class="button-icon" alt="Telegram"> Telegram </a>
-          <a href="https://www.twitch.tv/vityaptt" target="_blank" rel="noopener" class="win-button"><img src="https://win98icons.alexmeub.com/icons/png/display_properties-2.png" class="button-icon" alt="Twitch"> Twitch <span id="twitchBtnBadge" style="display:none;background:red;color:#fff;font-size:9px;padding:1px 4px;margin-left:auto;font-weight:700">LIVE</span> </a>
-          <a href="https://www.youtube.com/@potatkadwg/featured" target="_blank" rel="noopener" class="win-button"><img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" class="button-icon" alt="YouTube"> YouTube</a>
-        </div>
-        <div class="status-bar">
-          <div class="status-bar-field" style="flex:1">3 объекта(ов)</div>
-          <div class="status-bar-field">Win95 Edition</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="window" id="donateWindow">
-      <div class="title-bar">
-        <div class="title-bar-text"><img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="14" height="14" alt="Donate"> C:\WINDOWS\System\DonateWizard.exe</div>
-        <div class="title-bar-controls"><button aria-label="Close" onclick='closeWindow("donateWindow")'></button></div>
-      </div>
-      <div class="window-body money-bg">
-        <div class="da-header">
-          <div class="da-avatar-container"><img src="warning.png" class="da-avatar" alt="Avatar"></div>
-          <div class="da-user-info">vityaptt</div>
-        </div>
-        <div class="links-container">
-          <a href="https://www.donationalerts.com/r/vityaptt?amount=100&currency=RUB&comment=dbffgggsdrgerg" target="_blank" rel="noopener" class="win-button"><img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" class="button-icon" alt="DA"> DonationAlerts </a>
-          <a href="https://web.tribute.tg/d/NvR" target="_blank" rel="noopener" class="win-button"><img src="recycle_bin.png" class="button-icon" alt="Tribute"> Tribute </a>
-          <a href="https://boosty.to/viteapotatkafm" target="_blank" rel="noopener" class="win-button"><img src="https://win98icons.alexmeub.com/icons/png/key_padlock-0.png" class="button-icon" alt="Boosty"> Boosty</a>
-        </div>
-        <div class="status-bar">
-          <div class="status-bar-field" style="flex:1">Поддержка автора</div>
-          <div class="status-bar-field">vityaptt</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="window" id="guestbookWindow" style="width:380px">
-      <div class="title-bar">
-        <div class="title-bar-text"><img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png" width="14" height="14" alt="Notepad"> Гостевая книга - Блокнот</div>
-        <div class="title-bar-controls"><button aria-label="Close" onclick='closeWindow("guestbookWindow")'></button></div>
-      </div>
-      <div class="window-body" style="gap:8px;padding:10px;height:320px;box-sizing:border-box">
-        <div class="guestbook-content" id="guestbookMessages">
-          <div class="guestbook-msg"><span class="author">Система</span> <span class="date">01.01.1998</span><div class="text">Загрузка сообщений из облака...</div></div>
-        </div>
-        <form class="guestbook-form" onsubmit="postGuestbookMessage(event)">
-          <input type="text" id="gbAuthor" placeholder="Ваш ник / имя..." maxlength="25" required>
-          <textarea id="gbText" placeholder="Оставьте весточку для Вити и гостей..." maxlength="180" required></textarea>
-          <button type="submit" class="win-button guestbook-submit-btn">Оставить запись</button>
+        <!-- Форма отправки -->
+        <form id="guestbookForm">
+            <input type="text" id="guestName" placeholder="Ваше имя" required>
+            <textarea id="guestText" placeholder="Ваше сообщение..." rows="3" required></textarea>
+            <button type="submit">Отправить</button>
         </form>
-        <div class="status-bar" style="margin-top:0">
-          <div class="status-bar-field" style="flex:1">Синхронизация в реальном времени</div>
-          <div class="status-bar-field">Firebase</div>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <div class="start-menu" id="startMenu">
-    <div class="start-menu-side">прив чд</div>
-    <div class="start-menu-items">
-      <a href="https://open.spotify.com/user/gtahh91k0wd62si8reaw9c0w5?si=da4a95cad13442c1" target="_blank" rel="noopener" class="start-menu-item"><img src="https://win98icons.alexmeub.com/icons/png/media_player-0.png" alt="Spotify"> Spotify </a>
-      <a href="https://t.me/potatka" target="_blank" rel="noopener" class="start-menu-item"><img src="https://win98icons.alexmeub.com/icons/png/address_book-0.png" alt="Telegram"> Личный Telegram</a>
-      <div class="start-menu-divider"></div>
-      <a href="https://t.me/InYourEyesVault" target="_blank" rel="noopener" class="start-menu-item"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png" alt="Memes"> Мемы (Vault)</a>
-    </div>
-  </div>
+    <!-- Подключаем Firebase через CDN (модульная версия) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  <div class="taskbar" id="taskbar">
-    <div style="display:flex;align-items:center;overflow:hidden;flex:1">
-      <div class="start-container">
-        <button class="start-button" id="startButton"><img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" width="14" height="14" alt="Start"> <strong>Пуск</strong></button>
-      </div>
-      <div class="taskbar-divider"></div>
-      <div class="taskbar-tasks">
-        <button class="task-item" id="taskMain" onclick='toggleTask("mainWindow")'><img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png" width="12" height="12" alt="App"> <span>ВИТЯ - Links</span></button>
-        <button class="task-item" id="taskHelp" onclick='toggleTask("donateWindow")'><img src="https://win98icons.alexmeub.com/icons/png/help_sheet-0.png" width="12" height="12" alt="Help"> <span>Донат</span></button>
-        <button class="task-item" id="taskPlayer" onclick='toggleTask("playerWindow")'><img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-2.png" width="12" height="12" alt="Player"> <span>Media Player</span></button>
-        <button class="task-item" id="taskGuestbook" onclick='toggleTask("guestbookWindow")'><img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png" width="12" height="12" alt="Guestbook"> <span>Гостевая.txt</span></button>
-      </div>
-    </div>
-    <div class="tray" style="gap:6px">
-      <a href="https://www.twitch.tv/vityaptt" target="_blank" rel="noopener" id="twitchTrayBadge" title="Я в эфире! Нажми, чтобы залететь" style="display:none;align-items:center;gap:4px;text-decoration:none;color:#000;font-weight:700;background:#fc0;padding:0 4px;border:1px solid grey"><span style="width:8px;height:8px;background:red;border-radius:50%;display:inline-block;animation:blink 1s infinite"></span> LIVE</a>
-      <div id="clock">12:00</div>
-    </div>
-  </div>
+        // Актуальная конфигурация Firebase
+        const firebaseConfig = {
+          apiKey: "AIzaSyCKo0rGyP_DU1BNG9iqQfmm8h49twimVE",
+          authDomain: "vitya-guestbook.firebaseapp.com",
+          projectId: "vitya-guestbook",
+          storageBucket: "vitya-guestbook.firebasestorage.app",
+          messagingSenderId: "446796880365",
+          appId: "1:446796880365:web:1e5849eb562645cb0b6fe4",
+          measurementId: "G-CBGCJ1MFE0"
+        };
 
-  <script>
-    const playlist = [
-      {title:"track.mp3", src:"muzlo/track.mp3"},
-      {title:"Agent 007.mp3", src:"muzlo/Agent 007.mp3"},
-      {title:"First Contact.mp3", src:"muzlo/First Contact.mp3"},
-      {title:"Get Wild.mp3", src:"muzlo/Get Wild.mp3"},
-      {title:"Iceberg.mp3", src:"muzlo/Iceberg.mp3"},
-      {title:"Judgement Day.mp3", src:"muzlo/Judgement Day.mp3"},
-      {title:"Monolith.mp3", src:"muzlo/Monolith.mp3"},
-      {title:"Quagmire.mp3", src:"muzlo/Quagmire.mp3"},
-      {title:"Spasm.mp3", src:"muzlo/Spasm.mp3"},
-      {title:"Spectre - Mixed.mp3", src:"muzlo/Spectre - Mixed.mp3"},
-      {title:"T Minus - Mixed.mp3", src:"muzlo/T Minus - Mixed.mp3"},
-      {title:"Winner Takes All - Mixed.mp3", src:"muzlo/Winner Takes All - Mixed.mp3"}
-    ];
-    let currentTrackIndex = 0;
-    const audio = document.getElementById("audioTrack"),
-          playBtn = document.getElementById("audioPlayBtn"),
-          timeline = document.getElementById("trackTimeline"),
-          currentTimeEl = document.getElementById("currentTime"),
-          totalTimeEl = document.getElementById("totalTime"),
-          statusText = document.getElementById("audioStatusText"),
-          titleEl = document.getElementById("currentTrackTitle"),
-          playlistSelect = document.getElementById("playlistSelect");
-    let isSeeking = false;
+        // Инициализация Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    function initPlaylist() {
-      playlistSelect.innerHTML = playlist.map((t, e) => `<option value="${e}">${e+1}. ${t.title}</option>`).join("");
-      loadTrack(currentTrackIndex);
-    }
-    function loadTrack(t) {
-      currentTrackIndex = t;
-      audio.src = playlist[currentTrackIndex].src;
-      titleEl.textContent = playlist[currentTrackIndex].title;
-      playlistSelect.value = currentTrackIndex;
-      timeline.value = 0;
-      currentTimeEl.textContent = "0:00";
-    }
-    function playCurrent() {
-      audio.play().then(() => {
-        playBtn.innerHTML = "❚❚ Pause";
-        statusText.textContent = "Воспроизведение...";
-      }).catch(t => {
-        console.error("Ошибка воспроизведения audio:", t);
-        statusText.textContent = "Ошибка воспроизведения";
-      });
-    }
-    function toggleAudioPlay() {
-      audio.paused ? playCurrent() : (audio.pause(), playBtn.innerHTML = "▶ Play", statusText.textContent = "Пауза");
-    }
-    function stopAudio() {
-      audio.pause();
-      audio.currentTime = 0;
-      playBtn.innerHTML = "▶ Play";
-      timeline.value = 0;
-      currentTimeEl.textContent = "0:00";
-      statusText.textContent = "Остановлено";
-    }
-    function nextTrack() {
-      currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-      loadTrack(currentTrackIndex);
-      playCurrent();
-    }
-    function prevTrack() {
-      currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
-      loadTrack(currentTrackIndex);
-      playCurrent();
-    }
-    function selectTrackFromDropdown(t) {
-      loadTrack(parseInt(t));
-      playCurrent();
-    }
-    function onTimelineInput(t) {
-      isSeeking = true;
-      if (audio.duration) {
-        const e = t / 100 * audio.duration;
-        currentTimeEl.textContent = formatTime(e);
-      }
-    }
-    function onTimelineChange(t) {
-      if (audio.duration) {
-        const e = t / 100 * audio.duration;
-        audio.currentTime = e;
-      }
-      isSeeking = false;
-    }
-    function changeVolume(t) {
-      audio.volume = t;
-      const e = document.getElementById("volumeIcon");
-      if (e) e.textContent = 0 == t ? "🔇" : "🔊";
-    }
-    function formatTime(t) {
-      const e = Math.floor(t / 60), n = Math.floor(t % 60);
-      return e + ":" + (n < 10 ? "0" : "") + n;
-    }
-    audio.volume = .8;
-    audio.addEventListener("loadedmetadata", () => { totalTimeEl.textContent = formatTime(audio.duration); });
-    audio.addEventListener("timeupdate", () => {
-      if (!isSeeking && audio.duration) {
-        const t = audio.currentTime / audio.duration * 100;
-        timeline.value = t;
-        currentTimeEl.textContent = formatTime(audio.currentTime);
-      }
-    });
-    audio.addEventListener("ended", () => { nextTrack(); });
-    initPlaylist();
-  </script>
+        const messagesList = document.getElementById('messagesList');
+        const guestbookForm = document.getElementById('guestbookForm');
+        const guestNameInput = document.getElementById('guestName');
+        const guestTextInput = document.getElementById('guestText');
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, addDoc, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    
-    const firebaseConfig = {
-      apiKey: "AIzaSyCKo0rXgyP_DU1BNG9iqQfmm8h49twimVE",
-      authDomain: "vitya-guestbook.firebaseapp.com",
-      projectId: "vitya-guestbook",
-      storageBucket: "vitya-guestbook.firebasestorage.app",
-      messagingSenderId: "446796880365",
-      appId: "1:446796880365:web:1e5849eb562645cb0b6fe4",
-      measurementId: "G-CBGCJ1MFE0"
-    };
-    const app = initializeApp(firebaseConfig),
-          db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
-          
-    function listenGuestbook() {
-      const t = document.getElementById("guestbookMessages");
-      let e = false;
-      const s = setTimeout(() => {
-        if (!e) t.innerHTML = '\n            <div class="guestbook-msg">\n              <span class="author">Система</span>\n              <div class="text" style="color: #a00;">Медленное соединение. Проверьте интернет или обновите страницу.</div>\n            </div>';
-      }, 7e3);
-      const a = query(collection(db, "messages"), orderBy("timestamp", "asc"), limit(50));
-      onSnapshot(a, a => {
-        e = true;
-        clearTimeout(s);
-        let i = [];
-        a.forEach(t => {
-          const e = t.data();
-          let s = "Только что";
-          if (e.timestamp) {
-            const t = e.timestamp.toDate();
-            s = String(t.getDate()).padStart(2, "0") + "." + String(t.getMonth() + 1).padStart(2, "0") + "." + t.getFullYear() + " " + String(t.getHours()).padStart(2, "0") + ":" + String(t.getMinutes()).padStart(2, "0");
-          }
-          i.push({ author: e.author, text: e.text, date: s });
+        // Получение и отображение сообщений в реальном времени
+        const q = query(collection(db, "messages"), orderBy("timestamp", "asc"), limit(50));
+        
+        onSnapshot(q, (snapshot) => {
+            messagesList.innerHTML = '';
+            if (snapshot.empty) {
+                messagesList.innerHTML = '<p style="color: #aaa;">Пока нет ни одного сообщения. Будьте первыми!</p>';
+                return;
+            }
+            
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const div = document.createElement('div');
+                div.className = 'message-item';
+                
+                const safeName = data.name ? escapeHtml(data.name) : 'Аноним';
+                const safeText = data.text ? escapeHtml(data.text) : '';
+                
+                div.innerHTML = `<strong>${safeName}:</strong> <p style="margin: 5px 0 0 0;">${safeText}</p>`;
+                messagesList.appendChild(div);
+            });
+            
+            // Автопрокрутка вниз
+            messagesList.scrollTop = messagesList.scrollHeight;
+        }, (error) => {
+            console.error("Ошибка загрузки сообщений: ", error);
+            messagesList.innerHTML = '<p style="color: #e06c75;">Ошибка загрузки сообщений.</p>';
         });
-        if (0 !== i.length) {
-          t.innerHTML = i.map(t => `\n          <div class="guestbook-msg">\n            <span class="author">${escapeHtml(t.author)}</span>\n            <span class="date">${t.date}</span>\n            <div class="text">${escapeHtml(t.text)}</div>\n          </div>\n        `).join("");
-          t.scrollTop = t.scrollHeight;
-        } else {
-          t.innerHTML = '<div class="guestbook-msg"><span class="author">Система</span><div class="text">Добро пожаловать!</div></div>';
+
+        // Отправка нового сообщения
+        guestbookForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = guestNameInput.value.trim();
+            const text = guestTextInput.value.trim();
+            
+            if (!name || !text) return;
+
+            try {
+                await addDoc(collection(db, "messages"), {
+                    name: name,
+                    text: text,
+                    timestamp: serverTimestamp()
+                });
+                
+                guestTextInput.value = ''; // Очищаем поле текста
+            } catch (error) {
+                console.error("Ошибка при отправке сообщения: ", error);
+                alert("Не удалось отправить сообщение. Проверьте консоль.");
+            }
+        });
+
+        // Простая защита от XSS
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;")
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/"/g, "&quot;")
+                      .replace(/'/g, "&#039;");
         }
-      }, a => {
-        e = true;
-        clearTimeout(s);
-        console.error("Ошибка слушателя Firebase:", a);
-        t.innerHTML = '\n          <div class="guestbook-msg">\n            <span class="author">Система</span>\n            <div class="text" style="color: #a00;">Ошибка синхронизации с облаком.</div>\n          </div>';
-      });
-    }
-
-    async function checkTwitchStatus() {
-      try {
-        const t = await fetch("https://decapi.me/twitch/uptime/vityaptt"),
-              e = await t.text(),
-              s = document.getElementById("twitchTrayBadge"),
-              a = document.getElementById("twitchBtnBadge");
-        if (e && !e.includes("offline") && !e.includes("does not exist") && e.length > 1) {
-          if (s) s.style.display = "flex";
-          if (a) a.style.display = "inline-block";
-        } else {
-          if (s) s.style.display = "none";
-          if (a) a.style.display = "none";
-        }
-      } catch (t) {
-        console.error("Twitch check error:", t);
-      }
-    }
-
-    window.postGuestbookMessage = async function(t) {
-      t.preventDefault();
-      const e = document.getElementById("gbAuthor"),
-            s = document.getElementById("gbText"),
-            a = e.value.trim(),
-            i = s.value.trim();
-      if (a && i) {
-        try {
-          await addDoc(collection(db, "messages"), { author: a, text: i, timestamp: new Date });
-          s.value = "";
-        } catch (t) {
-          console.error("Ошибка отправки сообщения: ", t);
-        }
-      }
-    };
-    listenGuestbook();
-    checkTwitchStatus();
-    setInterval(checkTwitchStatus, 6e4);
-  </script>
-
-  <script>
-    let audioCtx = null;
-    function initAudio() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if ("suspended" === audioCtx.state) audioCtx.resume();
-    }
-    function playClickSound() {
-      initAudio();
-      if (!audioCtx) return;
-      const t = audioCtx.createOscillator(), e = audioCtx.createGain();
-      t.type = "square";
-      t.frequency.setValueAtTime(800, audioCtx.currentTime);
-      t.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + .03);
-      e.gain.setValueAtTime(.1, audioCtx.currentTime);
-      e.gain.exponentialRampToValueAtTime(.01, audioCtx.currentTime + .03);
-      t.connect(e);
-      e.connect(audioCtx.destination);
-      t.start();
-      t.stop(audioCtx.currentTime + .03);
-    }
-    function playCloseSound() {
-      if (!audioCtx) return;
-      const t = audioCtx.createOscillator(), e = audioCtx.createGain();
-      t.type = "triangle";
-      t.frequency.setValueAtTime(600, audioCtx.currentTime);
-      t.frequency.exponentialRampToValueAtTime(350, audioCtx.currentTime + .07);
-      e.gain.setValueAtTime(.12, audioCtx.currentTime);
-      e.gain.exponentialRampToValueAtTime(.01, audioCtx.currentTime + .07);
-      t.connect(e);
-      e.connect(audioCtx.destination);
-      t.start();
-      t.stop(audioCtx.currentTime + .07);
-    }
-    function playWindowOpenSound() {
-      const t = document.getElementById("windowOpenAudio");
-      if (t) { t.currentTime = 0; t.play().catch(t => console.log("Audio play blocked:", t)); }
-    }
-
-    const startOverlay = document.getElementById("startOverlay"),
-          launchButton = document.getElementById("launchButton"),
-          launcherWrapper = document.getElementById("launcherWrapper"),
-          orbitCursor = document.getElementById("orbitCursor"),
-          bootScreen = document.getElementById("bootScreen"),
-          bootProgress = document.getElementById("bootProgress"),
-          desktop = document.getElementById("desktop"),
-          taskbar = document.getElementById("taskbar");
-
-    function startBootSequence() {
-      let t = 0;
-      const e = setInterval(() => {
-        t += 10;
-        bootProgress.style.width = t + "%";
-        if (80 === t) playWindowOpenSound();
-        if (t >= 100) {
-          clearInterval(e);
-          setTimeout(() => {
-            bootScreen.style.opacity = "0";
-            setTimeout(() => {
-              bootScreen.style.display = "none";
-              desktop.style.display = "block";
-              taskbar.style.display = "flex";
-            }, 500);
-          }, 300);
-        }
-      }, 120);
-    }
-
-    function updateClock() {
-      const t = new Date, e = String(t.getHours()).padStart(2, "0"), n = String(t.getMinutes()).padStart(2, "0");
-      document.getElementById("clock").textContent = e + ":" + n;
-    }
-
-    launcherWrapper.addEventListener("mouseenter", () => orbitCursor.style.opacity = "0");
-    launcherWrapper.addEventListener("mouseleave", () => orbitCursor.style.opacity = "1");
-    launchButton.addEventListener("click", () => {
-      initAudio();
-      playClickSound();
-      orbitCursor.style.opacity = "0";
-      startOverlay.style.opacity = "0";
-      setTimeout(() => {
-        startOverlay.style.display = "none";
-        bootScreen.style.display = "flex";
-        startBootSequence();
-      }, 300);
-    });
-
-    setInterval(updateClock, 1e3);
-    updateClock();
-
-    const startButton = document.getElementById("startButton"), startMenu = document.getElementById("startMenu");
-    function isMobile() { return window.innerWidth <= 768; }
-
-    function initWindowPositions() {
-      const t = document.getElementById("mainWindow"),
-            e = document.getElementById("donateWindow"),
-            n = document.getElementById("playerWindow"),
-            o = document.getElementById("guestbookWindow");
-      if (isMobile()) {
-        t.style.left = "15px"; t.style.top = "145px";
-        e.style.left = "30px"; e.style.top = "175px";
-        n.style.left = "15px"; n.style.top = "115px"; n.style.width = "calc(100vw - 30px)";
-        o.style.left = "20px"; o.style.top = "210px"; o.style.width = "calc(100vw - 40px)";
-      } else {
-        t.style.left = "calc(50% - 180px)"; t.style.top = "150px";
-        e.style.left = "calc(50% + 175px)"; e.style.top = "180px";
-        n.style.left = "auto"; n.style.right = "10px"; n.style.top = "10px"; n.style.width = "360px";
-        o.style.left = "calc(50% - 320px)"; o.style.top = "220px";
-      }
-    }
-
-    startButton.addEventListener("click", t => {
-      t.stopPropagation();
-      playClickSound();
-      if (startMenu.classList.toggle("open")) {
-        startButton.classList.add("active");
-        document.querySelectorAll(".window").forEach(t => t.classList.remove("active"));
-        document.querySelectorAll(".task-item").forEach(t => t.classList.remove("active"));
-      } else {
-        startButton.classList.remove("active");
-      }
-    });
-
-    document.addEventListener("click", t => {
-      if (startMenu.classList.contains("open")) {
-        if (!startMenu.contains(t.target) && !startButton.contains(t.target)) {
-          startMenu.classList.remove("open");
-          startButton.classList.remove("active");
-        }
-      }
-    });
-
-    initWindowPositions();
-    let highestZ = 100;
-    const windowTaskMap = { mainWindow: "taskMain", donateWindow: "taskHelp", playerWindow: "taskPlayer", guestbookWindow: "taskGuestbook" };
-
-    function getTaskBtn(t) { return document.getElementById(windowTaskMap[t]); }
-    function updateTaskbarMode() {
-      if (!isMobile()) return void taskbar.classList.remove("compact-tasks");
-      document.querySelectorAll(".task-item.visible").length > 3 ? taskbar.classList.add("compact-tasks") : taskbar.classList.remove("compact-tasks");
-    }
-
-    function bringToFront(t) {
-      highestZ++;
-      const e = document.getElementById(t);
-      e.style.zIndex = highestZ;
-      document.querySelectorAll(".window").forEach(t => t.classList.remove("active"));
-      document.querySelectorAll(".task-item").forEach(t => t.classList.remove("active"));
-      e.classList.add("active");
-      const n = getTaskBtn(t);
-      if (n) n.classList.add("active");
-    }
-
-    function openWindow(t) {
-      document.getElementById(t).classList.add("open");
-      bringToFront(t);
-      const e = getTaskBtn(t);
-      if (e) e.classList.add("visible");
-      updateTaskbarMode();
-    }
-
-    function closeWindow(t) {
-      playCloseSound();
-      document.getElementById(t).classList.remove("open", "active");
-      const e = getTaskBtn(t);
-      if (e) e.classList.remove("visible", "active");
-      if ("playerWindow" === t) stopAudio();
-      updateTaskbarMode();
-    }
-
-    function toggleTask(t) {
-      playClickSound();
-      const e = document.getElementById(t), n = getTaskBtn(t);
-      if (e.classList.contains("open")) {
-        if (e.classList.contains("active")) {
-          e.classList.remove("active");
-          if (n) n.classList.remove("active");
-        } else {
-          e.classList.add("open");
-          if (n) n.classList.add("visible");
-          bringToFront(t);
-        }
-      } else {
-        openWindow(t);
-      }
-      updateTaskbarMode();
-    }
-
-    function escapeHtml(t) {
-      return t.replace(/[&<>'"]/g, t => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[t] || t));
-    }
-
-    function makeDraggable(t) {
-      const e = t.querySelector(".title-bar");
-      let n = false, o = 0, a = 0;
-      t.addEventListener("pointerdown", () => bringToFront(t.id));
-      e.addEventListener("pointerdown", i => {
-        if ("button" === i.target.tagName.toLowerCase()) return;
-        n = true;
-        const s = t.getBoundingClientRect();
-        o = i.clientX - s.left;
-        a = i.clientY - s.top;
-        t.style.width = s.width + "px";
-        t.style.left = s.left + "px";
-        t.style.top = s.top + "px";
-        t.style.right = "auto";
-        e.setPointerCapture(i.pointerId);
-        bringToFront(t.id);
-        i.preventDefault();
-      });
-      e.addEventListener("pointermove", e => {
-        if (!n) return;
-        let i = e.clientX - o, s = e.clientY - a;
-        if (s < 0) s = 0;
-        if (s > window.innerHeight - 60) s = window.innerHeight - 60;
-        t.style.left = i + "px";
-        t.style.top = s + "px";
-      });
-      e.addEventListener("pointerup", t => {
-        if (n) {
-          n = false;
-          try { e.releasePointerCapture(t.pointerId); } catch (t) {}
-        }
-      });
-    }
-
-    Object.keys(windowTaskMap).forEach(t => { makeDraggable(document.getElementById(t)); });
-    document.addEventListener("click", t => {
-      if (t.target.closest(".win-button, .desktop-icon, .start-menu-item")) playClickSound();
-    });
-    openWindow("mainWindow");
-  </script>
+    </script>
 </body>
 </html>
