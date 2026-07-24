@@ -870,6 +870,10 @@
       z-index: 15000;
       margin: 0;
     }
+    .desktop-icon img {
+      -webkit-user-drag: none;
+      user-drag: none;
+    }
     .desktop, .desktop-icon {
       -webkit-touch-callout: none;
     }
@@ -2177,8 +2181,27 @@
         grabOffsetY = event.clientY - rect.top;
       });
 
+      // Нативный drag картинки внутри ярлыка перехватывал перетаскивание
+      // и ломал pointer-события (ярлык «отбрасывало»). Глушим его полностью.
+      allIcons.forEach(icon => {
+        icon.querySelectorAll("img").forEach(img => img.draggable = false);
+      });
+      document.addEventListener("dragstart", event => {
+        if (event.target.closest(".desktop-icon")) event.preventDefault();
+      });
+
       document.addEventListener("pointermove", event => {
         if (!dragIcon) return;
+        // Кнопка уже не зажата — pointerup потерялся (нативный drag, alt-tab,
+        // выход курсора из окна). Отменяем перетаскивание без перемещения.
+        if (event.buttons === 0) {
+          dragGhosts.forEach(ghost => ghost.remove());
+          dragGhosts = [];
+          dragGroup = [];
+          dragIcon = null;
+          dragStarted = false;
+          return;
+        }
         // Порог 5px отделяет перетаскивание от обычного клика
         if (!dragStarted) {
           if (Math.abs(event.clientX - dragStartX) < 5 && Math.abs(event.clientY - dragStartY) < 5) return;
