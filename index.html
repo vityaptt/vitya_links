@@ -1213,6 +1213,7 @@
               <div class="snake-overlay-title">ПАУЗА</div>
               <div class="snake-overlay-text">Игра продолжится с того же места.</div>
               <button type="button" class="win-button" onclick="snakeResume()">Продолжить</button>
+              <button type="button" class="win-button" onclick="snakeToMenu()">В меню</button>
             </div>
           </div>
           <div class="snake-overlay" id="snakeGameOverOverlay" style="display:none">
@@ -1872,7 +1873,7 @@
         donateWin.style.left = "calc(50% + 175px)"; donateWin.style.top = "180px";
         playerWin.style.left = "auto"; playerWin.style.right = "10px"; playerWin.style.top = "10px"; playerWin.style.width = "360px";
         guestbookWin.style.left = "calc(50% - 320px)"; guestbookWin.style.top = "220px"; guestbookWin.style.width = "380px";
-        snakeWin.style.left = "40px"; snakeWin.style.top = "50px";
+        snakeWin.style.left = "120px"; snakeWin.style.top = "40px";
       }
     }
     initWindowPositions();
@@ -2768,9 +2769,24 @@
         }
       });
 
-      // Пауза при уходе со вкладки, чтобы змейка не умерла без присмотра
+      // Пауза при уходе со вкладки (alt+tab и т.п.), чтобы змейка не умерла без присмотра
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) pause();
+      });
+      window.addEventListener("blur", () => pause());
+
+      // Esc во время игры = пауза
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && running) {
+          event.preventDefault();
+          pause();
+        }
+      });
+
+      // Клик мимо окна игры (другое окно, ярлык, таскбар, рабочий стол) = пауза
+      document.addEventListener("pointerdown", event => {
+        if (!running) return;
+        if (!event.target.closest("#snakeWindow")) pause();
       });
 
       draw();
