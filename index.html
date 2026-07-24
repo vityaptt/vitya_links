@@ -2031,6 +2031,13 @@
       let raisedWin = null, savedTop = null;
 
       function resetStrayScroll() {
+        // Никогда не трогаем прокрутку при открытой клавиатуре: сброс в этот момент
+        // сдирает автоскролл Safari к полю, и он компенсирует паном visual viewport,
+        // который потом застревает (визуал и зоны нажатий разъезжаются).
+        // Важно проверять здесь, а не в вызывающих: отложенные таймеры от blur
+        // первого поля могут выстрелить уже во время фокуса во втором.
+        const active = document.activeElement;
+        if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) return;
         if (window.scrollX !== 0 || window.scrollY !== 0) window.scrollTo(0, 0);
         const scroller = document.scrollingElement || document.documentElement;
         if (scroller.scrollTop !== 0) scroller.scrollTop = 0;
@@ -2070,6 +2077,24 @@
             setTimeout(resetStrayScroll, 300);
           }
         });
+
+        // Компенсация пана visual viewport. Safari может сдвинуть «объектив»
+        // (offsetTop > 0), не трогая страницу, — тогда картинка и зоны нажатий
+        // разъезжаются, и из JS этот пан не снять. Вместо борьбы двигаем контент
+        // вслед за объективом: transform смещает и отрисовку, и хит-тестинг разом,
+        // так что даже застрявший пан становится невидимым. Пан вернулся в 0 —
+        // transform снимается сам.
+        const syncViewportPan = () => {
+          const offsetY = Math.round(window.visualViewport.offsetTop),
+                offsetX = Math.round(window.visualViewport.offsetLeft),
+                shift = (offsetX || offsetY) ? `translate(${offsetX}px, ${offsetY}px)` : "";
+          if (desktop.style.transform !== shift) {
+            desktop.style.transform = shift;
+            taskbar.style.transform = shift;
+          }
+        };
+        window.visualViewport.addEventListener("resize", syncViewportPan);
+        window.visualViewport.addEventListener("scroll", syncViewportPan);
       }
 
       // Страховка: iOS иногда сдвигает страницу/контейнер стола вне сценария с полями.
