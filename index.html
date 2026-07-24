@@ -2052,20 +2052,9 @@
       };
     }
 
-    // Невидимая сетка, как «выравнивание по сетке» в Windows.
-    // Ярлык занимает ячейку; занятые ячейки ищутся по фактическим прямоугольникам,
-    // поэтому налезание ярлыков друг на друга исключено.
-    const GRID_ORIGIN = 10;
-
-    function gridCellSize() {
-      let w = 0, h = 0;
-      allIcons.forEach(icon => {
-        w = Math.max(w, icon.offsetWidth);
-        h = Math.max(h, icon.offsetHeight);
-      });
-      return { w: w + 14, h: h + 14 };
-    }
-
+    // Свободное размещение, как в Windows без «выравнивания по сетке»:
+    // ярлык встаёт ровно в точку броска. Если место занято — сдвигается
+    // на минимальное расстояние (поиск ближайшей свободной точки по решётке 16px).
     function iconsOverlap(left, top, width, height, otherIcon) {
       const r = {
         left: parseFloat(otherIcon.style.left) || 0,
@@ -2080,35 +2069,31 @@
                top >= r.top + r.height + pad);
     }
 
-    // Ближайшая к точке броска свободная ячейка сетки
-    function findFreeGridPosition(icon, targetLeft, targetTop) {
-      const cell = gridCellSize(),
-            iconW = icon.offsetWidth,
+    function findFreePosition(icon, targetLeft, targetTop) {
+      const iconW = icon.offsetWidth,
             iconH = icon.offsetHeight,
             others = allIcons.filter(other => other !== icon),
-            cols = Math.max(1, Math.floor((desktop.clientWidth - GRID_ORIGIN) / cell.w)),
-            rows = Math.max(1, Math.floor((desktop.clientHeight - 30 - GRID_ORIGIN) / cell.h)),
-            targetCol = Math.round((targetLeft - GRID_ORIGIN) / cell.w),
-            targetRow = Math.round((targetTop - GRID_ORIGIN) / cell.h);
-      const candidates = [];
-      for (let col = 0; col < cols; col++) {
-        for (let row = 0; row < rows; row++) {
-          candidates.push({
-            col, row,
-            dist: (col - targetCol) ** 2 + (row - targetRow) ** 2
-          });
+            fits = pos => !others.some(other => iconsOverlap(pos.left, pos.top, iconW, iconH, other)),
+            start = clampIconPosition(targetLeft, targetTop, iconW, iconH);
+      if (fits(start)) return start;
+      const STEP = 16;
+      for (let radius = STEP; radius <= 640; radius += STEP) {
+        let best = null, bestDist = Infinity;
+        for (let dx = -radius; dx <= radius; dx += STEP) {
+          for (let dy = -radius; dy <= radius; dy += STEP) {
+            // проверяем только кольцо текущего радиуса
+            if (Math.max(Math.abs(dx), Math.abs(dy)) !== radius) continue;
+            const pos = clampIconPosition(start.left + dx, start.top + dy, iconW, iconH),
+                  dist = (pos.left - start.left) ** 2 + (pos.top - start.top) ** 2;
+            if (dist < bestDist && fits(pos)) {
+              best = pos;
+              bestDist = dist;
+            }
+          }
         }
+        if (best) return best;
       }
-      candidates.sort((a, b) => a.dist - b.dist);
-      for (const c of candidates) {
-        const left = GRID_ORIGIN + c.col * cell.w,
-              top = GRID_ORIGIN + c.row * cell.h;
-        if (left + iconW > desktop.clientWidth || top + iconH > desktop.clientHeight - 30) continue;
-        if (!others.some(other => iconsOverlap(left, top, iconW, iconH, other))) {
-          return { left, top };
-        }
-      }
-      return clampIconPosition(targetLeft, targetTop, iconW, iconH); // все ячейки заняты — маловероятно
+      return start; // свободного места не нашлось — маловероятно с 4 ярлыками
     }
 
     // «Замораживаем» ярлыки: переводим из потока в absolute-координаты стола,
@@ -2141,7 +2126,7 @@
               conflict = allIcons.some(other =>
                 other !== icon && iconsOverlap(left, top, icon.offsetWidth, icon.offsetHeight, other));
         if (conflict) {
-          const free = findFreeGridPosition(icon, left, top);
+          const free = findFreePosition(icon, left, top);
           icon.style.left = free.left + "px";
           icon.style.top = free.top + "px";
         }
@@ -2239,7 +2224,7 @@
           });
           // Расставляем по одному: каждый следующий видит уже поставленных
           dragGroup.forEach((icon, index) => {
-            const pos = findFreeGridPosition(icon, baseLeft + deltas[index].dx, baseTop + deltas[index].dy);
+            const pos = findFreePosition(icon, baseLeft + deltas[index].dx, baseTop + deltas[index].dy);
             icon.style.left = pos.left + "px";
             icon.style.top = pos.top + "px";
             saveIconPosition(icon.dataset.window, pos.left, pos.top);
