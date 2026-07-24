@@ -29,7 +29,14 @@
     body {
       background-color: teal;
       font-family: "MS Sans Serif", Arial, sans-serif;
-      min-height: 100vh;
+      /* position: fixed — замок прокрутки для iOS. Он игнорирует overflow: hidden
+         и после клавиатуры оставляет страницу смотанной (уползшие ярлыки, скроллбар).
+         Фиксированному body скроллиться физически некуда — сдвигу неоткуда взяться. */
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
