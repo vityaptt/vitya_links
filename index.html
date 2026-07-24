@@ -243,6 +243,8 @@
       height: 32px;
       margin-bottom: 4px;
       image-rendering: pixelated;
+      -webkit-user-drag: none;
+      user-drag: none;
     }
     .desktop-icon span {
       color: #fff;
@@ -978,11 +980,6 @@
     .snake-lb-empty {
       color: #666;
       font-family: Arial;
-    }
-    .desktop-icon img {
-      -webkit-user-drag: none;
-      user-drag: none;
-      image-rendering: pixelated;
     }
     .desktop, .desktop-icon {
       -webkit-touch-callout: none;
@@ -1967,7 +1964,9 @@
         win.style.left = rect.left + "px";
         win.style.top = rect.top + "px";
         win.style.right = "auto";
-        titleBar.setPointerCapture(event.pointerId);
+        try {
+          titleBar.setPointerCapture(event.pointerId);
+        } catch (error) {}
         bringToFront(win.id);
         event.preventDefault();
       });
@@ -2068,17 +2067,24 @@
         window.visualViewport.addEventListener("resize", () => {
           if (window.visualViewport.height / window.innerHeight > 0.85) {
             resetStrayScroll();
+            setTimeout(resetStrayScroll, 300);
           }
         });
       }
 
-      // Страховка: первый же тап вне поля ввода гасит остаточный сдвиг,
-      // чтобы окна не «подпрыгивали» при взаимодействии после клавиатуры
-      document.addEventListener("pointerdown", event => {
+      // Страховка: iOS иногда сдвигает страницу/контейнер стола вне сценария с полями.
+      // Ловим сам факт прокрутки и откатываем её с задержкой — после завершения жеста.
+      // ВАЖНО: не делать это на pointerdown — сдвиг страницы под пальцем заставляет iOS
+      // отменять жест (pointercancel), и все тапы/драги по окнам перестают работать.
+      let strayResetTimer = null;
+      function scheduleStrayReset() {
         const active = document.activeElement;
         if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) return;
-        resetStrayScroll();
-      }, true);
+        clearTimeout(strayResetTimer);
+        strayResetTimer = setTimeout(resetStrayScroll, 150);
+      }
+      window.addEventListener("scroll", scheduleStrayReset, { passive: true });
+      desktop.addEventListener("scroll", scheduleStrayReset, { passive: true });
     })();
 
     // ===== Выделение ярлыков рамкой (как на рабочем столе Windows) =====
@@ -2108,7 +2114,9 @@
       selectionBox.style.height = "0px";
       selectionBox.style.display = "block";
       clearIconSelection();
-      desktop.setPointerCapture(event.pointerId);
+      try {
+        desktop.setPointerCapture(event.pointerId);
+      } catch (error) {}
     });
 
     desktop.addEventListener("pointermove", event => {
@@ -2728,6 +2736,7 @@
         running = false;
         over = false;
         body = [];
+        disk = null;
         gameOverOverlay.style.display = "none";
         pauseOverlay.style.display = "none";
         startOverlay.style.display = "flex";
@@ -2800,13 +2809,6 @@
       });
 
       draw();
-      // Отладочный хук для автотестов; на геймплей не влияет
-      window.__snakeDebug = {
-        grow: n => { for (let i = 0; i < n; i++) body.push({ ...body[body.length - 1] }); },
-        setDisk: (x, y) => { disk = { x, y }; draw(); },
-        head: () => ({ ...body[0] }),
-        len: () => body.length
-      };
       return { start: start, pause: pause, resume: resume, toMenu: toMenu, getScore: () => score, isOver: () => over, getMode: () => mode };
     })();
 
