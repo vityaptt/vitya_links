@@ -870,9 +870,116 @@
       z-index: 15000;
       margin: 0;
     }
+    .snake-field-wrap {
+      position: relative;
+      line-height: 0;
+      border: 2px solid;
+      border-color: var(--border-inset);
+      background: #000;
+    }
+    #snakeCanvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      image-rendering: pixelated;
+      touch-action: none;
+    }
+    .snake-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, .45);
+      line-height: 1.4;
+      z-index: 2;
+    }
+    .snake-overlay-panel {
+      background: silver;
+      border: 2px solid;
+      border-color: var(--border-outset);
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, .5);
+      padding: 12px 16px;
+      text-align: center;
+      max-width: 85%;
+    }
+    .snake-overlay-title {
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+    .snake-overlay-text {
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+    .snake-overlay-panel .win-button {
+      width: 100%;
+      justify-content: center;
+      margin-top: 4px;
+    }
+    .snake-nick-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+    .snake-nick-row input {
+      width: 58px;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+    .snake-submit-status {
+      font-size: 10px;
+      min-height: 13px;
+      margin-bottom: 4px;
+    }
+    .snake-leaderboard {
+      font-size: 11px;
+      padding: 6px 8px 8px;
+    }
+    .snake-leaderboard legend {
+      font-weight: 700;
+      padding: 0 4px;
+    }
+    .snake-leaderboard-list {
+      background: #fff;
+      border: 2px solid;
+      border-color: var(--border-inset);
+      padding: 4px 6px;
+      max-height: 150px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+    }
+    .snake-lb-row {
+      display: flex;
+      gap: 8px;
+      padding: 1px 0;
+    }
+    .snake-lb-row .lb-rank {
+      width: 22px;
+      color: #666;
+    }
+    .snake-lb-row .lb-nick {
+      flex: 1;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    .snake-lb-row:first-child .lb-nick {
+      color: navy;
+    }
+    .snake-lb-empty {
+      color: #666;
+      font-family: Arial;
+    }
     .desktop-icon img {
       -webkit-user-drag: none;
       user-drag: none;
+      image-rendering: pixelated;
     }
     .desktop, .desktop-icon {
       -webkit-touch-callout: none;
@@ -974,6 +1081,9 @@
       <div class="desktop-icon" role="button" tabindex="0" data-window="guestbookWindow" onclick='openWindow("guestbookWindow")'>
         <img src="assets/icons/notepad-0.png" alt="Guestbook"> <span>Гостевая.txt</span>
       </div>
+      <div class="desktop-icon" role="button" tabindex="0" data-window="snakeWindow" onclick='openWindow("snakeWindow")'>
+        <img src="assets/icons/joystick-0.png" alt="Snake"> <span>Змейка.exe</span>
+      </div>
     </div>
     <div class="window open" id="mainWindow">
       <div class="title-bar">
@@ -1073,6 +1183,50 @@
         </div>
       </div>
     </div>
+    <div class="window" id="snakeWindow" style="width:348px">
+      <div class="title-bar">
+        <div class="title-bar-text">
+          <img src="assets/icons/joystick-0.png" width="14" height="14" alt="Snake"> Змейка - C:\GAMES\SNAKE.EXE
+        </div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" onclick='closeWindow("snakeWindow")'></button>
+        </div>
+      </div>
+      <div class="window-body" style="gap:8px;padding:10px;box-sizing:border-box">
+        <div class="snake-field-wrap">
+          <canvas id="snakeCanvas" width="320" height="256"></canvas>
+          <div class="snake-overlay" id="snakeStartOverlay">
+            <div class="snake-overlay-panel">
+              <div class="snake-overlay-title">ЗМЕЙКА</div>
+              <div class="snake-overlay-text">Собирай диски.<br>Края поля сквозные, игра бесконечная.<br><br>ПК: стрелки или WASD<br>Телефон: свайпы по полю</div>
+              <button type="button" class="win-button" onclick="snakeStart()">Начать игру</button>
+            </div>
+          </div>
+          <div class="snake-overlay" id="snakeGameOverOverlay" style="display:none">
+            <div class="snake-overlay-panel">
+              <div class="snake-overlay-title">GAME OVER</div>
+              <div class="snake-overlay-text">Очки: <strong id="snakeFinalScore">0</strong></div>
+              <div class="snake-nick-row" id="snakeNickRow">
+                <input type="text" id="snakeNick" maxlength="3" placeholder="AAA" autocomplete="off">
+                <button type="button" class="win-button" id="snakeSubmitBtn" onclick="snakeSubmitScore()">Записать</button>
+              </div>
+              <div class="snake-submit-status" id="snakeSubmitStatus"></div>
+              <button type="button" class="win-button" onclick="snakeStart()">Играть снова</button>
+            </div>
+          </div>
+        </div>
+        <div class="status-bar" style="margin-top:0">
+          <div class="status-bar-field" style="flex:1">Очки: <span id="snakeScore">0</span></div>
+          <div class="status-bar-field">Лучший: <span id="snakeBest">0</span></div>
+        </div>
+        <fieldset class="snake-leaderboard">
+          <legend>Таблица лидеров</legend>
+          <div class="snake-leaderboard-list" id="snakeLeaderboardList">
+            <div class="snake-lb-row snake-lb-empty">Загрузка...</div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
   </div>
   <div class="start-menu" id="startMenu">
     <div class="start-menu-side">прив чд</div>
@@ -1110,6 +1264,9 @@
         </button>
         <button class="task-item" id="taskGuestbook" onclick='toggleTask("guestbookWindow")'>
           <img src="assets/icons/notepad-0.png" width="12" height="12" alt="Guestbook"> <span>Гостевая.txt</span>
+        </button>
+        <button class="task-item" id="taskSnake" onclick='toggleTask("snakeWindow")'>
+          <img src="assets/icons/joystick-0.png" width="12" height="12" alt="Snake"> <span>Змейка</span>
         </button>
       </div>
     </div>
@@ -1475,6 +1632,42 @@
       }
     });
 
+    // ===== Змейка: глобальная таблица лидеров =====
+    let snakeLeaderboardStarted = false;
+
+    window.initSnakeLeaderboard = function() {
+      if (snakeLeaderboardStarted) return;
+      snakeLeaderboardStarted = true;
+      const listEl = document.getElementById("snakeLeaderboardList"),
+            topQuery = query(collection(db, "snake_scores"), orderBy("score", "desc"), limit(10));
+      onSnapshot(topQuery, snapshot => {
+        if (snapshot.empty) {
+          listEl.innerHTML = '<div class="snake-lb-row snake-lb-empty">Пока пусто — стань первым!</div>';
+          return;
+        }
+        listEl.innerHTML = snapshot.docs.map((doc, index) => {
+          const data = doc.data();
+          return `
+            <div class="snake-lb-row">
+              <span class="lb-rank">${index + 1}.</span>
+              <span class="lb-nick">${escapeHtml(String(data.nick || "???")).slice(0, 3)}</span>
+              <span class="lb-score">${Number(data.score) || 0}</span>
+            </div>`;
+        }).join("");
+      }, error => {
+        console.error("Ошибка загрузки таблицы лидеров:", error);
+        listEl.innerHTML = '<div class="snake-lb-row snake-lb-empty">Таблица недоступна</div>';
+      });
+    };
+
+    window.submitSnakeScore = function(nick, score) {
+      return addDoc(collection(db, "snake_scores"), {
+        nick: nick,
+        score: score,
+        timestamp: serverTimestamp()
+      });
+    };
+
     listenGuestbook();
     checkTwitchStatus();
     setInterval(checkTwitchStatus, 60000);
@@ -1623,7 +1816,8 @@
       const mainWin = document.getElementById("mainWindow"),
             donateWin = document.getElementById("donateWindow"),
             playerWin = document.getElementById("playerWindow"),
-            guestbookWin = document.getElementById("guestbookWindow");
+            guestbookWin = document.getElementById("guestbookWindow"),
+            snakeWin = document.getElementById("snakeWindow");
       if (isMobile()) {
         mainWin.style.left = "15px"; mainWin.style.top = "145px";
         donateWin.style.left = "30px"; donateWin.style.top = "175px";
@@ -1631,11 +1825,13 @@
         // Ширину гостевой не трогаем — одна и та же (380px) на всех устройствах;
         // на экранах уже 400px её мягко ужмёт max-width: 95vw. Центрируем по горизонтали.
         guestbookWin.style.left = "calc((100vw - min(380px, 95vw)) / 2)"; guestbookWin.style.top = "210px"; guestbookWin.style.width = "380px";
+        snakeWin.style.left = "calc((100vw - min(348px, 95vw)) / 2)"; snakeWin.style.top = "125px";
       } else {
         mainWin.style.left = "calc(50% - 180px)"; mainWin.style.top = "150px";
         donateWin.style.left = "calc(50% + 175px)"; donateWin.style.top = "180px";
         playerWin.style.left = "auto"; playerWin.style.right = "10px"; playerWin.style.top = "10px"; playerWin.style.width = "360px";
         guestbookWin.style.left = "calc(50% - 320px)"; guestbookWin.style.top = "220px"; guestbookWin.style.width = "380px";
+        snakeWin.style.left = "40px"; snakeWin.style.top = "50px";
       }
     }
     initWindowPositions();
@@ -1646,7 +1842,8 @@
       mainWindow: "taskMain",
       donateWindow: "taskHelp",
       playerWindow: "taskPlayer",
-      guestbookWindow: "taskGuestbook"
+      guestbookWindow: "taskGuestbook",
+      snakeWindow: "taskSnake"
     };
 
     function getTaskBtn(windowId) {
@@ -1678,6 +1875,7 @@
       bringToFront(windowId);
       const taskBtn = getTaskBtn(windowId);
       if (taskBtn) taskBtn.classList.add("visible");
+      if (windowId === "snakeWindow" && window.initSnakeLeaderboard) window.initSnakeLeaderboard();
       updateTaskbarMode();
     }
 
@@ -1687,6 +1885,7 @@
       const taskBtn = getTaskBtn(windowId);
       if (taskBtn) taskBtn.classList.remove("visible", "active");
       if (windowId === "playerWindow") stopAudio();
+      if (windowId === "snakeWindow" && typeof snakeOnWindowClose === "function") snakeOnWindowClose();
       updateTaskbarMode();
     }
 
@@ -2263,6 +2462,281 @@
       document.addEventListener("pointerup", finishIconDrag);
       document.addEventListener("pointercancel", finishIconDrag);
     })();
+
+    // ===== Змейка =====
+    const snake = (function() {
+      const COLS = 20, ROWS = 16, CELL = 16,
+            BASE_TICK = 150, MIN_TICK = 70,
+            canvas = document.getElementById("snakeCanvas"),
+            ctx = canvas.getContext("2d"),
+            scoreEl = document.getElementById("snakeScore"),
+            bestEl = document.getElementById("snakeBest"),
+            startOverlay = document.getElementById("snakeStartOverlay"),
+            gameOverOverlay = document.getElementById("snakeGameOverOverlay"),
+            finalScoreEl = document.getElementById("snakeFinalScore"),
+            diskImg = new Image();
+      diskImg.src = "assets/icons/cd_audio_cd_a-2.png";
+
+      let body = [], dir = { x: 1, y: 0 }, nextDir = { x: 1, y: 0 },
+          disk = null, score = 0, best = 0,
+          running = false, over = false, timer = null;
+
+      try {
+        best = parseInt(localStorage.getItem("vityaSnakeBest")) || 0;
+      } catch (error) {}
+      bestEl.textContent = best;
+
+      function playEatSound() {
+        initAudio();
+        if (!audioCtx) return;
+        const oscillator = audioCtx.createOscillator(),
+              gain = audioCtx.createGain();
+        oscillator.type = "square";
+        oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+        oscillator.connect(gain);
+        gain.connect(audioCtx.destination);
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.08);
+      }
+
+      function playDeathSound() {
+        initAudio();
+        if (!audioCtx) return;
+        const oscillator = audioCtx.createOscillator(),
+              gain = audioCtx.createGain();
+        oscillator.type = "sawtooth";
+        oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(60, audioCtx.currentTime + 0.4);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+        oscillator.connect(gain);
+        gain.connect(audioCtx.destination);
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.4);
+      }
+
+      function spawnDisk() {
+        const free = [];
+        for (let x = 0; x < COLS; x++) {
+          for (let y = 0; y < ROWS; y++) {
+            if (!body.some(seg => seg.x === x && seg.y === y)) free.push({ x, y });
+          }
+        }
+        disk = free.length ? free[Math.floor(Math.random() * free.length)] : null;
+      }
+
+      function draw() {
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // еле заметная сетка
+        ctx.strokeStyle = "rgba(255,255,255,0.04)";
+        ctx.lineWidth = 1;
+        for (let x = 1; x < COLS; x++) {
+          ctx.beginPath(); ctx.moveTo(x * CELL + .5, 0); ctx.lineTo(x * CELL + .5, canvas.height); ctx.stroke();
+        }
+        for (let y = 1; y < ROWS; y++) {
+          ctx.beginPath(); ctx.moveTo(0, y * CELL + .5); ctx.lineTo(canvas.width, y * CELL + .5); ctx.stroke();
+        }
+        if (disk) ctx.drawImage(diskImg, disk.x * CELL, disk.y * CELL, CELL, CELL);
+        body.forEach((seg, index) => {
+          const px = seg.x * CELL, py = seg.y * CELL;
+          ctx.fillStyle = index === 0 ? "#55ff55" : "#00a800";
+          ctx.fillRect(px + 1, py + 1, CELL - 2, CELL - 2);
+          // бевел в духе кнопок win95
+          ctx.fillStyle = "rgba(255,255,255,0.35)";
+          ctx.fillRect(px + 1, py + 1, CELL - 2, 2);
+          ctx.fillRect(px + 1, py + 1, 2, CELL - 2);
+          ctx.fillStyle = "rgba(0,0,0,0.35)";
+          ctx.fillRect(px + 1, py + CELL - 3, CELL - 2, 2);
+          ctx.fillRect(px + CELL - 3, py + 1, 2, CELL - 2);
+        });
+      }
+
+      function tickInterval() {
+        return Math.max(MIN_TICK, BASE_TICK - score * 2);
+      }
+
+      function step() {
+        dir = nextDir;
+        // Бесконечное поле: края сквозные
+        const head = {
+          x: (body[0].x + dir.x + COLS) % COLS,
+          y: (body[0].y + dir.y + ROWS) % ROWS
+        };
+        if (body.some(seg => seg.x === head.x && seg.y === head.y)) {
+          gameOver();
+          return;
+        }
+        body.unshift(head);
+        if (disk && head.x === disk.x && head.y === disk.y) {
+          score++;
+          scoreEl.textContent = score;
+          playEatSound();
+          spawnDisk();
+          clearInterval(timer);
+          timer = setInterval(step, tickInterval()); // растёт скорость
+        } else {
+          body.pop();
+        }
+        draw();
+      }
+
+      function gameOver() {
+        running = false;
+        over = true;
+        clearInterval(timer);
+        timer = null;
+        playDeathSound();
+        if (score > best) {
+          best = score;
+          bestEl.textContent = best;
+          try {
+            localStorage.setItem("vityaSnakeBest", String(best));
+          } catch (error) {}
+        }
+        finalScoreEl.textContent = score;
+        document.getElementById("snakeSubmitStatus").textContent = "";
+        document.getElementById("snakeNickRow").style.display = score > 0 ? "flex" : "none";
+        document.getElementById("snakeSubmitBtn").disabled = false;
+        gameOverOverlay.style.display = "flex";
+      }
+
+      function start() {
+        body = [{ x: 5, y: 8 }, { x: 4, y: 8 }, { x: 3, y: 8 }];
+        dir = { x: 1, y: 0 };
+        nextDir = { x: 1, y: 0 };
+        score = 0;
+        scoreEl.textContent = "0";
+        over = false;
+        running = true;
+        startOverlay.style.display = "none";
+        gameOverOverlay.style.display = "none";
+        spawnDisk();
+        draw();
+        clearInterval(timer);
+        timer = setInterval(step, tickInterval());
+      }
+
+      function pause() {
+        if (!running) return;
+        clearInterval(timer);
+        timer = null;
+        running = false;
+        startOverlay.querySelector(".snake-overlay-text").innerHTML = "Пауза.<br>Игра продолжится с того же места.";
+        startOverlay.querySelector(".win-button").textContent = "Продолжить";
+        startOverlay.style.display = "flex";
+      }
+
+      function resumeOrStart() {
+        if (over || body.length === 0) {
+          start();
+          return;
+        }
+        startOverlay.style.display = "none";
+        running = true;
+        clearInterval(timer);
+        timer = setInterval(step, tickInterval());
+      }
+
+      function setDirection(x, y) {
+        // запрет разворота на 180
+        if (x === -dir.x && y === -dir.y) return;
+        nextDir = { x, y };
+      }
+
+      // Клавиатура: стрелки и WASD, только при открытом окне и не из полей ввода
+      document.addEventListener("keydown", event => {
+        const win = document.getElementById("snakeWindow");
+        if (!win.classList.contains("open")) return;
+        const tag = event.target.tagName.toLowerCase();
+        if (tag === "input" || tag === "textarea") return;
+        const key = event.key.toLowerCase();
+        const map = {
+          arrowup: [0, -1], w: [0, -1], ц: [0, -1],
+          arrowdown: [0, 1], s: [0, 1], ы: [0, 1],
+          arrowleft: [-1, 0], a: [-1, 0], ф: [-1, 0],
+          arrowright: [1, 0], d: [1, 0], в: [1, 0]
+        };
+        if (map[key]) {
+          event.preventDefault();
+          if (running) setDirection(map[key][0], map[key][1]);
+        }
+      });
+
+      // Свайпы на канвасе для телефона
+      let swipeStartX = 0, swipeStartY = 0, swipeActive = false;
+      canvas.addEventListener("pointerdown", event => {
+        swipeActive = true;
+        swipeStartX = event.clientX;
+        swipeStartY = event.clientY;
+      });
+      canvas.addEventListener("pointerup", event => {
+        if (!swipeActive) return;
+        swipeActive = false;
+        const dx = event.clientX - swipeStartX,
+              dy = event.clientY - swipeStartY;
+        if (Math.abs(dx) < 18 && Math.abs(dy) < 18) return;
+        if (Math.abs(dx) > Math.abs(dy)) {
+          setDirection(dx > 0 ? 1 : -1, 0);
+        } else {
+          setDirection(0, dy > 0 ? 1 : -1);
+        }
+      });
+
+      // Пауза при уходе со вкладки, чтобы змейка не умерла без присмотра
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) pause();
+      });
+
+      draw();
+      // Отладочный хук для автотестов; на геймплей не влияет
+      window.__snakeDebug = {
+        grow: n => { for (let i = 0; i < n; i++) body.push({ ...body[body.length - 1] }); },
+        setDisk: (x, y) => { disk = { x, y }; draw(); },
+        head: () => ({ ...body[0] })
+      };
+      return { start: start, pause: pause, resumeOrStart: resumeOrStart, getScore: () => score, isOver: () => over };
+    })();
+
+    function snakeStart() {
+      playClickSound();
+      snake.resumeOrStart();
+    }
+
+    function snakeOnWindowClose() {
+      snake.pause();
+    }
+
+    function snakeSubmitScore() {
+      const nickInput = document.getElementById("snakeNick"),
+            statusEl = document.getElementById("snakeSubmitStatus"),
+            submitBtn = document.getElementById("snakeSubmitBtn"),
+            nick = nickInput.value.trim().toUpperCase();
+      if (!/^[A-ZА-ЯЁ0-9]{3}$/.test(nick)) {
+        statusEl.textContent = "Ник — ровно 3 буквы или цифры";
+        statusEl.style.color = "#a00";
+        return;
+      }
+      if (!snake.isOver() || snake.getScore() <= 0) return;
+      submitBtn.disabled = true;
+      statusEl.style.color = "#000";
+      statusEl.textContent = "Отправка...";
+      window.submitSnakeScore(nick, snake.getScore())
+        .then(() => {
+          statusEl.style.color = "#060";
+          statusEl.textContent = "Записано в таблицу!";
+          document.getElementById("snakeNickRow").style.display = "none";
+        })
+        .catch(error => {
+          console.error("Ошибка отправки результата:", error);
+          statusEl.style.color = "#a00";
+          statusEl.textContent = "Не удалось записать. Попробуй ещё раз.";
+          submitBtn.disabled = false;
+        });
+    }
 
     // ===== Звук клика на кнопках и иконках =====
     document.addEventListener("click", event => {
