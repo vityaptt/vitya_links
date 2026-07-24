@@ -2077,24 +2077,6 @@
             setTimeout(resetStrayScroll, 300);
           }
         });
-
-        // Компенсация пана visual viewport. Safari может сдвинуть «объектив»
-        // (offsetTop > 0), не трогая страницу, — тогда картинка и зоны нажатий
-        // разъезжаются, и из JS этот пан не снять. Вместо борьбы двигаем контент
-        // вслед за объективом: transform смещает и отрисовку, и хит-тестинг разом,
-        // так что даже застрявший пан становится невидимым. Пан вернулся в 0 —
-        // transform снимается сам.
-        const syncViewportPan = () => {
-          const offsetY = Math.round(window.visualViewport.offsetTop),
-                offsetX = Math.round(window.visualViewport.offsetLeft),
-                shift = (offsetX || offsetY) ? `translate(${offsetX}px, ${offsetY}px)` : "";
-          if (desktop.style.transform !== shift) {
-            desktop.style.transform = shift;
-            taskbar.style.transform = shift;
-          }
-        };
-        window.visualViewport.addEventListener("resize", syncViewportPan);
-        window.visualViewport.addEventListener("scroll", syncViewportPan);
       }
 
       // Страховка: iOS иногда сдвигает страницу/контейнер стола вне сценария с полями.
