@@ -951,8 +951,6 @@
       border: 2px solid;
       border-color: var(--border-inset);
       padding: 4px 6px;
-      max-height: 150px;
-      overflow-y: auto;
       font-family: 'Courier New', monospace;
     }
     .snake-lb-row {
@@ -1411,7 +1409,7 @@
   <script type="module">
     // ===== Гостевая книга (Firebase) и проверка Twitch-эфира =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, addDoc, query, orderBy, limit, onSnapshot, startAfter, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, addDoc, query, orderBy, limit, onSnapshot, startAfter, getDocs, serverTimestamp, where, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCKo0rXgyP_DU1BNG9iqQfmm8h49twimVE",
@@ -1632,40 +1630,67 @@
       }
     });
 
-    // ===== Змейка: глобальная таблица лидеров =====
+    // ===== Змейка: глобальная таблица лидеров (топ-10) =====
     let snakeLeaderboardStarted = false;
 
     window.initSnakeLeaderboard = function() {
       if (snakeLeaderboardStarted) return;
       snakeLeaderboardStarted = true;
-      const listEl = document.getElementById("snakeLeaderboardList"),
-            topQuery = query(collection(db, "snake_scores"), orderBy("score", "desc"), limit(10));
+      const listEl = document.getElementById("snakeLeaderboardList");
+      // Берём с запасом (30): старые дубли ников могли занять слоты выборки,
+      // после дедупликации показываем ровно топ-10
+      const topQuery = query(collection(db, "snake_scores"), orderBy("score", "desc"), limit(30));
       onSnapshot(topQuery, snapshot => {
         if (snapshot.empty) {
           listEl.innerHTML = '<div class="snake-lb-row snake-lb-empty">Пока пусто — стань первым!</div>';
           return;
         }
-        listEl.innerHTML = snapshot.docs.map((doc, index) => {
-          const data = doc.data();
-          return `
+        // Один ник — одна строка с его лучшим результатом
+        // (выборка отсортирована по убыванию: первое вхождение ника = его максимум)
+        const seen = new Set(),
+              rows = [];
+        for (const docSnap of snapshot.docs) {
+          const data = docSnap.data(),
+                nick = String(data.nick || "???").slice(0, 3).toUpperCase();
+          if (seen.has(nick)) continue;
+          seen.add(nick);
+          rows.push({ nick, score: Number(data.score) || 0 });
+          if (rows.length === 10) break;
+        }
+        listEl.innerHTML = rows.map((row, index) => `
             <div class="snake-lb-row">
               <span class="lb-rank">${index + 1}.</span>
-              <span class="lb-nick">${escapeHtml(String(data.nick || "???")).slice(0, 3)}</span>
-              <span class="lb-score">${Number(data.score) || 0}</span>
-            </div>`;
-        }).join("");
+              <span class="lb-nick">${escapeHtml(row.nick)}</span>
+              <span class="lb-score">${row.score}</span>
+            </div>`).join("");
       }, error => {
         console.error("Ошибка загрузки таблицы лидеров:", error);
         listEl.innerHTML = '<div class="snake-lb-row snake-lb-empty">Таблица недоступна</div>';
       });
     };
 
-    window.submitSnakeScore = function(nick, score) {
-      return addDoc(collection(db, "snake_scores"), {
+    window.submitSnakeScore = async function(nick, score) {
+      // Один ник — одна запись: ищем существующую и обновляем, если новый результат выше
+      const existingQuery = query(collection(db, "snake_scores"), where("nick", "==", nick), limit(1)),
+            existing = await getDocs(existingQuery);
+      if (!existing.empty) {
+        const docSnap = existing.docs[0],
+              oldScore = Number(docSnap.data().score) || 0;
+        if (oldScore >= score) {
+          return { kept: true, existing: oldScore };
+        }
+        await updateDoc(doc(db, "snake_scores", docSnap.id), {
+          score: score,
+          timestamp: serverTimestamp()
+        });
+        return { updated: true };
+      }
+      await addDoc(collection(db, "snake_scores"), {
         nick: nick,
         score: score,
         timestamp: serverTimestamp()
       });
+      return { created: true };
     };
 
     listenGuestbook();
@@ -2725,10 +2750,16 @@
       statusEl.style.color = "#000";
       statusEl.textContent = "Отправка...";
       window.submitSnakeScore(nick, snake.getScore())
-        .then(() => {
-          statusEl.style.color = "#060";
-          statusEl.textContent = "Записано в таблицу!";
-          document.getElementById("snakeNickRow").style.display = "none";
+        .then(result => {
+          if (result.kept) {
+            statusEl.style.color = "#000";
+            statusEl.textContent = "У ника " + nick + " рекорд уже выше: " + result.existing;
+            submitBtn.disabled = false;
+          } else {
+            statusEl.style.color = "#060";
+            statusEl.textContent = result.updated ? "Рекорд ника " + nick + " обновлён!" : "Записано в таблицу!";
+            document.getElementById("snakeNickRow").style.display = "none";
+          }
         })
         .catch(error => {
           console.error("Ошибка отправки результата:", error);
