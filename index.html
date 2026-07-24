@@ -2021,47 +2021,49 @@
       }, 150);
     });
 
-    // ===== Мобилка: поднимаем окно гостевой над клавиатурой при фокусе =====
+    // ===== Мобилка: клавиатура iOS =====
+    // Два эффекта, с которыми боремся:
+    // 1) Safari программно скроллит страницу И контейнер .desktop (даже с overflow:hidden),
+    //    чтобы показать поле над клавиатурой, и не откатывает сдвиг после закрытия —
+    //    ярлыки и окна «уползают» вверх, накапливаясь с каждым разом.
+    // 2) Окно с полем ввода нужно поднять над клавиатурой и вернуть на место.
+    // Работает для ЛЮБОГО input/textarea в любом окне (гостевая, ник в змейке, будущие поля).
     (function() {
-      const guestbookWin = document.getElementById("guestbookWindow");
-      let savedTop = null;
+      let raisedWin = null, savedTop = null;
 
-      // iOS Safari сам прокручивает страницу к полю при открытии клавиатуры,
-      // несмотря на overflow: hidden, и не откатывает прокрутку после закрытия.
-      // Смещение накапливается — ярлыки и окна уползают вверх. Возвращаем ноль сами.
       function resetStrayScroll() {
-        if (window.scrollX !== 0 || window.scrollY !== 0) {
-          window.scrollTo(0, 0);
-        }
+        if (window.scrollX !== 0 || window.scrollY !== 0) window.scrollTo(0, 0);
         const scroller = document.scrollingElement || document.documentElement;
         if (scroller.scrollTop !== 0) scroller.scrollTop = 0;
+        if (document.body.scrollTop !== 0) document.body.scrollTop = 0;
+        if (desktop.scrollTop !== 0) desktop.scrollTop = 0;
+        if (desktop.scrollLeft !== 0) desktop.scrollLeft = 0;
       }
 
-      function onFieldFocus() {
-        if (isMobile() && savedTop === null) {
-          savedTop = guestbookWin.style.top;
-          guestbookWin.style.top = "5px";
+      document.addEventListener("focusin", event => {
+        const tag = event.target.tagName.toLowerCase();
+        if (tag !== "input" && tag !== "textarea") return;
+        if (!isMobile()) return;
+        const win = event.target.closest(".window");
+        if (win && raisedWin === null) {
+          raisedWin = win;
+          savedTop = win.style.top;
+          win.style.top = "5px";
         }
-      }
-
-      function onFieldBlur() {
-        if (savedTop !== null) {
-          guestbookWin.style.top = savedTop;
-          savedTop = null;
-        }
-        // Клавиатура прячется не мгновенно — сбрасываем прокрутку с запасом
-        setTimeout(resetStrayScroll, 100);
-        setTimeout(resetStrayScroll, 400);
-      }
-
-      ["gbAuthor", "gbText"].forEach(id => {
-        const field = document.getElementById(id);
-        field.addEventListener("focus", onFieldFocus);
-        field.addEventListener("blur", onFieldBlur);
       });
 
-      // Подстраховка: ловим момент, когда высота visualViewport вернулась
-      // к полной (клавиатура закрыта), и тоже обнуляем прокрутку
+      document.addEventListener("focusout", () => {
+        if (raisedWin !== null) {
+          raisedWin.style.top = savedTop;
+          raisedWin = null;
+          savedTop = null;
+        }
+        // Клавиатура прячется с анимацией — сбрасываем сдвиг с запасом, дважды
+        setTimeout(resetStrayScroll, 100);
+        setTimeout(resetStrayScroll, 400);
+      });
+
+      // Клавиатура закрылась (высота вьюпорта вернулась к полной) — обнуляем сдвиг
       if (window.visualViewport) {
         window.visualViewport.addEventListener("resize", () => {
           if (window.visualViewport.height / window.innerHeight > 0.85) {
@@ -2069,6 +2071,14 @@
           }
         });
       }
+
+      // Страховка: первый же тап вне поля ввода гасит остаточный сдвиг,
+      // чтобы окна не «подпрыгивали» при взаимодействии после клавиатуры
+      document.addEventListener("pointerdown", event => {
+        const active = document.activeElement;
+        if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) return;
+        resetStrayScroll();
+      }, true);
     })();
 
     // ===== Выделение ярлыков рамкой (как на рабочем столе Windows) =====
