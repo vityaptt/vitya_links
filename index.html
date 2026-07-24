@@ -863,6 +863,13 @@
       color: #fff;
       text-shadow: none;
     }
+    .icon-drag-ghost {
+      position: fixed;
+      opacity: .55;
+      pointer-events: none;
+      z-index: 15000;
+      margin: 0;
+    }
     .desktop, .desktop-icon {
       -webkit-touch-callout: none;
     }
@@ -1544,6 +1551,10 @@
               bootScreen.style.display = "none";
               desktop.style.display = "block";
               taskbar.style.display = "flex";
+              // По умолчанию ярлыки живут в обычной CSS-колонке.
+              // В абсолютные координаты переводим только если есть что восстанавливать;
+              // иначе — лениво, при первом захвате ярлыка мышью.
+              if (!isMobile() && Object.keys(loadIconPositions()).length > 0) freezeIcons();
             }, 500);
           }, 300);
         }
@@ -1613,12 +1624,14 @@
         mainWin.style.left = "15px"; mainWin.style.top = "145px";
         donateWin.style.left = "30px"; donateWin.style.top = "175px";
         playerWin.style.left = "15px"; playerWin.style.top = "115px"; playerWin.style.width = "calc(100vw - 30px)";
-        guestbookWin.style.left = "20px"; guestbookWin.style.top = "210px"; guestbookWin.style.width = "calc(100vw - 40px)";
+        // Ширину гостевой не трогаем — одна и та же (380px) на всех устройствах;
+        // на экранах уже 400px её мягко ужмёт max-width: 95vw. Центрируем по горизонтали.
+        guestbookWin.style.left = "calc((100vw - min(380px, 95vw)) / 2)"; guestbookWin.style.top = "210px"; guestbookWin.style.width = "380px";
       } else {
         mainWin.style.left = "calc(50% - 180px)"; mainWin.style.top = "150px";
         donateWin.style.left = "calc(50% + 175px)"; donateWin.style.top = "180px";
         playerWin.style.left = "auto"; playerWin.style.right = "10px"; playerWin.style.top = "10px"; playerWin.style.width = "360px";
-        guestbookWin.style.left = "calc(50% - 320px)"; guestbookWin.style.top = "220px";
+        guestbookWin.style.left = "calc(50% - 320px)"; guestbookWin.style.top = "220px"; guestbookWin.style.width = "380px";
       }
     }
     initWindowPositions();
@@ -1750,7 +1763,14 @@
       resizeTimer = setTimeout(() => {
         if (isMobile() !== wasMobile) {
           wasMobile = isMobile();
+          if (isMobile()) {
+            unfreezeIcons();
+          }
           initWindowPositions();
+          if (!isMobile()) {
+            unfreezeIcons();
+            if (Object.keys(loadIconPositions()).length > 0) freezeIcons();
+          }
         }
         updateTaskbarMode();
       }, 150);
@@ -1760,6 +1780,17 @@
     (function() {
       const guestbookWin = document.getElementById("guestbookWindow");
       let savedTop = null;
+
+      // iOS Safari сам прокручивает страницу к полю при открытии клавиатуры,
+      // несмотря на overflow: hidden, и не откатывает прокрутку после закрытия.
+      // Смещение накапливается — ярлыки и окна уползают вверх. Возвращаем ноль сами.
+      function resetStrayScroll() {
+        if (window.scrollX !== 0 || window.scrollY !== 0) {
+          window.scrollTo(0, 0);
+        }
+        const scroller = document.scrollingElement || document.documentElement;
+        if (scroller.scrollTop !== 0) scroller.scrollTop = 0;
+      }
 
       function onFieldFocus() {
         if (isMobile() && savedTop === null) {
@@ -1773,6 +1804,9 @@
           guestbookWin.style.top = savedTop;
           savedTop = null;
         }
+        // Клавиатура прячется не мгновенно — сбрасываем прокрутку с запасом
+        setTimeout(resetStrayScroll, 100);
+        setTimeout(resetStrayScroll, 400);
       }
 
       ["gbAuthor", "gbText"].forEach(id => {
@@ -1780,6 +1814,16 @@
         field.addEventListener("focus", onFieldFocus);
         field.addEventListener("blur", onFieldBlur);
       });
+
+      // Подстраховка: ловим момент, когда высота visualViewport вернулась
+      // к полной (клавиатура закрыта), и тоже обнуляем прокрутку
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", () => {
+          if (window.visualViewport.height / window.innerHeight > 0.85) {
+            resetStrayScroll();
+          }
+        });
+      }
     })();
 
     // ===== Выделение ярлыков рамкой (как на рабочем столе Windows) =====
@@ -1874,6 +1918,7 @@
       } else {
         contextMenu.innerHTML =
           '<div class="context-menu-item" data-action="refresh">Обновить</div>' +
+          (isMobile() ? '' : '<div class="context-menu-item" data-action="arrange">Упорядочить значки</div>') +
           '<div class="context-menu-divider"></div>' +
           '<div class="context-menu-item" data-action="closeAll">Закрыть все окна</div>';
         delete contextMenu.dataset.window;
@@ -1915,6 +1960,7 @@
             windowId = contextMenu.dataset.window;
       hideContextMenu();
       if (action === "refresh") refreshDesktop();
+      else if (action === "arrange") arrangeIcons();
       else if (action === "closeAll") closeAllWindows();
       else if (action === "open" && windowId) openWindow(windowId);
     });
@@ -1975,6 +2021,240 @@
         event.stopPropagation();
       }
     }, true);
+
+    // ===== ПК: перетаскивание ярлыков по столу + сохранение позиций =====
+    const ICON_POS_KEY = "vityaIconPositions";
+    const allIcons = Array.from(document.querySelectorAll(".desktop-icon"));
+    let iconsFrozen = false;
+
+    function loadIconPositions() {
+      try {
+        return JSON.parse(localStorage.getItem(ICON_POS_KEY)) || {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function saveIconPosition(windowId, left, top) {
+      const positions = loadIconPositions();
+      positions[windowId] = { left: Math.round(left), top: Math.round(top) };
+      try {
+        localStorage.setItem(ICON_POS_KEY, JSON.stringify(positions));
+      } catch (error) {}
+    }
+
+    function clampIconPosition(left, top, iconWidth, iconHeight) {
+      const maxLeft = desktop.clientWidth - iconWidth,
+            maxTop = desktop.clientHeight - iconHeight - 30; // 30px — таскбар
+      return {
+        left: Math.max(0, Math.min(left, maxLeft)),
+        top: Math.max(0, Math.min(top, maxTop))
+      };
+    }
+
+    // Невидимая сетка, как «выравнивание по сетке» в Windows.
+    // Ярлык занимает ячейку; занятые ячейки ищутся по фактическим прямоугольникам,
+    // поэтому налезание ярлыков друг на друга исключено.
+    const GRID_ORIGIN = 10;
+
+    function gridCellSize() {
+      let w = 0, h = 0;
+      allIcons.forEach(icon => {
+        w = Math.max(w, icon.offsetWidth);
+        h = Math.max(h, icon.offsetHeight);
+      });
+      return { w: w + 14, h: h + 14 };
+    }
+
+    function iconsOverlap(left, top, width, height, otherIcon) {
+      const r = {
+        left: parseFloat(otherIcon.style.left) || 0,
+        top: parseFloat(otherIcon.style.top) || 0,
+        width: otherIcon.offsetWidth,
+        height: otherIcon.offsetHeight
+      };
+      const pad = 4;
+      return !(left + width + pad <= r.left ||
+               left >= r.left + r.width + pad ||
+               top + height + pad <= r.top ||
+               top >= r.top + r.height + pad);
+    }
+
+    // Ближайшая к точке броска свободная ячейка сетки
+    function findFreeGridPosition(icon, targetLeft, targetTop) {
+      const cell = gridCellSize(),
+            iconW = icon.offsetWidth,
+            iconH = icon.offsetHeight,
+            others = allIcons.filter(other => other !== icon),
+            cols = Math.max(1, Math.floor((desktop.clientWidth - GRID_ORIGIN) / cell.w)),
+            rows = Math.max(1, Math.floor((desktop.clientHeight - 30 - GRID_ORIGIN) / cell.h)),
+            targetCol = Math.round((targetLeft - GRID_ORIGIN) / cell.w),
+            targetRow = Math.round((targetTop - GRID_ORIGIN) / cell.h);
+      const candidates = [];
+      for (let col = 0; col < cols; col++) {
+        for (let row = 0; row < rows; row++) {
+          candidates.push({
+            col, row,
+            dist: (col - targetCol) ** 2 + (row - targetRow) ** 2
+          });
+        }
+      }
+      candidates.sort((a, b) => a.dist - b.dist);
+      for (const c of candidates) {
+        const left = GRID_ORIGIN + c.col * cell.w,
+              top = GRID_ORIGIN + c.row * cell.h;
+        if (left + iconW > desktop.clientWidth || top + iconH > desktop.clientHeight - 30) continue;
+        if (!others.some(other => iconsOverlap(left, top, iconW, iconH, other))) {
+          return { left, top };
+        }
+      }
+      return clampIconPosition(targetLeft, targetTop, iconW, iconH); // все ячейки заняты — маловероятно
+    }
+
+    // «Замораживаем» ярлыки: переводим из потока в absolute-координаты стола,
+    // чтобы перетаскивание одного не сдвигало остальные
+    function freezeIcons() {
+      if (iconsFrozen || isMobile()) return;
+      // Защита: стол скрыт или ещё не имеет размеров — координаты будут нулевыми
+      if (desktop.clientWidth < 100 || desktop.clientHeight < 100) return;
+      const saved = loadIconPositions(),
+            desktopRect = desktop.getBoundingClientRect(),
+            snapshot = allIcons.map(icon => {
+              const r = icon.getBoundingClientRect();
+              return { icon, left: r.left - desktopRect.left, top: r.top - desktopRect.top };
+            });
+      desktopIcons.style.top = "0";
+      desktopIcons.style.left = "0";
+      desktopIcons.style.right = "0";
+      desktopIcons.style.bottom = "0";
+      snapshot.forEach(({ icon, left, top }) => {
+        const pos = saved[icon.dataset.window] || { left, top },
+              clamped = clampIconPosition(pos.left, pos.top, icon.offsetWidth, icon.offsetHeight);
+        icon.style.position = "absolute";
+        icon.style.left = clamped.left + "px";
+        icon.style.top = clamped.top + "px";
+      });
+      // Сохранённые позиции могли наложиться (другой размер экрана, старые данные) — разводим
+      allIcons.forEach(icon => {
+        const left = parseFloat(icon.style.left),
+              top = parseFloat(icon.style.top),
+              conflict = allIcons.some(other =>
+                other !== icon && iconsOverlap(left, top, icon.offsetWidth, icon.offsetHeight, other));
+        if (conflict) {
+          const free = findFreeGridPosition(icon, left, top);
+          icon.style.left = free.left + "px";
+          icon.style.top = free.top + "px";
+        }
+      });
+      iconsFrozen = true;
+    }
+
+    function unfreezeIcons() {
+      if (!iconsFrozen) return;
+      desktopIcons.style.top = "";
+      desktopIcons.style.left = "";
+      desktopIcons.style.right = "";
+      desktopIcons.style.bottom = "";
+      allIcons.forEach(icon => {
+        icon.style.position = "";
+        icon.style.left = "";
+        icon.style.top = "";
+      });
+      iconsFrozen = false;
+    }
+
+    // Пункт меню «Упорядочить значки»: сброс к раскладке по умолчанию
+    function arrangeIcons() {
+      try {
+        localStorage.removeItem(ICON_POS_KEY);
+      } catch (error) {}
+      unfreezeIcons();
+      freezeIcons();
+    }
+
+    // Заморозка вызывается из startBootSequence, когда стол становится видимым
+
+    (function() {
+      let dragIcon = null, dragGroup = [], dragGhosts = [], dragStarted = false,
+          dragStartX = 0, dragStartY = 0, grabOffsetX = 0, grabOffsetY = 0;
+
+      document.querySelector(".desktop-icons").addEventListener("pointerdown", event => {
+        if (event.pointerType !== "mouse" || event.button !== 0 || isMobile()) return;
+        const icon = event.target.closest(".desktop-icon");
+        if (!icon) return;
+        freezeIcons();
+        dragIcon = icon;
+        dragStarted = false;
+        dragStartX = event.clientX;
+        dragStartY = event.clientY;
+        const rect = icon.getBoundingClientRect();
+        grabOffsetX = event.clientX - rect.left;
+        grabOffsetY = event.clientY - rect.top;
+      });
+
+      document.addEventListener("pointermove", event => {
+        if (!dragIcon) return;
+        // Порог 5px отделяет перетаскивание от обычного клика
+        if (!dragStarted) {
+          if (Math.abs(event.clientX - dragStartX) < 5 && Math.abs(event.clientY - dragStartY) < 5) return;
+          dragStarted = true;
+          // Схватили выделенный ярлык — едет вся выделенная группа,
+          // невыделенный — выделение переключается на него одного
+          if (dragIcon.classList.contains("selected")) {
+            dragGroup = allIcons.filter(icon => icon.classList.contains("selected"));
+          } else {
+            selectOnlyIcon(dragIcon);
+            dragGroup = [dragIcon];
+          }
+          const baseRect = dragIcon.getBoundingClientRect();
+          dragGhosts = dragGroup.map(icon => {
+            const r = icon.getBoundingClientRect(),
+                  ghost = icon.cloneNode(true);
+            ghost.classList.add("icon-drag-ghost");
+            ghost.classList.remove("selected");
+            ghost.style.width = icon.offsetWidth + "px";
+            ghost.dataset.dx = r.left - baseRect.left;
+            ghost.dataset.dy = r.top - baseRect.top;
+            document.body.appendChild(ghost);
+            return ghost;
+          });
+        }
+        dragGhosts.forEach(ghost => {
+          ghost.style.left = (event.clientX - grabOffsetX + Number(ghost.dataset.dx)) + "px";
+          ghost.style.top = (event.clientY - grabOffsetY + Number(ghost.dataset.dy)) + "px";
+        });
+      });
+
+      function finishIconDrag(event) {
+        if (!dragIcon) return;
+        if (dragStarted) {
+          const desktopRect = desktop.getBoundingClientRect(),
+                baseLeft = event.clientX - grabOffsetX - desktopRect.left,
+                baseTop = event.clientY - grabOffsetY - desktopRect.top,
+                deltas = dragGhosts.map(ghost => ({ dx: Number(ghost.dataset.dx), dy: Number(ghost.dataset.dy) }));
+          // Временно убираем группу со стола, чтобы старые места не считались занятыми
+          dragGroup.forEach(icon => {
+            icon.style.left = "-9999px";
+            icon.style.top = "-9999px";
+          });
+          // Расставляем по одному: каждый следующий видит уже поставленных
+          dragGroup.forEach((icon, index) => {
+            const pos = findFreeGridPosition(icon, baseLeft + deltas[index].dx, baseTop + deltas[index].dy);
+            icon.style.left = pos.left + "px";
+            icon.style.top = pos.top + "px";
+            saveIconPosition(icon.dataset.window, pos.left, pos.top);
+          });
+          suppressNextClick = true; // бросили ярлыки — это не клик, окно не открываем
+        }
+        dragGhosts.forEach(ghost => ghost.remove());
+        dragGhosts = [];
+        dragGroup = [];
+        dragIcon = null;
+        dragStarted = false;
+      }
+      document.addEventListener("pointerup", finishIconDrag);
+      document.addEventListener("pointercancel", finishIconDrag);
+    })();
 
     // ===== Звук клика на кнопках и иконках =====
     document.addEventListener("click", event => {
