@@ -938,6 +938,11 @@
       min-height: 13px;
       margin-bottom: 4px;
     }
+    .snake-mode-note {
+      font-size: 9px;
+      color: #444;
+      margin: 2px 0 6px;
+    }
     .snake-leaderboard {
       font-size: 11px;
       padding: 6px 8px 8px;
@@ -1196,8 +1201,18 @@
           <div class="snake-overlay" id="snakeStartOverlay">
             <div class="snake-overlay-panel">
               <div class="snake-overlay-title">ЗМЕЙКА</div>
-              <div class="snake-overlay-text">Собирай диски.<br>Края поля сквозные, игра бесконечная.<br><br>ПК: стрелки или WASD<br>Телефон: свайпы по полю</div>
-              <button type="button" class="win-button" onclick="snakeStart()">Начать игру</button>
+              <div class="snake-overlay-text">Собирай диски.<br>ПК: стрелки или WASD. Телефон: свайпы.</div>
+              <button type="button" class="win-button" onclick="snakeStartFree()">Свободная игра</button>
+              <div class="snake-mode-note">Края сквозные, скорость щадящая — играй, пока не надоест</div>
+              <button type="button" class="win-button" onclick="snakeStartRanked()">На рекорд</button>
+              <div class="snake-mode-note">Стены смертельны, результат идёт в таблицу лидеров</div>
+            </div>
+          </div>
+          <div class="snake-overlay" id="snakePauseOverlay" style="display:none">
+            <div class="snake-overlay-panel">
+              <div class="snake-overlay-title">ПАУЗА</div>
+              <div class="snake-overlay-text">Игра продолжится с того же места.</div>
+              <button type="button" class="win-button" onclick="snakeResume()">Продолжить</button>
             </div>
           </div>
           <div class="snake-overlay" id="snakeGameOverOverlay" style="display:none">
@@ -1209,7 +1224,8 @@
                 <button type="button" class="win-button" id="snakeSubmitBtn" onclick="snakeSubmitScore()">Записать</button>
               </div>
               <div class="snake-submit-status" id="snakeSubmitStatus"></div>
-              <button type="button" class="win-button" onclick="snakeStart()">Играть снова</button>
+              <button type="button" class="win-button" onclick="snakeRestart()">Играть снова</button>
+              <button type="button" class="win-button" onclick="snakeToMenu()">В меню</button>
             </div>
           </div>
         </div>
@@ -2502,14 +2518,19 @@
             diskImg = new Image();
       diskImg.src = "assets/icons/cd_audio_cd_a-2.png";
 
+      // Режимы: "free" — сквозные края, щадящая скорость, рост ограничен, без лидерборда;
+      // "ranked" — смертельные стены, полные правила, результат идёт в таблицу
+      const FREE_MAX_LENGTH = 49, FREE_MIN_TICK = 110;
       let body = [], dir = { x: 1, y: 0 }, nextDir = { x: 1, y: 0 },
-          disk = null, score = 0, best = 0,
+          disk = null, score = 0, mode = "ranked",
           running = false, over = false, timer = null;
+      const bestByMode = { free: 0, ranked: 0 };
 
       try {
-        best = parseInt(localStorage.getItem("vityaSnakeBest")) || 0;
+        bestByMode.ranked = parseInt(localStorage.getItem("vityaSnakeBest")) || 0;
+        bestByMode.free = parseInt(localStorage.getItem("vityaSnakeBestFree")) || 0;
       } catch (error) {}
-      bestEl.textContent = best;
+      bestEl.textContent = bestByMode.ranked;
 
       function playEatSound() {
         initAudio();
@@ -2565,6 +2586,17 @@
         for (let y = 1; y < ROWS; y++) {
           ctx.beginPath(); ctx.moveTo(0, y * CELL + .5); ctx.lineTo(canvas.width, y * CELL + .5); ctx.stroke();
         }
+        // В режиме "на рекорд" стены смертельны — рисуем их кирпичной рамкой
+        if (mode === "ranked") {
+          ctx.fillStyle = "#808080";
+          ctx.fillRect(0, 0, canvas.width, 3);
+          ctx.fillRect(0, canvas.height - 3, canvas.width, 3);
+          ctx.fillRect(0, 0, 3, canvas.height);
+          ctx.fillRect(canvas.width - 3, 0, 3, canvas.height);
+          ctx.fillStyle = "#c0c0c0";
+          ctx.fillRect(0, 0, canvas.width, 1);
+          ctx.fillRect(0, 0, 1, canvas.height);
+        }
         if (disk) ctx.drawImage(diskImg, disk.x * CELL, disk.y * CELL, CELL, CELL);
         body.forEach((seg, index) => {
           const px = seg.x * CELL, py = seg.y * CELL;
@@ -2581,15 +2613,22 @@
       }
 
       function tickInterval() {
-        return Math.max(MIN_TICK, BASE_TICK - score * 2);
+        const floor = mode === "free" ? FREE_MIN_TICK : MIN_TICK;
+        return Math.max(floor, BASE_TICK - score * 2);
       }
 
       function step() {
         dir = nextDir;
-        // Бесконечное поле: края сквозные
+        const rawX = body[0].x + dir.x,
+              rawY = body[0].y + dir.y;
+        // "ranked": стены смертельны; "free": края сквозные
+        if (mode === "ranked" && (rawX < 0 || rawX >= COLS || rawY < 0 || rawY >= ROWS)) {
+          gameOver();
+          return;
+        }
         const head = {
-          x: (body[0].x + dir.x + COLS) % COLS,
-          y: (body[0].y + dir.y + ROWS) % ROWS
+          x: (rawX + COLS) % COLS,
+          y: (rawY + ROWS) % ROWS
         };
         if (body.some(seg => seg.x === head.x && seg.y === head.y)) {
           gameOver();
@@ -2601,8 +2640,13 @@
           scoreEl.textContent = score;
           playEatSound();
           spawnDisk();
+          // В свободном режиме змейка не растёт бесконечно —
+          // после FREE_MAX_LENGTH сегментов диски дают только очки
+          if (mode === "free" && body.length > FREE_MAX_LENGTH) {
+            body.pop();
+          }
           clearInterval(timer);
-          timer = setInterval(step, tickInterval()); // растёт скорость
+          timer = setInterval(step, tickInterval());
         } else {
           body.pop();
         }
@@ -2615,21 +2659,26 @@
         clearInterval(timer);
         timer = null;
         playDeathSound();
-        if (score > best) {
-          best = score;
-          bestEl.textContent = best;
+        if (score > bestByMode[mode]) {
+          bestByMode[mode] = score;
+          bestEl.textContent = score;
           try {
-            localStorage.setItem("vityaSnakeBest", String(best));
+            localStorage.setItem(mode === "free" ? "vityaSnakeBestFree" : "vityaSnakeBest", String(score));
           } catch (error) {}
         }
         finalScoreEl.textContent = score;
         document.getElementById("snakeSubmitStatus").textContent = "";
-        document.getElementById("snakeNickRow").style.display = score > 0 ? "flex" : "none";
+        // Запись в таблицу лидеров — только из режима "на рекорд"
+        document.getElementById("snakeNickRow").style.display = (mode === "ranked" && score > 0) ? "flex" : "none";
         document.getElementById("snakeSubmitBtn").disabled = false;
         gameOverOverlay.style.display = "flex";
       }
 
-      function start() {
+      const pauseOverlay = document.getElementById("snakePauseOverlay");
+
+      function start(newMode) {
+        mode = newMode;
+        bestEl.textContent = bestByMode[mode];
         body = [{ x: 5, y: 8 }, { x: 4, y: 8 }, { x: 3, y: 8 }];
         dir = { x: 1, y: 0 };
         nextDir = { x: 1, y: 0 };
@@ -2638,6 +2687,7 @@
         over = false;
         running = true;
         startOverlay.style.display = "none";
+        pauseOverlay.style.display = "none";
         gameOverOverlay.style.display = "none";
         spawnDisk();
         draw();
@@ -2650,20 +2700,27 @@
         clearInterval(timer);
         timer = null;
         running = false;
-        startOverlay.querySelector(".snake-overlay-text").innerHTML = "Пауза.<br>Игра продолжится с того же места.";
-        startOverlay.querySelector(".win-button").textContent = "Продолжить";
-        startOverlay.style.display = "flex";
+        pauseOverlay.style.display = "flex";
       }
 
-      function resumeOrStart() {
-        if (over || body.length === 0) {
-          start();
-          return;
-        }
-        startOverlay.style.display = "none";
+      function resume() {
+        if (running || over || body.length === 0) return;
+        pauseOverlay.style.display = "none";
         running = true;
         clearInterval(timer);
         timer = setInterval(step, tickInterval());
+      }
+
+      function toMenu() {
+        clearInterval(timer);
+        timer = null;
+        running = false;
+        over = false;
+        body = [];
+        gameOverOverlay.style.display = "none";
+        pauseOverlay.style.display = "none";
+        startOverlay.style.display = "flex";
+        draw();
       }
 
       function setDirection(x, y) {
@@ -2721,14 +2778,35 @@
       window.__snakeDebug = {
         grow: n => { for (let i = 0; i < n; i++) body.push({ ...body[body.length - 1] }); },
         setDisk: (x, y) => { disk = { x, y }; draw(); },
-        head: () => ({ ...body[0] })
+        head: () => ({ ...body[0] }),
+        len: () => body.length
       };
-      return { start: start, pause: pause, resumeOrStart: resumeOrStart, getScore: () => score, isOver: () => over };
+      return { start: start, pause: pause, resume: resume, toMenu: toMenu, getScore: () => score, isOver: () => over, getMode: () => mode };
     })();
 
-    function snakeStart() {
+    function snakeStartFree() {
       playClickSound();
-      snake.resumeOrStart();
+      snake.start("free");
+    }
+
+    function snakeStartRanked() {
+      playClickSound();
+      snake.start("ranked");
+    }
+
+    function snakeRestart() {
+      playClickSound();
+      snake.start(snake.getMode());
+    }
+
+    function snakeResume() {
+      playClickSound();
+      snake.resume();
+    }
+
+    function snakeToMenu() {
+      playClickSound();
+      snake.toMenu();
     }
 
     function snakeOnWindowClose() {
@@ -2745,7 +2823,7 @@
         statusEl.style.color = "#a00";
         return;
       }
-      if (!snake.isOver() || snake.getScore() <= 0) return;
+      if (!snake.isOver() || snake.getScore() <= 0 || snake.getMode() !== "ranked") return;
       submitBtn.disabled = true;
       statusEl.style.color = "#000";
       statusEl.textContent = "Отправка...";
