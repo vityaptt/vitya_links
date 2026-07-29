@@ -1497,6 +1497,9 @@
       <a href="https://t.me/InYourEyesVault" target="_blank" rel="noopener" class="start-menu-item">
         <img src="assets/icons/game_solitaire-0.png" alt="Memes"> Мемы (Vault)
       </a>
+      <a href="https://t.me/InYouEyes" target="_blank" rel="noopener" class="start-menu-item">
+        <img src="assets/icons/newspaper-0.png" alt="IYE"> IYE
+      </a>
     </div>
   </div>
   <div class="context-menu" id="contextMenu"></div>
@@ -1931,21 +1934,44 @@
       });
     };
 
+    // Теоретический потолок очков в ranked-режиме: поле 20×16 клеток минус
+    // стартовая длина змейки (3). Больше набрать физически невозможно.
+    // Это лишь клиентская подсказка — настоящая защита от читерства должна
+    // стоять в правилах безопасности Firestore (см. комментарий в чате).
+    const SNAKE_MAX_POSSIBLE_SCORE = 20 * 16 - 3;
+
     window.submitSnakeScore = async function (nick, score) {
+      if (!Number.isInteger(score) || score < 1 || score > SNAKE_MAX_POSSIBLE_SCORE) {
+        return { invalid: true };
+      }
       // Один ник — одна запись: ищем существующую и обновляем, если новый результат выше
       const existingQuery = query(collection(db, "snake_scores"), where("nick", "==", nick), limit(1)),
         existing = await getDocs(existingQuery);
+
+      // Не хотим несколько строк с одинаковым счётом в таблице: если такой счёт
+      // уже принадлежит другому нику, новую запись не создаём и не обновляем.
+      // Личный рекорд игрока при этом уже сохранён отдельно в localStorage (gameOver()).
+      const dupQuery = query(collection(db, "snake_scores"), where("score", "==", score), limit(2)),
+        dupSnap = await getDocs(dupQuery),
+        scoreTakenByOther = dupSnap.docs.some(docSnap => docSnap.data().nick !== nick);
+
       if (!existing.empty) {
         const docSnap = existing.docs[0],
           oldScore = Number(docSnap.data().score) || 0;
         if (oldScore >= score) {
           return { kept: true, existing: oldScore };
         }
+        if (scoreTakenByOther) {
+          return { duplicateScore: true };
+        }
         await updateDoc(doc(db, "snake_scores", docSnap.id), {
           score: score,
           timestamp: serverTimestamp()
         });
         return { updated: true };
+      }
+      if (scoreTakenByOther) {
+        return { duplicateScore: true };
       }
       await addDoc(collection(db, "snake_scores"), {
         nick: nick,
@@ -3046,10 +3072,18 @@
       statusEl.textContent = "Отправка...";
       window.submitSnakeScore(nick, snake.getScore())
         .then(result => {
-          if (result.kept) {
+          if (result.invalid) {
+            statusEl.style.color = "#a00";
+            statusEl.textContent = "Некорректный счёт";
+            submitBtn.disabled = false;
+          } else if (result.kept) {
             statusEl.style.color = "#000";
             statusEl.textContent = "У ника " + nick + " рекорд уже выше: " + result.existing;
             submitBtn.disabled = false;
+          } else if (result.duplicateScore) {
+            statusEl.style.color = "#000";
+            statusEl.textContent = "Результат засчитан, но такой счёт уже есть в таблице — вторую строку не добавляем";
+            document.getElementById("snakeNickRow").style.display = "none";
           } else {
             statusEl.style.color = "#060";
             statusEl.textContent = result.updated ? "Рекорд ника " + nick + " обновлён!" : "Записано в таблицу!";
