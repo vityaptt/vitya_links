@@ -1223,9 +1223,9 @@
       }
     }
     /* ===== Окно-браузер (Портфолио) ===== */
-    .browser-window { width: 560px; }
+    .browser-window { width: 720px; }
     .browser-window .window-body { padding: 0; align-items: stretch; gap: 0; background-color: silver; }
-    .browser-toolbar { display: flex; align-items: center; gap: 3px; padding: 3px 4px; flex-wrap: wrap; }
+    .browser-toolbar { display: flex; align-items: center; gap: 3px; padding: 3px 4px 3px 2px; flex-wrap: wrap; }
     .browser-nav-btn { display: flex; align-items: center; gap: 4px; padding: 3px 8px; font-size: 12px; font-weight: 700; color: #000; background: silver; box-shadow: var(--bevel-raised); border: none; cursor: pointer; }
     .browser-nav-btn:active { box-shadow: var(--bevel-pressed); padding: 4px 7px 2px 9px; }
     .browser-nav-btn:disabled { color: #808080; cursor: default; }
@@ -1274,11 +1274,12 @@
     .cv-footer { border-top: 2px solid #808080; margin-top: 16px; padding: 12px 14px 16px; text-align: center; font-size: 11px; color: #333; background: #ececec; }
     .cv-counter { display: inline-block; background: #000; color: #33ff33; font-family: "Courier New", monospace; font-size: 13px; letter-spacing: 3px; padding: 2px 7px; border: 1px solid #808080; margin: 4px 0 8px; }
     /* ===== Вкладки браузера и галерея портфолио ===== */
-    .browser-tabs { display: flex; flex-wrap: wrap; padding: 4px 6px 0; position: relative; z-index: 2; margin-bottom: -2px; }
-    .browser-tab { display: flex; align-items: center; gap: 6px; padding: 4px 14px; margin-right: 3px; font-size: 12px; font-weight: 700; color: #000; background: silver; border: 2px solid; border-color: var(--border-outset); position: relative; top: 2px; cursor: pointer; }
-    .browser-tab img { width: 13px; height: 13px; image-rendering: pixelated; }
-    .browser-tab.active { top: 0; padding-bottom: 6px; z-index: 3; border-bottom-color: silver; }
-    .browser-tab:focus-visible { outline: 1px dotted #000; outline-offset: -4px; }
+    .browser-tabs { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 3px; padding: 6px 8px 0; position: relative; z-index: 2; margin-bottom: -2px; }
+    @media (min-width: 769px) { .browser-tabs { flex-wrap: nowrap; } }
+    .browser-tab { padding: 5px 16px 7px; font-size: 12px; font-weight: 700; color: #565656; background: #b6b6b6; border: 2px solid; border-color: var(--border-outset); border-bottom: none; border-radius: 6px 6px 0 0; position: relative; top: 3px; cursor: pointer; }
+    .browser-tab:hover { color: #000; background: #cfcfcf; }
+    .browser-tab.active { top: 0; padding: 7px 18px 9px; color: #000; background: silver; z-index: 3; }
+    .browser-tab:focus-visible { outline: 1px dotted #000; outline-offset: -5px; }
     .browser-pane[hidden] { display: none; }
     .pf-gallery { display: flex; flex-direction: column; background: #fff; }
     .pf-gallery img { display: block; width: 100%; height: auto; }
@@ -1315,8 +1316,21 @@
     .st-sub { color:#555; font-size:11px; margin-top:4px; }
     .st-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:14px; }
     .st-card { background:#fff; box-shadow: var(--bevel-raised); padding:8px 8px 10px; display:flex; flex-direction:column; }
-    .st-thumb { aspect-ratio:1/1; background:#ececec url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%20fill%3D%22none%22%20stroke%3D%22%238a8a8a%22%20stroke-width%3D%222%22%3E%3Crect%20x%3D%224%22%20y%3D%228%22%20width%3D%2240%22%20height%3D%2232%22%20rx%3D%222%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2218%22%20r%3D%224%22%20fill%3D%22%23c9c9c9%22%20stroke%3D%22none%22%2F%3E%3Cpath%20d%3D%22M8%2038%20L20%2024%20L28%2032%20L34%2026%20L40%2034%22%2F%3E%3C%2Fsvg%3E") center/44px no-repeat; border:2px solid; border-color:var(--border-inset); position:relative; }
+    .st-thumb { aspect-ratio:4/5; background:#ececec url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%20fill%3D%22none%22%20stroke%3D%22%238a8a8a%22%20stroke-width%3D%222%22%3E%3Crect%20x%3D%224%22%20y%3D%228%22%20width%3D%2240%22%20height%3D%2232%22%20rx%3D%222%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2218%22%20r%3D%224%22%20fill%3D%22%23c9c9c9%22%20stroke%3D%22none%22%2F%3E%3Cpath%20d%3D%22M8%2038%20L20%2024%20L28%2032%20L34%2026%20L40%2034%22%2F%3E%3C%2Fsvg%3E") center/44px no-repeat; border:2px solid; border-color:var(--border-inset); position:relative; }
     .st-thumb::after { content:"IMG"; position:absolute; bottom:4px; right:5px; font-family:"Courier New", monospace; font-size:9px; color:#a0a0a0; letter-spacing:1px; }
+    .st-thumb.has-img { background:#111; }
+    .st-thumb.has-img::after { display:none; }
+    .st-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .st-carousel { overflow:hidden; }
+    .st-track { display:flex; height:100%; transition:transform .25s ease; }
+    .st-track img { flex:0 0 100%; }
+    .st-nav { position:absolute; top:50%; transform:translateY(-50%); z-index:3; width:22px; height:32px; padding:0; border:none; background:rgba(212,212,212,.9); box-shadow:var(--bevel-raised); color:#000; font-size:11px; line-height:1; text-align:center; cursor:pointer; }
+    .st-nav:active { box-shadow:var(--bevel-pressed); }
+    .st-prev { left:4px; }
+    .st-next { right:4px; }
+    .st-dots { position:absolute; bottom:6px; left:0; right:0; z-index:3; display:flex; gap:5px; justify-content:center; }
+    .st-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.5); box-shadow:0 0 2px rgba(0,0,0,.7); }
+    .st-dot.active { background:#fff; }
     .st-cap { margin-top:8px; font-size:12px; font-weight:700; color:#000; }
     .st-link { margin-top:6px; }
     .st-link a { color:#0000ee; text-decoration:underline; font-size:11px; font-weight:700; }
@@ -1376,6 +1390,52 @@
     .start-lang { display:flex; gap:5px; align-items:center; justify-content:center; margin-top:14px; font-size:11px; color:#000; }
     .lang-tray { display:flex; gap:2px; align-items:center; margin-right:4px; }
     .lang-tray .lang-btn { font-size:10px; padding:1px 5px; }
+    .lang-cycle { display: none; }
+    .lang-tray .lang-cycle { min-width: 26px; text-align: center; }
+    @media (max-width: 768px) { .lang-tray .lang-btn[data-lang] { display: none; } .lang-tray .lang-cycle { display: inline-block; } }
+    /* ===== Вкладка IYE (InYourEyes) ===== */
+    .iye-page { position:relative; background:#0a0a0a; color:#f2f2e8; font-family: Verdana, Tahoma, sans-serif; font-size:12px; line-height:1.5; }
+    .iye-banner { text-align:center; padding:18px 12px 14px; background:#000; border-bottom:3px solid #ffe500; }
+    .iye-eye { width:88px; height:88px; display:block; margin:0 auto 8px; border-radius:50%; }
+    .iye-title { font-family:"Arial Black", Impact, Haettenschweiler, sans-serif; font-weight:900; font-size:30px; letter-spacing:1px; color:#ffe500; text-transform:uppercase; text-shadow:2px 2px 0 #000; }
+    .iye-sub { color:#c9c9b8; font-size:11px; margin-top:5px; letter-spacing:2px; text-transform:uppercase; }
+    .iye-marquee { background:#ffe500; color:#000; font-weight:700; font-size:12px; overflow:hidden; white-space:nowrap; border-bottom:2px solid #000; }
+    .iye-marquee span { display:inline-block; padding:4px 0 4px 100%; animation: iyeScroll 20s linear infinite; }
+    @keyframes iyeScroll { from { transform:translateX(0); } to { transform:translateX(-100%); } }
+    @media (prefers-reduced-motion: reduce) { .iye-marquee span { animation:none; padding-left:8px; } }
+    .iye-body { padding:14px; }
+    .iye-intro { color:#e8e8dc; margin:0 0 12px; }
+    .iye-cta { margin:0 0 16px; }
+    .iye-cta a { display:inline-block; background:#ffe500; color:#000; font-weight:700; text-decoration:none; padding:6px 14px; box-shadow:var(--bevel-raised); }
+    .iye-cta a:active { box-shadow:var(--bevel-pressed); }
+    .iye-h { font-family:"Courier New", monospace; font-size:13px; font-weight:700; color:#ffe500; letter-spacing:1px; margin:6px 0 10px; border-left:3px solid #ffe500; padding-left:8px; text-transform:uppercase; }
+    .iye-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+    .iye-post { aspect-ratio:1/1; border:2px solid #ffe500; background:#000; overflow:hidden; }
+    .iye-post img { width:100%; height:100%; object-fit:cover; display:block; }
+    .iye-foot { margin-top:18px; text-align:center; color:#8a8a7a; font-size:11px; letter-spacing:2px; }
+    @media (max-width:768px) { .iye-grid { grid-template-columns:1fr 1fr; } }
+    /* ===== Вкладка bbooks (брендбуки) ===== */
+    .bb-page { background:#d8d4cc; color:#111; font-family: Verdana, Tahoma, sans-serif; font-size:12px; line-height:1.5; }
+    .bb-banner { text-align:center; padding:16px 12px 12px; background:linear-gradient(#ffffff,#d8d4cc); border-bottom:2px solid #808080; }
+    .bb-title { font-family:"Arial Black", Impact, sans-serif; font-weight:900; font-size:30px; letter-spacing:3px; color:#111; }
+    .bb-sub { color:#555; font-size:11px; margin-top:4px; text-transform:uppercase; letter-spacing:2px; }
+    .bb-marquee { background:#111; color:#fff; font-weight:700; font-size:12px; overflow:hidden; white-space:nowrap; }
+    .bb-marquee span { display:inline-block; padding:4px 0 4px 100%; animation: bbScroll 22s linear infinite; }
+    @keyframes bbScroll { from { transform:translateX(0); } to { transform:translateX(-100%); } }
+    @media (prefers-reduced-motion: reduce) { .bb-marquee span { animation:none; padding-left:8px; } }
+    .bb-body { padding:14px; }
+    .bb-intro { margin:0 0 14px; color:#222; }
+    .bb-card { display:flex; background:#fff; border:2px solid var(--bb); box-shadow: var(--bevel-raised); margin-bottom:14px; overflow:hidden; }
+    .bb-cover { flex:0 0 44%; aspect-ratio:16/10; display:block; background:#000; border-right:2px solid var(--bb); }
+    .bb-cover img { width:100%; height:100%; object-fit:cover; display:block; }
+    .bb-info { flex:1; padding:12px 14px; display:flex; flex-direction:column; min-width:0; }
+    .bb-name { font-family:"Arial Black", Impact, sans-serif; font-weight:900; font-size:17px; color:var(--bb); letter-spacing:.5px; }
+    .bb-kind { font-size:11px; color:#777; margin:2px 0 8px; text-transform:uppercase; letter-spacing:1px; }
+    .bb-desc { color:#333; font-size:12px; margin-bottom:12px; }
+    .bb-link { margin-top:auto; align-self:flex-start; display:inline-block; background:var(--bb); color:#fff; font-weight:700; text-decoration:none; padding:6px 14px; box-shadow: var(--bevel-raised); }
+    .bb-link:active { box-shadow: var(--bevel-pressed); }
+    .bb-foot { margin-top:6px; text-align:center; color:#666; font-size:11px; letter-spacing:1px; }
+    @media (max-width:768px) { .bb-card { flex-direction:column; } .bb-cover { flex-basis:auto; border-right:none; border-bottom:2px solid var(--bb); } }
   </style>
 </head>
 
@@ -1491,24 +1551,26 @@
       </div>
       <div class="window-body">
         <div class="browser-toolbar">
-          <button class="browser-nav-btn" title="Обновить" onclick="document.getElementById('portfolioViewport').scrollTo(0,0)"><span class="nav-glyph">&#8635;</span><span class="nav-label">Обновить</span></button>
+          <button class="browser-nav-btn" title="Обновить" onclick="playClickSound();document.getElementById('portfolioViewport').scrollTo(0,0)"><svg class="nav-glyph" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.4 8a5.4 5.4 0 1 1-1.6-3.8"/><path d="M13.7 2.4v3.2h-3.2"/></svg><span class="nav-label">Обновить</span></button>
           <div class="browser-toolbar-sep"></div>
-          <button class="browser-nav-btn" title="Домой" onclick="showTab('cv')"><span class="nav-glyph">&#8962;</span><span class="nav-label">Домой</span></button>
+          <button class="browser-nav-btn" title="Домой" onclick="showTab('cv')"><svg class="nav-glyph" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.3 8 8 2.7 13.7 8"/><path d="M3.9 6.7V13h8.2V6.7"/></svg><span class="nav-label">Домой</span></button>
         </div>
         <div class="browser-address-row">
           <span class="addr-label">Адрес</span>
           <div class="browser-address">
-            <img src="assets/icons/prtfl.png" alt="">
+            
             <input type="text" id="portfolioAddress" value="http://www.vitya.space/cv" readonly aria-label="Адрес">
           </div>
         </div>
         <div class="browser-tabs">
-          <button class="browser-tab active" id="tabCv" onclick="showTab('cv')"><img src="assets/icons/prtfl.png" alt=""> CV</button>
-          <button class="browser-tab" id="tabPortfolio" onclick="showTab('portfolio')"><img src="assets/icons/prtfl.png" alt=""> Портфолио</button>
-          <button class="browser-tab" id="tabMotion" onclick="showTab('motion')"><img src="assets/icons/prtfl.png" alt=""> Motion</button>
-          <button class="browser-tab" id="tabStatic" onclick="showTab('static')"><img src="assets/icons/prtfl.png" alt=""> Static</button>
-          <button class="browser-tab" id="tabDixi" onclick="showTab('dixi')"><img src="assets/icons/prtfl.png" alt=""> Dixi</button>
-          <button class="browser-tab" id="tabOkak" onclick="showTab('okak')"><img src="assets/icons/prtfl.png" alt=""> OK@K</button>
+          <button class="browser-tab active" id="tabCv" onclick="showTab('cv')"> CV</button>
+          <button class="browser-tab" id="tabPortfolio" onclick="showTab('portfolio')"> Портфолио</button>
+          <button class="browser-tab" id="tabMotion" onclick="showTab('motion')"> Motion</button>
+          <button class="browser-tab" id="tabStatic" onclick="showTab('static')"> Static</button>
+          <button class="browser-tab" id="tabDixi" onclick="showTab('dixi')"> Dixi</button>
+          <button class="browser-tab" id="tabOkak" onclick="showTab('okak')"> OK@K</button>
+          <button class="browser-tab" id="tabIye" onclick="showTab('iye')">IYE</button>
+          <button class="browser-tab" id="tabBbooks" onclick="showTab('bbooks')">bbooks</button>
         </div>
         <div class="browser-viewport" id="portfolioViewport">
           <div class="browser-pane" id="paneCv">
@@ -1635,7 +1697,7 @@
               <div class="mo-marquee"><span>&#9654; MOTION &#9654; ANIMATION &#9654; COMPOSITING &#9654; AR &#9654; PROMO REELS &#9654; EVENT VIDEO &#9654; EDIT &#9654; MOTION GRAPHICS &#9654;</span></div>
               <div class="mo-grid">
               <div class="mo-card">
-                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-01.jpg')"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-01.jpg')"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">AR приглашение на MBR 2023 (сентябрь)</div>
                   <div class="mo-did"><b>Что я делал:</b> анимации, композитинг в AR программе</div>
@@ -1643,7 +1705,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-02.jpg')"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-02.jpg')"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-анимация диджей-проекта KVRT.DVIJ (KVARTIRA)</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1651,7 +1713,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Seeance x Kvartira под показ фильма «Сумерки» в Одеоне</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1659,7 +1721,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик диджей-сета KVRT в Amor Amar</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1667,7 +1729,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Seeance x Kvartira под показ фильма «Мечтатели» в Одеоне</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1675,7 +1737,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Seeance x Kvartira под показ фильма «Шрек» в Одеоне</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1683,7 +1745,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Просто креативный видос для поддержания актива на аккаунте KVRT</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1691,7 +1753,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик диджей-сета KVRT в Amor Amar</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1699,7 +1761,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Seeance под новогодний показ фильма «Кто подставил кролика Роджера» в Одеоне</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1707,7 +1769,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-10.jpg')"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-10.jpg')"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Репортаж Ezym Mag про три новогодних вечеринки Кишинёва</div>
                   <div class="mo-did"><b>Что я делал:</b> автор задумки, актёр, монтаж</div>
@@ -1715,7 +1777,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Magic Flowers x Mirror</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1723,7 +1785,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Mirror x Oystersgeese</div>
                   <div class="mo-did"><b>Что я делал:</b> практически всё; графика частично со стороннего референса, переработана</div>
@@ -1731,7 +1793,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-13.jpg')"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-13.jpg')"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-серия сторис в стиле старого ВК для вечеринки TRAPEZA 2K17</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1739,7 +1801,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-рилс для диджей-сета KVRT</div>
                   <div class="mo-did"><b>Что я делал:</b> монтаж, графика</div>
@@ -1747,7 +1809,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Пародийный промо-ролик в стиле «FACE: Я роняю запад» для вечеринки TRAPEZA 2K17</div>
                   <div class="mo-did"><b>Что я делал:</b> всё, включая идею и съёмку</div>
@@ -1755,7 +1817,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик для вечеринки KVRT в #norma</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1763,7 +1825,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Cinemai x Trapeza</div>
                   <div class="mo-did"><b>Что я делал:</b> пак-шот в конце</div>
@@ -1771,7 +1833,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик для вечеринки Trapeza Silencio</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1779,7 +1841,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-19.jpg')"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-19.jpg')"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик трека «OK» для P.S. ZARANEE</div>
                   <div class="mo-did"><b>Что я делал:</b> всё (ещё не залито, но посмотреть можно)</div>
@@ -1787,7 +1849,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик под мероприятие в музее истории, Cârturești x KVRT</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1795,7 +1857,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик FLORILE: MADVILLA</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1803,7 +1865,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик FLORILE x Boardshop</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1811,7 +1873,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик FLORILE Rooftop Party</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1819,7 +1881,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик FLORILE x Ivan Dorn</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1827,7 +1889,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик FLORILE Rooftop Session</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1835,7 +1897,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Trapeza x Autohub</div>
                   <div class="mo-did"><b>Что я делал:</b> леттеринг и анимация</div>
@@ -1843,7 +1905,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Trapeza Rooftob</div>
                   <div class="mo-did"><b>Что я делал:</b> графика, монтаж, саунд-дизайн</div>
@@ -1851,7 +1913,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Trapeza Pop-up market</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1859,7 +1921,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Mutant Avenue #8</div>
                   <div class="mo-did"><b>Что я делал:</b> анимацию монстра и освещение</div>
@@ -1867,7 +1929,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Концерт NOUA UNSPE</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1875,7 +1937,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик FLORILE: DISCO</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1883,7 +1945,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Trapeza Glamour Pre-party</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1891,7 +1953,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-карусель Trapeza Glamour</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1899,7 +1961,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик TudaSuda Bar</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1907,7 +1969,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик OKAK x Bubblepop</div>
                   <div class="mo-did"><b>Что я делал:</b> Монтаж, саунд-дизайн</div>
@@ -1915,7 +1977,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик OKAK x Proslushka.md</div>
                   <div class="mo-did"><b>Что я делал:</b> Монтаж, саунд-дизайн</div>
@@ -1923,7 +1985,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик OKAK x sijenesuispasla</div>
                   <div class="mo-did"><b>Что я делал:</b> Физика и анимация футболки</div>
@@ -1931,7 +1993,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-tc">00:00</span><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик OKAK x Getman Car</div>
                   <div class="mo-did"><b>Что я делал:</b> Дизайн автомобиля</div>
@@ -1950,72 +2012,72 @@
               </div>
               <div class="st-grid">
               <div class="st-card">
-                <div class="st-thumb"></div>
+                <div class="st-thumb has-img"><img src="assets/static/s1.jpg" alt="" loading="lazy"></div>
                 <div class="st-cap">Постер к Румынскому туру Catalina Cara</div>
                 <div class="st-link"><a href="https://www.instagram.com/p/DdHHYCWwQ7h/?stkn=emtqZXI5ZGVsbXNt" target="_blank" rel="noopener">▶ Открыть в Instagram</a></div>
               </div>
               <div class="st-card">
-                <div class="st-thumb"></div>
+                <div class="st-thumb has-img"><img src="assets/static/s2.jpg" alt="" loading="lazy"></div>
                 <div class="st-cap">Постер TRPZ: Glamour - Ionel Istrati</div>
                 <div class="st-link"><a href="https://www.instagram.com/p/DRmFYD5jD2l/?stkn=MWphZTl3YnYwcm1xOA%3D%3D" target="_blank" rel="noopener">▶ Открыть в Instagram</a></div>
               </div>
               <div class="st-card">
-                <div class="st-thumb"></div>
+                <div class="st-thumb has-img st-carousel"><div class="st-track"><img src="assets/static/s3-1.jpg" alt="" loading="lazy"><img src="assets/static/s3-2.jpg" alt="" loading="lazy"><img src="assets/static/s3-3.jpg" alt="" loading="lazy"><img src="assets/static/s3-4.jpg" alt="" loading="lazy"><img src="assets/static/s3-5.jpg" alt="" loading="lazy"></div><button class="st-nav st-prev" aria-label="Назад">&#9664;</button><button class="st-nav st-next" aria-label="Вперёд">&#9654;</button><div class="st-dots"><span class="st-dot"></span><span class="st-dot"></span><span class="st-dot"></span><span class="st-dot"></span><span class="st-dot"></span></div></div>
                 <div class="st-cap">Промо-пост TRPZ: Glamour</div>
                 <div class="st-link"><a href="https://www.instagram.com/p/DRKGi3ADMtV/?img_index=4&amp;stkn=dHhsNmc4djBuY2I4" target="_blank" rel="noopener">▶ Открыть в Instagram</a></div>
               </div>
               <div class="st-card">
-                <div class="st-thumb"></div>
+                <div class="st-thumb has-img"><img src="assets/static/s4.jpg" alt="" loading="lazy"></div>
                 <div class="st-cap">Постер TRPZ: Glamour</div>
                 <div class="st-link"><a href="https://www.instagram.com/p/DRR-MoujAeX/?stkn=MXVkcWY1dW1mcWFhag%3D%3D" target="_blank" rel="noopener">▶ Открыть в Instagram</a></div>
               </div>
               <div class="st-card">
-                <div class="st-thumb"></div>
+                <div class="st-thumb has-img st-carousel"><div class="st-track"><img src="assets/static/s5-1.jpg" alt="" loading="lazy"><img src="assets/static/s5-2.jpg" alt="" loading="lazy"></div><button class="st-nav st-prev" aria-label="Назад">&#9664;</button><button class="st-nav st-next" aria-label="Вперёд">&#9654;</button><div class="st-dots"><span class="st-dot"></span><span class="st-dot"></span></div></div>
                 <div class="st-cap">Постер Trapeza Masquerade</div>
                 <div class="st-link"><a href="https://www.instagram.com/p/DQJtRr3jGRU/?img_index=1&amp;stkn=djg2NmVnaGk1NWR6%C3%A2" target="_blank" rel="noopener">▶ Открыть в Instagram</a></div>
               </div>
               <div class="st-card">
-                <div class="st-thumb"></div>
+                <div class="st-thumb has-img"><img src="assets/static/s6.jpg" alt="" loading="lazy"></div>
                 <div class="st-cap">Постер Trapeza Rooftop Highway</div>
                 <div class="st-link"><a href="https://www.instagram.com/p/DNBErfvtiM5/?stkn=YTFsczd4ZXF0M2R6" target="_blank" rel="noopener">▶ Открыть в Instagram</a></div>
               </div>
               <div class="st-card">
-                <div class="st-thumb"></div>
+                <div class="st-thumb has-img"><img src="assets/static/s7.jpg" alt="" loading="lazy"></div>
                 <div class="st-cap">Постер Trapeza Silencio</div>
                 <div class="st-link"><a href="https://www.instagram.com/p/DJE4t8sNQDh/?stkn=MWlyYmh6enZmeWlhdQ%3D%3D" target="_blank" rel="noopener">▶ Открыть в Instagram</a></div>
               </div>
               <div class="st-card">
-                <div class="st-thumb"></div>
+                <div class="st-thumb has-img"><img src="assets/static/s8.jpg" alt="" loading="lazy"></div>
                 <div class="st-cap">Постер Trapeza 2k17</div>
                 <div class="st-link"><a href="https://www.instagram.com/p/DGlTV5pterK/?stkn=MWM3YWdlbWJ2dzc3bw%3D%3D" target="_blank" rel="noopener">▶ Открыть в Instagram</a></div>
               </div>
               <div class="st-card">
-                <div class="st-thumb"></div>
+                <div class="st-thumb has-img"><img src="assets/static/s9.jpg" alt="" loading="lazy"></div>
                 <div class="st-cap">Промо-пост в стиле ВКонтакте для вечеринки Trapeza 2k17</div>
                 <div class="st-link"><a href="https://www.instagram.com/p/DF0aZAhN648/?stkn=MW0xZGJpajFtcmZxYg%3D%3D" target="_blank" rel="noopener">▶ Открыть в Instagram</a></div>
               </div>
               <div class="st-card">
-                <div class="st-thumb"></div>
+                <div class="st-thumb has-img"><img src="assets/static/s10.jpg" alt="" loading="lazy"></div>
                 <div class="st-cap">Промо-пост для мероприятия в баре TudaSuda</div>
                 <div class="st-link"><a href="https://www.instagram.com/p/Dc3iLSYMrUA/?stkn=MTQ1cXluMmN6OXg1Zg%3D%3D" target="_blank" rel="noopener">▶ Открыть в Instagram</a></div>
               </div>
               <div class="st-card">
-                <div class="st-thumb"></div>
+                <div class="st-thumb has-img"><img src="assets/static/s11.jpg" alt="" loading="lazy"></div>
                 <div class="st-cap">Постер FLORILE: MADVILLA</div>
                 <div class="st-link"><a href="https://www.instagram.com/p/DUi-tC9jH7E/?stkn=MWI5OTRzdjhrdWlxOA%3D%3D" target="_blank" rel="noopener">▶ Открыть в Instagram</a></div>
               </div>
               <div class="st-card">
-                <div class="st-thumb"></div>
+                <div class="st-thumb has-img"><img src="assets/static/s12.jpg" alt="" loading="lazy"></div>
                 <div class="st-cap">Постер FLORILE x IVAN DORN</div>
                 <div class="st-link"><a href="https://www.instagram.com/p/DMGBlA5tLee/?stkn=dHNnM2tlZmttODg1" target="_blank" rel="noopener">▶ Открыть в Instagram</a></div>
               </div>
               <div class="st-card">
-                <div class="st-thumb"></div>
+                <div class="st-thumb has-img st-carousel"><div class="st-track"><img src="assets/static/s13-1.jpg" alt="" loading="lazy"><img src="assets/static/s13-2.jpg" alt="" loading="lazy"><img src="assets/static/s13-3.jpg" alt="" loading="lazy"><img src="assets/static/s13-4.jpg" alt="" loading="lazy"></div><button class="st-nav st-prev" aria-label="Назад">&#9664;</button><button class="st-nav st-next" aria-label="Вперёд">&#9654;</button><div class="st-dots"><span class="st-dot"></span><span class="st-dot"></span><span class="st-dot"></span><span class="st-dot"></span></div></div>
                 <div class="st-cap">Промо-пост карусель для вечеринки Trapeza Rooftop</div>
                 <div class="st-link"><a href="https://www.instagram.com/p/DLafW7Zs-uC/?stkn=MXZ4M3dlZm9rcGNsaA%3D%3D" target="_blank" rel="noopener">▶ Открыть в Instagram</a></div>
               </div>
               <div class="st-card">
-                <div class="st-thumb"></div>
+                <div class="st-thumb has-img st-carousel"><div class="st-track"><img src="assets/static/s14-1.jpg" alt="" loading="lazy"><img src="assets/static/s14-2.jpg" alt="" loading="lazy"><img src="assets/static/s14-3.jpg" alt="" loading="lazy"><img src="assets/static/s14-4.jpg" alt="" loading="lazy"><img src="assets/static/s14-5.jpg" alt="" loading="lazy"><img src="assets/static/s14-6.jpg" alt="" loading="lazy"></div><button class="st-nav st-prev" aria-label="Назад">&#9664;</button><button class="st-nav st-next" aria-label="Вперёд">&#9654;</button><div class="st-dots"><span class="st-dot"></span><span class="st-dot"></span><span class="st-dot"></span><span class="st-dot"></span><span class="st-dot"></span><span class="st-dot"></span></div></div>
                 <div class="st-cap">Промо-пост карусель для продвижения услуг UI/UX дизайна и разработки сайтов OKAK</div>
                 <div class="st-link"><a href="https://www.instagram.com/p/DRE3F1rjLaw/?stkn=MWl5Y21kZGE3aDl6MQ%3D%3D" target="_blank" rel="noopener">▶ Открыть в Instagram</a></div>
               </div>
@@ -2031,7 +2093,7 @@
               </div>
               <div class="dx-holding">
                 <img src="assets/radio/dixi.png" alt="Dixi Media">
-                <div class="dx-h-txt">Последние 3 года работаю фулл-тайм в Dixi Media — рекламно-радийном холдинге. Делаю визуалы для самого холдинга и его четырёх радиостанций: афиши, контент для соцсетей, промо и айдентику эфиров. <a href="https://dixi.md/" target="_blank" rel="noopener">▶ dixi.md</a></div>
+                <div class="dx-h-txt">Три года работал фулл-тайм в Dixi Media, рекламно-радийном холдинге. Делал визуалы для самого холдинга и его четырёх радиостанций: афиши, контент для соцсетей, промо и айдентику эфиров. <a href="https://dixi.md/" target="_blank" rel="noopener">▶ dixi.md</a></div>
               </div>
               <div class="dx-grid">
               <div class="dx-card dx-hit">
@@ -2080,7 +2142,7 @@
                 <div class="ok-marquee"><span>@ VIDEO PRODUCTION @ VFX / CGI @ DESIGN @ BRANDING @ WEBSITES @ CARSHARING @ ADS @ VIDEO PRODUCTION @ VFX / CGI @</span></div>
                 <div class="ok-body">
                   <p>OK@K это продакшн- и дизайн-агентство, которое мы начинали с друзьями. Брали реальные заказы и успели немало, но из-за нехватки опыта проект, к сожалению, не пошёл.</p>
-                  <p>За это время поработали с Прослушка МД и с зарубежными клиентами, разрабатывали вебсайты, сделали дизайн автомобиля для каршеринга и снимали рекламу.</p>
+                  
                   <div class="ok-h">Чем занимались</div>
                   <ul class="ok-list">
                     <li>Работа с Прослушка МД</li>
@@ -2093,6 +2155,76 @@
                 </div>
                 <div class="ok-cta"><a href="https://www.instagram.com/okak.digital/" target="_blank" rel="noopener">▶ okak.digital в Instagram</a></div>
                 <div class="ok-foot">OK@K &middot; закрытый проект</div>
+              </div>
+            </div>
+          </div>
+          <div class="browser-pane" id="paneIye" hidden>
+            <div class="iye-page">
+              <div class="iye-banner">
+                <img class="iye-eye" src="assets/iye/eye.jpg" alt="IYE">
+                <div class="iye-title">InYourEyes</div>
+                <div class="iye-sub">новости кино · технологий · видеоигр</div>
+              </div>
+              <div class="iye-marquee"><span>▶ КИНО ▶ ТЕХНОЛОГИИ ▶ ВИДЕОИГРЫ ▶ РАЗДАЧИ ▶ КОНКУРСЫ ▶ НОВОСТИ ▶ КИНО ▶ ТЕХНОЛОГИИ ▶ ВИДЕОИГРЫ ▶</span></div>
+              <div class="iye-body">
+                <p class="iye-intro">IYE (InYourEyes) это новостной телеграм-канал про кино, технологии и видеоигры. Последние два года я его главный дизайнер: делаю обложки постов, конкурсы и раздачи, айдентику и ежедневные новости.</p>
+                <div class="iye-cta"><a href="https://t.me/InYouEyes" target="_blank" rel="noopener">▶ t.me/InYouEyes</a></div>
+                <div class="iye-h">Посты и обложки</div>
+                <div class="iye-grid">
+                  <div class="iye-post"><img src="assets/iye/post-1.jpg" alt="" loading="lazy"></div>
+                  <div class="iye-post"><img src="assets/iye/post-2.jpg" alt="" loading="lazy"></div>
+                  <div class="iye-post"><img src="assets/iye/post-3.jpg" alt="" loading="lazy"></div>
+                  <div class="iye-post"><img src="assets/iye/post-4.jpg" alt="" loading="lazy"></div>
+                  <div class="iye-post"><img src="assets/iye/post-5.jpg" alt="" loading="lazy"></div>
+                  <div class="iye-post"><img src="assets/iye/post-6.jpg" alt="" loading="lazy"></div>
+                  <div class="iye-post"><img src="assets/iye/post-7.jpg" alt="" loading="lazy"></div>
+                  <div class="iye-post"><img src="assets/iye/post-8.jpg" alt="" loading="lazy"></div>
+                  <div class="iye-post"><img src="assets/iye/post-9.jpg" alt="" loading="lazy"></div>
+                  <div class="iye-post"><img src="assets/iye/post-10.jpg" alt="" loading="lazy"></div>
+                  <div class="iye-post"><img src="assets/iye/post-11.jpg" alt="" loading="lazy"></div>
+                  <div class="iye-post"><img src="assets/iye/post-12.jpg" alt="" loading="lazy"></div>
+                </div>
+                <div class="iye-foot">★ дизайн для InYourEyes · © 2026 ★</div>
+              </div>
+            </div>
+          </div>
+          <div class="browser-pane" id="paneBbooks" hidden>
+            <div class="bb-page">
+              <div class="bb-banner">
+                <div class="bb-title">BBOOKS</div>
+                <div class="bb-sub">брендбуки, которые я делал</div>
+              </div>
+              <div class="bb-marquee"><span>★ BRANDBOOKS ★ ЛОГОТИПЫ ★ ФИРМЕННЫЙ СТИЛЬ ★ ГАЙДЛАЙНЫ ★ НОСИТЕЛИ ★ BRANDBOOKS ★ ЛОГОТИПЫ ★</span></div>
+              <div class="bb-body">
+                <p class="bb-intro">Здесь несколько брендбуков из тех, что я собирал: логотипы, фирменные цвета, шрифты и носители. Каждый открывается как PDF.</p>
+                <div class="bb-card" style="--bb:#0001e9">
+                  <a class="bb-cover" href="assets/bbooks/space-brandbook.pdf" target="_blank" rel="noopener"><img src="assets/bbooks/cover-space.jpg" alt="Space Moldova" loading="lazy"></a>
+                  <div class="bb-info">
+                    <div class="bb-name">Space Moldova</div>
+                    <div class="bb-kind">Маркетинговое агентство</div>
+                    <div class="bb-desc">Инфлюенс-маркетинговое агентство. Логотип, синий и розовый фирменные цвета, фото-стиль и носители.</div>
+                    <a class="bb-link" href="assets/bbooks/space-brandbook.pdf" target="_blank" rel="noopener">▶ Открыть брендбук (PDF)</a>
+                  </div>
+                </div>
+                <div class="bb-card" style="--bb:#840016">
+                  <a class="bb-cover" href="assets/bbooks/radio-vintage-brandbook.pdf" target="_blank" rel="noopener"><img src="assets/bbooks/cover-vintage.jpg" alt="Radio Vintage" loading="lazy"></a>
+                  <div class="bb-info">
+                    <div class="bb-name">Radio Vintage</div>
+                    <div class="bb-kind">Радиостанция</div>
+                    <div class="bb-desc">Радиостанция с хитами 90-х и 2000-х. Логотип, бордовый стиль, гайдлайны и носители.</div>
+                    <a class="bb-link" href="assets/bbooks/radio-vintage-brandbook.pdf" target="_blank" rel="noopener">▶ Открыть брендбук (PDF)</a>
+                  </div>
+                </div>
+                <div class="bb-card" style="--bb:#3f51c4">
+                  <a class="bb-cover" href="assets/bbooks/elysian-brandbook.pdf" target="_blank" rel="noopener"><img src="assets/bbooks/cover-elysian.jpg" alt="Elysian" loading="lazy"></a>
+                  <div class="bb-info">
+                    <div class="bb-name">Elysian</div>
+                    <div class="bb-kind">Мобильный бар и кейтеринг</div>
+                    <div class="bb-desc">Мобильный бар и кейтеринг. Логотип, сине-кремовая палитра, айдентика и носители.</div>
+                    <a class="bb-link" href="assets/bbooks/elysian-brandbook.pdf" target="_blank" rel="noopener">▶ Открыть брендбук (PDF)</a>
+                  </div>
+                </div>
+                <div class="bb-foot">★ PDF открываются в новой вкладке ★</div>
               </div>
             </div>
           </div>
@@ -2321,7 +2453,7 @@
           style="width:8px;height:8px;background:red;border-radius:50%;display:inline-block;animation:blink 1s infinite"></span>
         LIVE
       </a>
-      <div class="lang-tray"><button class="lang-btn" data-lang="ru" onclick="setLang('ru')">RU</button><button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button><button class="lang-btn" data-lang="ro" onclick="setLang('ro')">RO</button></div>
+      <div class="lang-tray"><button class="lang-btn lang-cycle" onclick="cycleLang()">RU</button><button class="lang-btn" data-lang="ru" onclick="setLang('ru')">RU</button><button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button><button class="lang-btn" data-lang="ro" onclick="setLang('ro')">RO</button></div>
       <div id="clock">12:00</div>
     </div>
   </div>
@@ -2932,7 +3064,7 @@
         playerWin.style.left = "auto"; playerWin.style.right = "10px"; playerWin.style.top = "10px"; playerWin.style.width = "360px";
         guestbookWin.style.left = "calc(50% - 320px)"; guestbookWin.style.top = "220px"; guestbookWin.style.width = "380px";
         snakeWin.style.left = "120px"; snakeWin.style.top = "40px";
-        portfolioWin.style.left = "calc(50% - 280px)"; portfolioWin.style.top = "90px"; portfolioWin.style.width = "560px";
+        portfolioWin.style.left = "calc(50% - 360px)"; portfolioWin.style.top = "90px"; portfolioWin.style.width = "720px";
       }
     }
     initWindowPositions();
@@ -3173,14 +3305,14 @@
 
     function showContextMenu(x, y, windowId) {
       if (windowId) {
-        contextMenu.innerHTML = '<div class="context-menu-item" data-action="open">Открыть приложение</div>';
+        contextMenu.innerHTML = '<div class="context-menu-item" data-action="open">'+window.__t('Открыть приложение')+'</div>';
         contextMenu.dataset.window = windowId;
       } else {
         contextMenu.innerHTML =
-          '<div class="context-menu-item" data-action="refresh">Обновить</div>' +
-          (isMobile() ? '' : '<div class="context-menu-item" data-action="arrange">Упорядочить значки</div>') +
+          '<div class="context-menu-item" data-action="refresh">'+window.__t('Обновить')+'</div>' +
+          (isMobile() ? '' : '<div class="context-menu-item" data-action="arrange">'+window.__t('Упорядочить значки')+'</div>') +
           '<div class="context-menu-divider"></div>' +
-          '<div class="context-menu-item" data-action="closeAll">Закрыть все окна</div>';
+          '<div class="context-menu-item" data-action="closeAll">'+window.__t('Закрыть все окна')+'</div>';
         delete contextMenu.dataset.window;
       }
       contextMenu.style.left = x + "px";
@@ -3889,7 +4021,7 @@
 
     // ===== Звук клика на кнопках и иконках =====
     document.addEventListener("click", event => {
-      if (event.target.closest(".win-button, .desktop-icon, .start-menu-item, .context-menu-item")) {
+      if (event.target.closest(".win-button, .desktop-icon, .start-menu-item, .context-menu-item, .lang-btn, .launcher-btn")) {
         playClickSound();
       }
     });
@@ -3910,7 +4042,9 @@
         motion: { pane: "paneMotion", tab: "tabMotion", url: "http://www.vitya.space/motion" },
         static: { pane: "paneStatic", tab: "tabStatic", url: "http://www.vitya.space/static" },
         dixi: { pane: "paneDixi", tab: "tabDixi", url: "http://www.vitya.space/dixi" },
-        okak: { pane: "paneOkak", tab: "tabOkak", url: "http://www.vitya.space/okak" }
+        okak: { pane: "paneOkak", tab: "tabOkak", url: "http://www.vitya.space/okak" },
+        iye: { pane: "paneIye", tab: "tabIye", url: "http://www.vitya.space/iye" },
+        bbooks: { pane: "paneBbooks", tab: "tabBbooks", url: "http://www.vitya.space/bbooks" }
       };
       Object.keys(tabs).forEach(function (k) {
         var t = tabs[k], active = (k === name);
@@ -3929,7 +4063,27 @@
   </script>
   <script>
   (function(){
-    var T={"Пуск": {"ru": "Пуск", "en": "Start", "ro": "Start"}, "Адрес": {"ru": "Адрес", "en": "Address", "ro": "Adresă"}, "Портфолио": {"ru": "Портфолио", "en": "Portfolio", "ro": "Portofoliu"}, "Донат": {"ru": "Донат", "en": "Donate", "ro": "Donații"}, "Плеер": {"ru": "Плеер", "en": "Player", "ro": "Player"}, "Гостевая.txt": {"ru": "Гостевая.txt", "en": "Guestbook.txt", "ro": "Oaspeți.txt"}, "Змейка.exe": {"ru": "Змейка.exe", "en": "Snake.exe", "ro": "Snake.exe"}, "Змейка": {"ru": "Змейка", "en": "Snake", "ro": "Snake"}, "Гостевая книга - Блокнот": {"ru": "Гостевая книга - Блокнот", "en": "Guestbook - Notepad", "ro": "Cartea de oaspeți - Notepad"}, "Media Player - Плейлист": {"ru": "Media Player - Плейлист", "en": "Media Player - Playlist", "ro": "Media Player - Playlist"}, "Портфолио - Internet Explorer": {"ru": "Портфолио - Internet Explorer", "en": "Portfolio - Internet Explorer", "ro": "Portofoliu - Internet Explorer"}, "Змейка - C:\\GAMES\\SNAKE.EXE": {"ru": "Змейка - C:\\GAMES\\SNAKE.EXE", "en": "Snake - C:\\GAMES\\SNAKE.EXE", "ro": "Snake - C:\\GAMES\\SNAKE.EXE"}, "Нажми на ссылку ниже для перехода": {"ru": "Нажми на ссылку ниже для перехода", "en": "Tap a link below to open it", "ro": "Apasă un link de mai jos"}, "Состояние:": {"ru": "Состояние:", "en": "Status:", "ro": "Stare:"}, "3 объекта(ов)": {"ru": "3 объекта(ов)", "en": "3 objects", "ro": "3 obiecte"}, "Готово": {"ru": "Готово", "en": "Done", "ro": "Gata"}, "Интернет": {"ru": "Интернет", "en": "Internet", "ro": "Internet"}, "Назад": {"ru": "Назад", "en": "Back", "ro": "Înapoi"}, "Вперёд": {"ru": "Вперёд", "en": "Forward", "ro": "Înainte"}, "Стоп": {"ru": "Стоп", "en": "Stop", "ro": "Stop"}, "Обновить": {"ru": "Обновить", "en": "Refresh", "ro": "Reîncarcă"}, "Домой": {"ru": "Домой", "en": "Home", "ro": "Acasă"}, "Загрузка...": {"ru": "Загрузка...", "en": "Loading...", "ro": "Se încarcă..."}, "Папка /muzlo/": {"ru": "Папка /muzlo/", "en": "Folder /muzlo/", "ro": "Folder /muzlo/"}, "Готов к воспроизведению": {"ru": "Готов к воспроизведению", "en": "Ready to play", "ro": "Gata de redare"}, "Записать": {"ru": "Записать", "en": "Submit", "ro": "Trimite"}, "Оставить запись": {"ru": "Оставить запись", "en": "Leave a note", "ro": "Lasă un mesaj"}, "Загрузка сообщений из облака...": {"ru": "Загрузка сообщений из облака...", "en": "Loading messages from the cloud...", "ro": "Se încarcă mesajele din cloud..."}, "Синхронизация в реальном времени": {"ru": "Синхронизация в реальном времени", "en": "Real-time sync", "ro": "Sincronizare în timp real"}, "ЗМЕЙКА": {"ru": "ЗМЕЙКА", "en": "SNAKE", "ro": "SNAKE"}, "Свободная игра": {"ru": "Свободная игра", "en": "Free play", "ro": "Joc liber"}, "На рекорд": {"ru": "На рекорд", "en": "Ranked", "ro": "Pe record"}, "Собирай диски.": {"ru": "Собирай диски.", "en": "Collect the disks.", "ro": "Adună discurile."}, "ПК: стрелки или WASD. Телефон: свайпы.": {"ru": "ПК: стрелки или WASD. Телефон: свайпы.", "en": "PC: arrows or WASD. Phone: swipes.", "ro": "PC: săgeți sau WASD. Telefon: swipe."}, "ПАУЗА": {"ru": "ПАУЗА", "en": "PAUSE", "ro": "PAUZĂ"}, "Игра продолжится с того же места.": {"ru": "Игра продолжится с того же места.", "en": "The game will resume from the same spot.", "ro": "Jocul continuă din același loc."}, "Продолжить": {"ru": "Продолжить", "en": "Resume", "ro": "Continuă"}, "В меню": {"ru": "В меню", "en": "To menu", "ro": "La meniu"}, "Очки:": {"ru": "Очки:", "en": "Score:", "ro": "Scor:"}, "Лучший:": {"ru": "Лучший:", "en": "Best:", "ro": "Record:"}, "Играть снова": {"ru": "Играть снова", "en": "Play again", "ro": "Joacă din nou"}, "Таблица лидеров": {"ru": "Таблица лидеров", "en": "Leaderboard", "ro": "Clasament"}, "Поддержка автора": {"ru": "Поддержка автора", "en": "Support the creator", "ro": "Susține autorul"}, "Личный Telegram": {"ru": "Личный Telegram", "en": "Personal Telegram", "ro": "Telegram personal"}, "Мемы (Vault)": {"ru": "Мемы (Vault)", "en": "Memes (Vault)", "ro": "Meme (Vault)"}, "Система": {"ru": "Система", "en": "System", "ro": "Sistem"}, "Нажмите кнопку для запуска системы:": {"ru": "Нажмите кнопку для запуска системы:", "en": "Press the button to start the system:", "ro": "Apasă butonul pentru a porni sistemul:"}, "Запустить систему": {"ru": "Запустить систему", "en": "Start the system", "ro": "Pornește sistemul"}, "Громкость": {"ru": "Громкость", "en": "Volume", "ro": "Volum"}, "Громкость плеера": {"ru": "Громкость плеера", "en": "Player volume", "ro": "Volumul player-ului"}, "Предыдущий": {"ru": "Предыдущий", "en": "Previous", "ro": "Anterior"}, "Следующий": {"ru": "Следующий", "en": "Next", "ro": "Următor"}, "Я в эфире! Нажми, чтобы залететь": {"ru": "Я в эфире! Нажми, чтобы залететь", "en": "I'm live! Tap to jump in", "ro": "Sunt live! Intră"}, "Оставьте весточку для Вити и гостей...": {"ru": "Оставьте весточку для Вити и гостей...", "en": "Leave a message for Vitya and the guests...", "ro": "Lasă un mesaj pentru Vitya și oaspeți..."}, "Ваш ник / имя...": {"ru": "Ваш ник / имя...", "en": "Your nickname / name...", "ro": "Nick / nume..."}, "Края сквозные, скорость щадящая — играй, пока не надоест": {"ru": "Края сквозные, скорость щадящая — играй, пока не надоест", "en": "Walls wrap around, gentle speed, play as long as you like", "ro": "Pereții sunt permeabili, viteză blândă, joacă cât vrei"}, "Стены смертельны, результат идёт в таблицу лидеров": {"ru": "Стены смертельны, результат идёт в таблицу лидеров", "en": "Walls are deadly, your score goes to the leaderboard", "ro": "Pereții sunt letali, scorul intră în clasament"}, "3 года · фулл-тайм · визуалы для холдинга и 4 радиостанций": {"ru": "3 года · фулл-тайм · визуалы для холдинга и 4 радиостанций", "en": "3 years · full-time · visuals for the holding and 4 radio stations", "ro": "3 ani · full-time · vizual pentru holding și 4 posturi de radio"}, "Последние 3 года работаю фулл-тайм в Dixi Media — рекламно-радийном холдинге. Делаю визуалы для самого холдинга и его четырёх радиостанций: афиши, контент для соцсетей, промо и айдентику эфиров.": {"ru": "Последние 3 года работаю фулл-тайм в Dixi Media — рекламно-радийном холдинге. Делаю визуалы для самого холдинга и его четырёх радиостанций: афиши, контент для соцсетей, промо и айдентику эфиров.", "en": "For the last 3 years I have worked full-time at Dixi Media, an advertising and radio holding. I make visuals for the holding itself and its four radio stations: posters, social media content, promo and on-air identity.", "ro": "De 3 ani lucrez full-time la Dixi Media, un holding de publicitate și radio. Fac vizual pentru holding și cele patru posturi de radio ale sale: afișe, conținut pentru social media, promo și identitatea emisiunilor."}, "Поп-хиты": {"ru": "Поп-хиты", "en": "Pop hits", "ro": "Hituri pop"}, "Рок": {"ru": "Рок", "en": "Rock", "ro": "Rock"}, "Лёгкая музыка": {"ru": "Лёгкая музыка", "en": "Easy listening", "ro": "Muzică ușoară"}, "Хиты прошлых лет": {"ru": "Хиты прошлых лет", "en": "Throwback hits", "ro": "Hituri de altădată"}, "OK@K это продакшн- и дизайн-агентство, которое мы начинали с друзьями. Брали реальные заказы и успели немало, но из-за нехватки опыта проект, к сожалению, не пошёл.": {"ru": "OK@K это продакшн- и дизайн-агентство, которое мы начинали с друзьями. Брали реальные заказы и успели немало, но из-за нехватки опыта проект, к сожалению, не пошёл.", "en": "OK@K is a production and design agency we started with friends. We took on real orders and got quite a lot done, but due to a lack of experience the project sadly did not take off.", "ro": "OK@K este o agenție de producție și design pe care am pornit-o cu prietenii. Am luat comenzi reale și am reușit destul de multe, dar din lipsă de experiență proiectul, din păcate, nu a mers."}, "За это время поработали с Прослушка МД и с зарубежными клиентами, разрабатывали вебсайты, сделали дизайн автомобиля для каршеринга и снимали рекламу.": {"ru": "За это время поработали с Прослушка МД и с зарубежными клиентами, разрабатывали вебсайты, сделали дизайн автомобиля для каршеринга и снимали рекламу.", "en": "Along the way we worked with Proslushka MD and foreign clients, built websites, designed a carsharing car and shot ads.", "ro": "Între timp am colaborat cu Proslushka MD și cu clienți din străinătate, am dezvoltat site-uri, am făcut designul unei mașini de carsharing și am filmat reclame."}, "Чем занимались": {"ru": "Чем занимались", "en": "What we did", "ro": "Ce am făcut"}, "Работа с Прослушка МД": {"ru": "Работа с Прослушка МД", "en": "Work with Proslushka MD", "ro": "Colaborare cu Proslushka MD"}, "Заказы от зарубежных клиентов": {"ru": "Заказы от зарубежных клиентов", "en": "Orders from foreign clients", "ro": "Comenzi de la clienți străini"}, "Разработка вебсайтов": {"ru": "Разработка вебсайтов", "en": "Website development", "ro": "Dezvoltare de site-uri"}, "Дизайн автомобиля для каршеринга": {"ru": "Дизайн автомобиля для каршеринга", "en": "Carsharing car design", "ro": "Design de mașină pentru carsharing"}, "Съёмка рекламы": {"ru": "Съёмка рекламы", "en": "Ad production", "ro": "Producție de reclame"}, "Видео-продакшн, VFX / CGI, дизайн, брендинг": {"ru": "Видео-продакшн, VFX / CGI, дизайн, брендинг", "en": "Video production, VFX / CGI, design, branding", "ro": "Producție video, VFX / CGI, design, branding"}, "постеры · афиши · посты": {"ru": "постеры · афиши · посты", "en": "posters · flyers · posts", "ro": "afișe · postere · postări"}, "OK@K · закрытый проект": {"ru": "OK@K · закрытый проект", "en": "OK@K · closed project", "ro": "OK@K · proiect închis"}, "Что я делал:": {"ru": "Что я делал:", "en": "What I did:", "ro": "Ce am făcut:"}, "▶ Видео": {"ru": "▶ Видео", "en": "▶ Video", "ro": "▶ Video"}, "▶ Открыть в Instagram": {"ru": "▶ Открыть в Instagram", "en": "▶ Open on Instagram", "ro": "▶ Deschide pe Instagram"}, "▶ Сайт": {"ru": "▶ Сайт", "en": "▶ Website", "ro": "▶ Site"}, "▶ Часть 1": {"ru": "▶ Часть 1", "en": "▶ Part 1", "ro": "▶ Partea 1"}, "▶ Часть 2": {"ru": "▶ Часть 2", "en": "▶ Part 2", "ro": "▶ Partea 2"}, "▶ okak.digital в Instagram": {"ru": "▶ okak.digital в Instagram", "en": "▶ okak.digital on Instagram", "ro": "▶ okak.digital pe Instagram"}, "▶ 38 роликов · Victor Musteata": {"ru": "▶ 38 роликов · Victor Musteata", "en": "▶ 38 videos · Victor Musteata", "ro": "▶ 38 clipuri · Victor Musteata"}, "Всё": {"ru": "Всё", "en": "Everything", "ro": "Tot"}, "анимации, композитинг в AR программе": {"ru": "анимации, композитинг в AR программе", "en": "animation, compositing in an AR app", "ro": "animație, compositing într-o aplicație AR"}, "практически всё; графика частично со стороннего референса, переработана": {"ru": "практически всё; графика частично со стороннего референса, переработана", "en": "almost everything; some graphics adapted from an external reference", "ro": "aproape tot; o parte din grafică adaptată după o referință externă"}, "автор задумки, актёр, монтаж": {"ru": "автор задумки, актёр, монтаж", "en": "concept author, actor, editing", "ro": "autor de concept, actor, montaj"}, "монтаж, графика": {"ru": "монтаж, графика", "en": "editing, graphics", "ro": "montaj, grafică"}, "всё, включая идею и съёмку": {"ru": "всё, включая идею и съёмку", "en": "everything, including the idea and the shoot", "ro": "tot, inclusiv ideea și filmarea"}, "пак-шот в конце": {"ru": "пак-шот в конце", "en": "the pack shot at the end", "ro": "pack shot-ul de la final"}, "всё (ещё не залито, но посмотреть можно)": {"ru": "всё (ещё не залито, но посмотреть можно)", "en": "everything (not published yet, but you can watch it)", "ro": "tot (încă nepublicat, dar poți viziona)"}, "леттеринг и анимация": {"ru": "леттеринг и анимация", "en": "lettering and animation", "ro": "lettering și animație"}, "графика, монтаж, саунд-дизайн": {"ru": "графика, монтаж, саунд-дизайн", "en": "graphics, editing, sound design", "ro": "grafică, montaj, sound design"}, "анимацию монстра и освещение": {"ru": "анимацию монстра и освещение", "en": "the monster animation and lighting", "ro": "animația monstrului și lumina"}, "Монтаж, саунд-дизайн": {"ru": "Монтаж, саунд-дизайн", "en": "Editing, sound design", "ro": "Montaj, sound design"}, "Физика и анимация футболки": {"ru": "Физика и анимация футболки", "en": "T-shirt physics and animation", "ro": "Fizica și animația tricoului"}, "Дизайн автомобиля": {"ru": "Дизайн автомобиля", "en": "Car design", "ro": "Design de mașină"}, "AR приглашение на MBR 2023 (сентябрь)": {"ru": "AR приглашение на MBR 2023 (сентябрь)", "en": "AR invitation for MBR 2023 (September)", "ro": "Invitație AR pentru MBR 2023 (septembrie)"}, "Промо-анимация диджей-проекта KVRT.DVIJ (KVARTIRA)": {"ru": "Промо-анимация диджей-проекта KVRT.DVIJ (KVARTIRA)", "en": "Promo animation for the DJ project KVRT.DVIJ (KVARTIRA)", "ro": "Animație promo pentru proiectul DJ KVRT.DVIJ (KVARTIRA)"}, "Промо-ролик Seeance x Kvartira под показ фильма «Сумерки» в Одеоне": {"ru": "Промо-ролик Seeance x Kvartira под показ фильма «Сумерки» в Одеоне", "en": "Promo video for Seeance x Kvartira, screening of «Twilight» at Odeon", "ro": "Clip promo pentru Seeance x Kvartira, difuzarea filmului «Amurg» la Odeon"}, "Промо-ролик Seeance x Kvartira под показ фильма «Мечтатели» в Одеоне": {"ru": "Промо-ролик Seeance x Kvartira под показ фильма «Мечтатели» в Одеоне", "en": "Promo video for Seeance x Kvartira, screening of «The Dreamers» at Odeon", "ro": "Clip promo pentru Seeance x Kvartira, difuzarea filmului «Visătorii» la Odeon"}, "Промо-ролик Seeance x Kvartira под показ фильма «Шрек» в Одеоне": {"ru": "Промо-ролик Seeance x Kvartira под показ фильма «Шрек» в Одеоне", "en": "Promo video for Seeance x Kvartira, screening of «Shrek» at Odeon", "ro": "Clip promo pentru Seeance x Kvartira, difuzarea filmului «Shrek» la Odeon"}, "Просто креативный видос для поддержания актива на аккаунте KVRT": {"ru": "Просто креативный видос для поддержания актива на аккаунте KVRT", "en": "Just a creative video to keep the KVRT account active", "ro": "Un clip creativ pentru a menține activ contul KVRT"}, "Промо-ролик диджей-сета KVRT в Amor Amar": {"ru": "Промо-ролик диджей-сета KVRT в Amor Amar", "en": "Promo video for the KVRT DJ set at Amor Amar", "ro": "Clip promo pentru setul DJ KVRT la Amor Amar"}, "Промо-ролик Seeance под новогодний показ фильма «Кто подставил кролика Роджера» в Одеоне": {"ru": "Промо-ролик Seeance под новогодний показ фильма «Кто подставил кролика Роджера» в Одеоне", "en": "Promo video for Seeance, New Year screening of «Who Framed Roger Rabbit» at Odeon", "ro": "Clip promo pentru Seeance, difuzarea de Anul Nou a filmului «Cine i-a înscenat lui Roger Rabbit» la Odeon"}, "Репортаж Ezym Mag про три новогодних вечеринки Кишинёва": {"ru": "Репортаж Ezym Mag про три новогодних вечеринки Кишинёва", "en": "Ezym Mag report on three New Year parties in Chișinău", "ro": "Reportaj Ezym Mag despre trei petreceri de Anul Nou din Chișinău"}, "Промо-ролик Magic Flowers x Mirror": {"ru": "Промо-ролик Magic Flowers x Mirror", "en": "Promo video Magic Flowers x Mirror", "ro": "Clip promo Magic Flowers x Mirror"}, "Промо-ролик Mirror x Oystersgeese": {"ru": "Промо-ролик Mirror x Oystersgeese", "en": "Promo video Mirror x Oystersgeese", "ro": "Clip promo Mirror x Oystersgeese"}, "Промо-серия сторис в стиле старого ВК для вечеринки TRAPEZA 2K17": {"ru": "Промо-серия сторис в стиле старого ВК для вечеринки TRAPEZA 2K17", "en": "Promo stories series in old VK style for the TRAPEZA 2K17 party", "ro": "Serie de stories promo în stil vechi VK pentru petrecerea TRAPEZA 2K17"}, "Промо-рилс для диджей-сета KVRT": {"ru": "Промо-рилс для диджей-сета KVRT", "en": "Promo reel for the KVRT DJ set", "ro": "Reel promo pentru setul DJ KVRT"}, "Пародийный промо-ролик в стиле «FACE: Я роняю запад» для вечеринки TRAPEZA 2K17": {"ru": "Пародийный промо-ролик в стиле «FACE: Я роняю запад» для вечеринки TRAPEZA 2K17", "en": "Parody promo video in the style of «FACE: Я роняю запад» for the TRAPEZA 2K17 party", "ro": "Clip promo parodie în stilul «FACE: Я роняю запад» pentru petrecerea TRAPEZA 2K17"}, "Промо-ролик для вечеринки KVRT в #norma": {"ru": "Промо-ролик для вечеринки KVRT в #norma", "en": "Promo video for the KVRT party at #norma", "ro": "Clip promo pentru petrecerea KVRT la #norma"}, "Промо-ролик Cinemai x Trapeza": {"ru": "Промо-ролик Cinemai x Trapeza", "en": "Promo video Cinemai x Trapeza", "ro": "Clip promo Cinemai x Trapeza"}, "Промо-ролик для вечеринки Trapeza Silencio": {"ru": "Промо-ролик для вечеринки Trapeza Silencio", "en": "Promo video for the Trapeza Silencio party", "ro": "Clip promo pentru petrecerea Trapeza Silencio"}, "Промо-ролик трека «OK» для P.S. ZARANEE": {"ru": "Промо-ролик трека «OK» для P.S. ZARANEE", "en": "Promo video for the track «OK» for P.S. ZARANEE", "ro": "Clip promo pentru piesa «OK» pentru P.S. ZARANEE"}, "Промо-ролик под мероприятие в музее истории, Cârturești x KVRT": {"ru": "Промо-ролик под мероприятие в музее истории, Cârturești x KVRT", "en": "Promo video for an event at the history museum, Cârturești x KVRT", "ro": "Clip promo pentru un eveniment la muzeul de istorie, Cârturești x KVRT"}, "Промо-ролик FLORILE: MADVILLA": {"ru": "Промо-ролик FLORILE: MADVILLA", "en": "Promo video FLORILE: MADVILLA", "ro": "Clip promo FLORILE: MADVILLA"}, "Промо-ролик FLORILE x Boardshop": {"ru": "Промо-ролик FLORILE x Boardshop", "en": "Promo video FLORILE x Boardshop", "ro": "Clip promo FLORILE x Boardshop"}, "Промо-ролик FLORILE Rooftop Party": {"ru": "Промо-ролик FLORILE Rooftop Party", "en": "Promo video FLORILE Rooftop Party", "ro": "Clip promo FLORILE Rooftop Party"}, "Промо-ролик FLORILE x Ivan Dorn": {"ru": "Промо-ролик FLORILE x Ivan Dorn", "en": "Promo video FLORILE x Ivan Dorn", "ro": "Clip promo FLORILE x Ivan Dorn"}, "Промо-ролик FLORILE Rooftop Session": {"ru": "Промо-ролик FLORILE Rooftop Session", "en": "Promo video FLORILE Rooftop Session", "ro": "Clip promo FLORILE Rooftop Session"}, "Промо-ролик Trapeza x Autohub": {"ru": "Промо-ролик Trapeza x Autohub", "en": "Promo video Trapeza x Autohub", "ro": "Clip promo Trapeza x Autohub"}, "Промо-ролик Trapeza Rooftob": {"ru": "Промо-ролик Trapeza Rooftob", "en": "Promo video Trapeza Rooftob", "ro": "Clip promo Trapeza Rooftob"}, "Промо-ролик Trapeza Pop-up market": {"ru": "Промо-ролик Trapeza Pop-up market", "en": "Promo video Trapeza Pop-up market", "ro": "Clip promo Trapeza Pop-up market"}, "Промо-ролик Mutant Avenue #8": {"ru": "Промо-ролик Mutant Avenue #8", "en": "Promo video Mutant Avenue #8", "ro": "Clip promo Mutant Avenue #8"}, "Промо-ролик Концерт NOUA UNSPE": {"ru": "Промо-ролик Концерт NOUA UNSPE", "en": "Promo video for the NOUA UNSPE concert", "ro": "Clip promo pentru concertul NOUA UNSPE"}, "Промо-ролик FLORILE: DISCO": {"ru": "Промо-ролик FLORILE: DISCO", "en": "Promo video FLORILE: DISCO", "ro": "Clip promo FLORILE: DISCO"}, "Промо-ролик Trapeza Glamour Pre-party": {"ru": "Промо-ролик Trapeza Glamour Pre-party", "en": "Promo video Trapeza Glamour Pre-party", "ro": "Clip promo Trapeza Glamour Pre-party"}, "Промо-карусель Trapeza Glamour": {"ru": "Промо-карусель Trapeza Glamour", "en": "Promo carousel Trapeza Glamour", "ro": "Carusel promo Trapeza Glamour"}, "Промо-ролик TudaSuda Bar": {"ru": "Промо-ролик TudaSuda Bar", "en": "Promo video TudaSuda Bar", "ro": "Clip promo TudaSuda Bar"}, "Промо-ролик OKAK x Bubblepop": {"ru": "Промо-ролик OKAK x Bubblepop", "en": "Promo video OKAK x Bubblepop", "ro": "Clip promo OKAK x Bubblepop"}, "Промо-ролик OKAK x Proslushka.md": {"ru": "Промо-ролик OKAK x Proslushka.md", "en": "Promo video OKAK x Proslushka.md", "ro": "Clip promo OKAK x Proslushka.md"}, "Промо-ролик OKAK x sijenesuispasla": {"ru": "Промо-ролик OKAK x sijenesuispasla", "en": "Promo video OKAK x sijenesuispasla", "ro": "Clip promo OKAK x sijenesuispasla"}, "Промо-ролик OKAK x Getman Car": {"ru": "Промо-ролик OKAK x Getman Car", "en": "Promo video OKAK x Getman Car", "ro": "Clip promo OKAK x Getman Car"}, "Постер к Румынскому туру Catalina Cara": {"ru": "Постер к Румынскому туру Catalina Cara", "en": "Poster for Catalina Cara's Romania tour", "ro": "Afiș pentru turneul din România al Catalinei Cara"}, "Постер TRPZ: Glamour - Ionel Istrati": {"ru": "Постер TRPZ: Glamour - Ionel Istrati", "en": "Poster TRPZ: Glamour - Ionel Istrati", "ro": "Afiș TRPZ: Glamour - Ionel Istrati"}, "Промо-пост TRPZ: Glamour": {"ru": "Промо-пост TRPZ: Glamour", "en": "Promo post TRPZ: Glamour", "ro": "Postare promo TRPZ: Glamour"}, "Постер TRPZ: Glamour": {"ru": "Постер TRPZ: Glamour", "en": "Poster TRPZ: Glamour", "ro": "Afiș TRPZ: Glamour"}, "Постер Trapeza Masquerade": {"ru": "Постер Trapeza Masquerade", "en": "Poster Trapeza Masquerade", "ro": "Afiș Trapeza Masquerade"}, "Постер Trapeza Rooftop Highway": {"ru": "Постер Trapeza Rooftop Highway", "en": "Poster Trapeza Rooftop Highway", "ro": "Afiș Trapeza Rooftop Highway"}, "Постер Trapeza Silencio": {"ru": "Постер Trapeza Silencio", "en": "Poster Trapeza Silencio", "ro": "Afiș Trapeza Silencio"}, "Постер Trapeza 2k17": {"ru": "Постер Trapeza 2k17", "en": "Poster Trapeza 2k17", "ro": "Afiș Trapeza 2k17"}, "Промо-пост в стиле ВКонтакте для вечеринки Trapeza 2k17": {"ru": "Промо-пост в стиле ВКонтакте для вечеринки Trapeza 2k17", "en": "VK-style promo post for the Trapeza 2k17 party", "ro": "Postare promo în stil VK pentru petrecerea Trapeza 2k17"}, "Промо-пост для мероприятия в баре TudaSuda": {"ru": "Промо-пост для мероприятия в баре TudaSuda", "en": "Promo post for an event at TudaSuda bar", "ro": "Postare promo pentru un eveniment la barul TudaSuda"}, "Постер FLORILE: MADVILLA": {"ru": "Постер FLORILE: MADVILLA", "en": "Poster FLORILE: MADVILLA", "ro": "Afiș FLORILE: MADVILLA"}, "Постер FLORILE x IVAN DORN": {"ru": "Постер FLORILE x IVAN DORN", "en": "Poster FLORILE x IVAN DORN", "ro": "Afiș FLORILE x IVAN DORN"}, "Промо-пост карусель для вечеринки Trapeza Rooftop": {"ru": "Промо-пост карусель для вечеринки Trapeza Rooftop", "en": "Promo carousel post for the Trapeza Rooftop party", "ro": "Postare carusel promo pentru petrecerea Trapeza Rooftop"}, "Промо-пост карусель для продвижения услуг UI/UX дизайна и разработки сайтов OKAK": {"ru": "Промо-пост карусель для продвижения услуг UI/UX дизайна и разработки сайтов OKAK", "en": "Promo carousel post for OKAK's UI/UX design and web development services", "ro": "Postare carusel promo pentru serviciile OKAK de design UI/UX și dezvoltare web"}, "14 работ · Victor Musteata": {"ru": "14 работ · Victor Musteata", "en": "14 works · Victor Musteata", "ro": "14 lucrări · Victor Musteata"}, "About myself": {"ru": "О себе", "en": "About myself", "ro": "Despre mine"}, "Work experience": {"ru": "Опыт работы", "en": "Work experience", "ro": "Experiență de muncă"}, "Education": {"ru": "Образование", "en": "Education", "ro": "Educație"}, "Languages": {"ru": "Языки", "en": "Languages", "ro": "Limbi"}, "Skills": {"ru": "Навыки", "en": "Skills", "ro": "Competențe"}, "Hobbies & interests": {"ru": "Хобби и интересы", "en": "Hobbies & interests", "ro": "Hobby-uri și interese"}, "Contact": {"ru": "Контакты", "en": "Contact", "ro": "Contact"}, "Selected clients:": {"ru": "Избранные клиенты:", "en": "Selected clients:", "ro": "Clienți selectați:"}, "Mother tongues:": {"ru": "Родные языки:", "en": "Mother tongues:", "ro": "Limbi materne:"}, "About": {"ru": "О себе", "en": "About", "ro": "Despre"}, "Work": {"ru": "Опыт", "en": "Work", "ro": "Experiență"}, "Hobbies": {"ru": "Хобби", "en": "Hobbies", "ro": "Hobby-uri"}, "Understanding": {"ru": "Понимание", "en": "Understanding", "ro": "Înțelegere"}, "Speaking": {"ru": "Речь", "en": "Speaking", "ro": "Vorbire"}, "Writing": {"ru": "Письмо", "en": "Writing", "ro": "Scriere"}, "English": {"ru": "Английский", "en": "English", "ro": "Engleză"}, "Russian": {"ru": "Русский", "en": "Russian", "ro": "Rusă"}, "Romanian": {"ru": "Румынский", "en": "Romanian", "ro": "Română"}, "Ukrainian": {"ru": "Украинский", "en": "Ukrainian", "ro": "Ucraineană"}, "Commercial Graphic Designer": {"ru": "Коммерческий график-дизайнер", "en": "Commercial Graphic Designer", "ro": "Designer grafic comercial"}, "Graphics Designer": {"ru": "График-дизайнер", "en": "Graphics Designer", "ro": "Designer grafic"}, "Front Desk Receptionist": {"ru": "Администратор ресепшн", "en": "Front Desk Receptionist", "ro": "Recepționer"}, "Multidisciplinary Graphic Designer · 4+ years": {"ru": "Мультидисциплинарный график-дизайнер · 4+ года", "en": "Multidisciplinary Graphic Designer · 4+ years", "ro": "Designer grafic multidisciplinar · 4+ ani"}, "Basketball": {"ru": "Баскетбол", "en": "Basketball", "ro": "Baschet"}, "DJing": {"ru": "Диджеинг", "en": "DJing", "ro": "DJing"}, "Online": {"ru": "Онлайн", "en": "Online", "ro": "Online"}, "Listen to a set": {"ru": "Послушать сет", "en": "Listen to a set", "ro": "Ascultă un set"}, "Location: Chișinău, Moldova": {"ru": "Локация: Кишинёв, Молдова", "en": "Location: Chișinău, Moldova", "ro": "Locație: Chișinău, Moldova"}, ", Chișinău, Moldova": {"ru": ", Кишинёв, Молдова", "en": ", Chișinău, Moldova", "ro": ", Chișinău, Moldova"}, "reels · promo · animation": {"ru": "рилсы · промо · анимация", "en": "reels · promo · animation", "ro": "reels · promo · animație"}, "Production & Design agency": {"ru": "Продакшн- и дизайн-агентство", "en": "Production & Design agency", "ro": "Agenție de producție și design"}, "Social media content creation.": {"ru": "Контент для соцсетей.", "en": "Social media content creation.", "ro": "Conținut pentru social media."}, "Figma & UI/UX design; typography & layout.": {"ru": "Figma и UI/UX-дизайн; типографика и вёрстка.", "en": "Figma & UI/UX design; typography & layout.", "ro": "Figma și design UI/UX; tipografie și layout."}, "3D design (Blender); motion graphics & animation.": {"ru": "3D-дизайн (Blender); моушн-графика и анимация.", "en": "3D design (Blender); motion graphics & animation.", "ro": "Design 3D (Blender); motion graphics și animație."}, "Image retouching & manipulation; presentation design.": {"ru": "Ретушь и обработка изображений; дизайн презентаций.", "en": "Image retouching & manipulation; presentation design.", "ro": "Retuș și manipulare de imagini; design de prezentări."}, "AI tools: confident use of AI, plus AI video and image generation.": {"ru": "AI-инструменты: уверенное использование ИИ, плюс генерация видео и изображений.", "en": "AI tools: confident use of AI, plus AI video and image generation.", "ro": "Instrumente AI: utilizare sigură a AI, plus generare de video și imagini."}, "Microsoft Office, Google Workspace; fast adaptation to new software; multitasking.": {"ru": "Microsoft Office, Google Workspace; быстрая адаптация к новому софту; многозадачность.", "en": "Microsoft Office, Google Workspace; fast adaptation to new software; multitasking.", "ro": "Microsoft Office, Google Workspace; adaptare rapidă la software nou; multitasking."}, "Made in Chișinău, MD · © 2026 Victor Musteata": {"ru": "Сделано в Кишинёве, MD · © 2026 Victor Musteata", "en": "Made in Chișinău, MD · © 2026 Victor Musteata", "ro": "Făcut în Chișinău, MD · © 2026 Victor Musteata"}, "You are visitor No. 000137 · Best viewed in 800x600": {"ru": "Вы посетитель № 000137 · Лучше смотреть в 800x600", "en": "You are visitor No. 000137 · Best viewed in 800x600", "ro": "Ești vizitatorul nr. 000137 · Se vede cel mai bine la 800x600"}, "Multidisciplinary graphic designer with over 4 years of experience in branding, poster and flyer design, motion graphics and 3D. My work blends bold visuals with strategic thinking and storytelling so each project reads clearly and stays memorable.": {"ru": "Мультидисциплинарный график-дизайнер с опытом более 4 лет в брендинге, дизайне постеров и флаеров, моушн-графике и 3D. Моя работа сочетает смелую визуалку со стратегическим мышлением и сторителлингом, чтобы каждый проект читался ясно и запоминался.", "en": "Multidisciplinary graphic designer with over 4 years of experience in branding, poster and flyer design, motion graphics and 3D. My work blends bold visuals with strategic thinking and storytelling so each project reads clearly and stays memorable.", "ro": "Designer grafic multidisciplinar cu peste 4 ani de experiență în branding, design de afișe și flyere, motion graphics și 3D. Munca mea îmbină vizualul îndrăzneț cu gândirea strategică și storytelling, astfel încât fiecare proiect să fie clar și memorabil."}, "Hands-on across visual identity, UI/UX, social media content, packaging and typography. Proficient in Adobe Creative Suite (Photoshop, Illustrator, After Effects, Premiere Pro), Figma and Blender. Quick learner, strong problem-solving, comfortable solo or in a team, and at home in fast-paced environments.": {"ru": "Работаю с фирменным стилем, UI/UX, контентом для соцсетей, упаковкой и типографикой. Уверенно владею Adobe Creative Suite (Photoshop, Illustrator, After Effects, Premiere Pro), Figma и Blender. Быстро учусь, хорошо решаю задачи, комфортно работаю один и в команде, в быстром темпе.", "en": "Hands-on across visual identity, UI/UX, social media content, packaging and typography. Proficient in Adobe Creative Suite (Photoshop, Illustrator, After Effects, Premiere Pro), Figma and Blender. Quick learner, strong problem-solving, comfortable solo or in a team, and at home in fast-paced environments.", "ro": "Lucrez cu identitate vizuală, UI/UX, conținut pentru social media, ambalaj și tipografie. Stăpânesc Adobe Creative Suite (Photoshop, Illustrator, After Effects, Premiere Pro), Figma și Blender. Învăț repede, rezolv bine problemele, lucrez confortabil singur sau în echipă, în ritm alert."}, "Promo materials (banners, posters, social graphics) for shows, events and campaigns.": {"ru": "Промо-материалы (баннеры, постеры, соцсети) для шоу, событий и кампаний.", "en": "Promo materials (banners, posters, social graphics) for shows, events and campaigns.", "ro": "Materiale promo (bannere, afișe, social media) pentru show-uri, evenimente și campanii."}, "Visual assets for digital platforms: websites, mobile apps, streaming services.": {"ru": "Визуалы для digital-платформ: сайты, мобильные приложения, стриминговые сервисы.", "en": "Visual assets for digital platforms: websites, mobile apps, streaming services.", "ro": "Vizual pentru platforme digitale: site-uri, aplicații mobile, servicii de streaming."}, "Branded content for merch, sponsorship decks and press materials.": {"ru": "Брендированный контент для мерча, спонсорских презентаций и пресс-материалов.", "en": "Branded content for merch, sponsorship decks and press materials.", "ro": "Conținut de brand pentru merch, prezentări de sponsorizare și materiale de presă."}, "On-screen graphics, signage and stage visuals for live events and concerts.": {"ru": "Экранная графика, вывески и сценические визуалы для лайв-событий и концертов.", "en": "On-screen graphics, signage and stage visuals for live events and concerts.", "ro": "Grafică pe ecran, semnalistică și vizual de scenă pentru evenimente live și concerte."}, "Logos, brand guidelines and complete visual identity systems.": {"ru": "Логотипы, брендбуки и цельные системы фирменного стиля.", "en": "Logos, brand guidelines and complete visual identity systems.", "ro": "Logo-uri, ghiduri de brand și sisteme complete de identitate vizuală."}, "Brand assets for print and digital: business cards, packaging, social visuals, presentations.": {"ru": "Брендовые ассеты для печати и digital: визитки, упаковка, соцсети, презентации.", "en": "Brand assets for print and digital: business cards, packaging, social visuals, presentations.", "ro": "Materiale de brand pentru print și digital: cărți de vizită, ambalaj, social media, prezentări."}, "Visual research and mood boards; production-ready files and quality control.": {"ru": "Визуальный ресёрч и мудборды; файлы, готовые к продакшену, и контроль качества.", "en": "Visual research and mood boards; production-ready files and quality control.", "ro": "Research vizual și mood-board-uri; fișiere gata de producție și control al calității."}, "Handling calls, guest requests and internal communications.": {"ru": "Приём звонков, запросов гостей и внутренних коммуникаций.", "en": "Handling calls, guest requests and internal communications.", "ro": "Preluarea apelurilor, a solicitărilor oaspeților și a comunicării interne."}, "Coordinating housekeeping, maintenance and front desk; tracking service requests.": {"ru": "Координация уборки, обслуживания и ресепшена; отслеживание заявок.", "en": "Coordinating housekeeping, maintenance and front desk; tracking service requests.", "ro": "Coordonarea curățeniei, mentenanței și recepției; urmărirea solicitărilor."}, "Keeping detailed records of calls and service reports.": {"ru": "Ведение подробных записей звонков и сервисных отчётов.", "en": "Keeping detailed records of calls and service reports.", "ro": "Ținerea evidențelor detaliate ale apelurilor și rapoartelor de serviciu."}, "- Bachelor in Interior Design (incomplete), 2021-2023.": {"ru": "- Бакалавр, дизайн интерьера (не окончено), 2021-2023.", "en": "- Bachelor in Interior Design (incomplete), 2021-2023.", "ro": "- Licență, design interior (neterminat), 2021-2023."}, "- Bachelor in Game Design (incomplete), 2023-2024.": {"ru": "- Бакалавр, гейм-дизайн (не окончено), 2023-2024.", "en": "- Bachelor in Game Design (incomplete), 2023-2024.", "ro": "- Licență, game design (neterminat), 2023-2024."}, ", Singera - High School 2018-2021, Gymnasium 2008-2018.": {"ru": ", Сынжера - лицей 2018-2021, гимназия 2008-2018.", "en": ", Singera - High School 2018-2021, Gymnasium 2008-2018.", "ro": ", Sîngera - liceu 2018-2021, gimnaziu 2008-2018."}, "- mixing genres, custom sets, occasional local events and private parties.": {"ru": "- микширую жанры, кастомные сеты, иногда локальные события и частные вечеринки.", "en": "- mixing genres, custom sets, occasional local events and private parties.", "ro": "- mixez genuri, seturi custom, ocazional evenimente locale și petreceri private."}, "- staying active, teamwork and focus under pressure.": {"ru": "- поддерживаю форму, командная работа и концентрация под давлением.", "en": "- staying active, teamwork and focus under pressure.", "ro": "- rămân activ, lucru în echipă și concentrare sub presiune."}};
+    function init(){
+      document.querySelectorAll('.st-carousel').forEach(function(car){
+        if(car.__c) return; car.__c=1;
+        var track=car.querySelector('.st-track'); if(!track) return;
+        var n=track.children.length, idx=0, dots=car.querySelectorAll('.st-dot');
+        function go(i){ idx=(i+n)%n; track.style.transform='translateX('+(-idx*100)+'%)'; for(var d=0;d<dots.length;d++) dots[d].classList.toggle('active',d===idx); }
+        var pv=car.querySelector('.st-prev'), nx=car.querySelector('.st-next');
+        if(pv) pv.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();go(idx-1);});
+        if(nx) nx.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();go(idx+1);});
+        var x0=null;
+        track.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;},{passive:true});
+        track.addEventListener('touchend',function(e){ if(x0===null) return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>30) go(idx+(dx<0?1:-1)); x0=null; },{passive:true});
+        go(0);
+      });
+    }
+    if(document.readyState!=='loading') init(); else document.addEventListener('DOMContentLoaded',init);
+  })();
+  </script>
+  <script>
+  (function(){
+    var T={"Пуск": {"ru": "Пуск", "en": "Start", "ro": "Start"}, "Адрес": {"ru": "Адрес", "en": "Address", "ro": "Adresă"}, "Портфолио": {"ru": "Портфолио", "en": "Portfolio", "ro": "Portofoliu"}, "Донат": {"ru": "Донат", "en": "Donate", "ro": "Donații"}, "Плеер": {"ru": "Плеер", "en": "Player", "ro": "Player"}, "Гостевая.txt": {"ru": "Гостевая.txt", "en": "Guestbook.txt", "ro": "Oaspeți.txt"}, "Змейка.exe": {"ru": "Змейка.exe", "en": "Snake.exe", "ro": "Snake.exe"}, "Змейка": {"ru": "Змейка", "en": "Snake", "ro": "Snake"}, "Гостевая книга - Блокнот": {"ru": "Гостевая книга - Блокнот", "en": "Guestbook - Notepad", "ro": "Cartea de oaspeți - Notepad"}, "Media Player - Плейлист": {"ru": "Media Player - Плейлист", "en": "Media Player - Playlist", "ro": "Media Player - Playlist"}, "Портфолио - Internet Explorer": {"ru": "Портфолио - Internet Explorer", "en": "Portfolio - Internet Explorer", "ro": "Portofoliu - Internet Explorer"}, "Змейка - C:\\GAMES\\SNAKE.EXE": {"ru": "Змейка - C:\\GAMES\\SNAKE.EXE", "en": "Snake - C:\\GAMES\\SNAKE.EXE", "ro": "Snake - C:\\GAMES\\SNAKE.EXE"}, "Нажми на ссылку ниже для перехода": {"ru": "Нажми на ссылку ниже для перехода", "en": "Tap a link below to open it", "ro": "Apasă un link de mai jos"}, "Состояние:": {"ru": "Состояние:", "en": "Status:", "ro": "Stare:"}, "3 объекта(ов)": {"ru": "3 объекта(ов)", "en": "3 objects", "ro": "3 obiecte"}, "Готово": {"ru": "Готово", "en": "Done", "ro": "Gata"}, "Интернет": {"ru": "Интернет", "en": "Internet", "ro": "Internet"}, "Назад": {"ru": "Назад", "en": "Back", "ro": "Înapoi"}, "Вперёд": {"ru": "Вперёд", "en": "Forward", "ro": "Înainte"}, "Стоп": {"ru": "Стоп", "en": "Stop", "ro": "Stop"}, "Обновить": {"ru": "Обновить", "en": "Refresh", "ro": "Reîncarcă"}, "Домой": {"ru": "Домой", "en": "Home", "ro": "Acasă"}, "Загрузка...": {"ru": "Загрузка...", "en": "Loading...", "ro": "Se încarcă..."}, "Папка /muzlo/": {"ru": "Папка /muzlo/", "en": "Folder /muzlo/", "ro": "Folder /muzlo/"}, "Готов к воспроизведению": {"ru": "Готов к воспроизведению", "en": "Ready to play", "ro": "Gata de redare"}, "Записать": {"ru": "Записать", "en": "Submit", "ro": "Trimite"}, "Оставить запись": {"ru": "Оставить запись", "en": "Leave a note", "ro": "Lasă un mesaj"}, "Загрузка сообщений из облака...": {"ru": "Загрузка сообщений из облака...", "en": "Loading messages from the cloud...", "ro": "Se încarcă mesajele din cloud..."}, "Синхронизация в реальном времени": {"ru": "Синхронизация в реальном времени", "en": "Real-time sync", "ro": "Sincronizare în timp real"}, "ЗМЕЙКА": {"ru": "ЗМЕЙКА", "en": "SNAKE", "ro": "SNAKE"}, "Свободная игра": {"ru": "Свободная игра", "en": "Free play", "ro": "Joc liber"}, "На рекорд": {"ru": "На рекорд", "en": "Ranked", "ro": "Pe record"}, "Собирай диски.": {"ru": "Собирай диски.", "en": "Collect the disks.", "ro": "Adună discurile."}, "ПК: стрелки или WASD. Телефон: свайпы.": {"ru": "ПК: стрелки или WASD. Телефон: свайпы.", "en": "PC: arrows or WASD. Phone: swipes.", "ro": "PC: săgeți sau WASD. Telefon: swipe."}, "ПАУЗА": {"ru": "ПАУЗА", "en": "PAUSE", "ro": "PAUZĂ"}, "Игра продолжится с того же места.": {"ru": "Игра продолжится с того же места.", "en": "The game will resume from the same spot.", "ro": "Jocul continuă din același loc."}, "Продолжить": {"ru": "Продолжить", "en": "Resume", "ro": "Continuă"}, "В меню": {"ru": "В меню", "en": "To menu", "ro": "La meniu"}, "Очки:": {"ru": "Очки:", "en": "Score:", "ro": "Scor:"}, "Лучший:": {"ru": "Лучший:", "en": "Best:", "ro": "Record:"}, "Играть снова": {"ru": "Играть снова", "en": "Play again", "ro": "Joacă din nou"}, "Таблица лидеров": {"ru": "Таблица лидеров", "en": "Leaderboard", "ro": "Clasament"}, "Поддержка автора": {"ru": "Поддержка автора", "en": "Support the creator", "ro": "Susține autorul"}, "Личный Telegram": {"ru": "Личный Telegram", "en": "Personal Telegram", "ro": "Telegram personal"}, "Мемы (Vault)": {"ru": "Мемы (Vault)", "en": "Memes (Vault)", "ro": "Meme (Vault)"}, "Система": {"ru": "Система", "en": "System", "ro": "Sistem"}, "Нажмите кнопку для запуска системы:": {"ru": "Нажмите кнопку для запуска системы:", "en": "Press the button to start the system:", "ro": "Apasă butonul pentru a porni sistemul:"}, "Запустить систему": {"ru": "Запустить систему", "en": "Start the system", "ro": "Pornește sistemul"}, "Громкость": {"ru": "Громкость", "en": "Volume", "ro": "Volum"}, "Громкость плеера": {"ru": "Громкость плеера", "en": "Player volume", "ro": "Volumul player-ului"}, "Предыдущий": {"ru": "Предыдущий", "en": "Previous", "ro": "Anterior"}, "Следующий": {"ru": "Следующий", "en": "Next", "ro": "Următor"}, "Я в эфире! Нажми, чтобы залететь": {"ru": "Я в эфире! Нажми, чтобы залететь", "en": "I'm live! Tap to jump in", "ro": "Sunt live! Intră"}, "Оставьте весточку для Вити и гостей...": {"ru": "Оставьте весточку для Вити и гостей...", "en": "Leave a message for Vitya and the guests...", "ro": "Lasă un mesaj pentru Vitya și oaspeți..."}, "Ваш ник / имя...": {"ru": "Ваш ник / имя...", "en": "Your nickname / name...", "ro": "Nick / nume..."}, "Края сквозные, скорость щадящая — играй, пока не надоест": {"ru": "Края сквозные, скорость щадящая — играй, пока не надоест", "en": "Walls wrap around, gentle speed, play as long as you like", "ro": "Pereții sunt permeabili, viteză blândă, joacă cât vrei"}, "Стены смертельны, результат идёт в таблицу лидеров": {"ru": "Стены смертельны, результат идёт в таблицу лидеров", "en": "Walls are deadly, your score goes to the leaderboard", "ro": "Pereții sunt letali, scorul intră în clasament"}, "3 года · фулл-тайм · визуалы для холдинга и 4 радиостанций": {"ru": "3 года · фулл-тайм · визуалы для холдинга и 4 радиостанций", "en": "3 years · full-time · visuals for the holding and 4 radio stations", "ro": "3 ani · full-time · vizualuri pentru holding și 4 posturi de radio"}, "Три года работал фулл-тайм в Dixi Media, рекламно-радийном холдинге. Делал визуалы для самого холдинга и его четырёх радиостанций: афиши, контент для соцсетей, промо и айдентику эфиров.": {"ru": "Три года работал фулл-тайм в Dixi Media, рекламно-радийном холдинге. Делал визуалы для самого холдинга и его четырёх радиостанций: афиши, контент для соцсетей, промо и айдентику эфиров.", "en": "For 3 years I worked full-time at Dixi Media, an advertising and radio holding. I made visuals for the holding itself and its four radio stations: posters, social media content, promo and on-air identity.", "ro": "Timp de 3 ani am lucrat full-time la Dixi Media, un holding de publicitate și radio. Am realizat vizualurile pentru holding și cele patru posturi de radio ale sale: afișe, conținut pentru social media, promo și identitatea emisiunilor."}, "Поп-хиты": {"ru": "Поп-хиты", "en": "Pop hits", "ro": "Hituri pop"}, "Рок": {"ru": "Рок", "en": "Rock", "ro": "Rock"}, "Лёгкая музыка": {"ru": "Лёгкая музыка", "en": "Easy listening", "ro": "Muzică ușoară"}, "Хиты прошлых лет": {"ru": "Хиты прошлых лет", "en": "Throwback hits", "ro": "Hituri de altădată"}, "OK@K это продакшн- и дизайн-агентство, которое мы начинали с друзьями. Брали реальные заказы и успели немало, но из-за нехватки опыта проект, к сожалению, не пошёл.": {"ru": "OK@K это продакшн- и дизайн-агентство, которое мы начинали с друзьями. Брали реальные заказы и успели немало, но из-за нехватки опыта проект, к сожалению, не пошёл.", "en": "OK@K is a production and design agency we started with friends. We took on real orders and got quite a lot done, but due to a lack of experience the project sadly did not take off.", "ro": "OK@K este o agenție de producție și design pe care am pornit-o cu prietenii. Am luat comenzi reale și am reușit destul de multe, dar din lipsă de experiență proiectul, din păcate, nu a mers."}, "За это время поработали с Прослушка МД и с зарубежными клиентами, разрабатывали вебсайты, сделали дизайн автомобиля для каршеринга и снимали рекламу.": {"ru": "За это время поработали с Прослушка МД и с зарубежными клиентами, разрабатывали вебсайты, сделали дизайн автомобиля для каршеринга и снимали рекламу.", "en": "Along the way we worked with Proslushka MD and foreign clients, built websites, designed a carsharing car and shot ads.", "ro": "Între timp am colaborat cu Proslushka MD și cu clienți din străinătate, am dezvoltat site-uri, am făcut designul unei mașini de carsharing și am filmat reclame."}, "Чем занимались": {"ru": "Чем занимались", "en": "What we did", "ro": "Ce am făcut"}, "Работа с Прослушка МД": {"ru": "Работа с Прослушка МД", "en": "Work with Proslushka MD", "ro": "Colaborare cu Proslushka MD"}, "Заказы от зарубежных клиентов": {"ru": "Заказы от зарубежных клиентов", "en": "Orders from foreign clients", "ro": "Comenzi de la clienți străini"}, "Разработка вебсайтов": {"ru": "Разработка вебсайтов", "en": "Website development", "ro": "Dezvoltare de site-uri"}, "Дизайн автомобиля для каршеринга": {"ru": "Дизайн автомобиля для каршеринга", "en": "Carsharing car design", "ro": "Design de mașină pentru carsharing"}, "Съёмка рекламы": {"ru": "Съёмка рекламы", "en": "Ad production", "ro": "Producție de reclame"}, "Видео-продакшн, VFX / CGI, дизайн, брендинг": {"ru": "Видео-продакшн, VFX / CGI, дизайн, брендинг", "en": "Video production, VFX / CGI, design, branding", "ro": "Producție video, VFX / CGI, design, branding"}, "постеры · афиши · посты": {"ru": "постеры · афиши · посты", "en": "posters · flyers · posts", "ro": "afișe · postere · postări"}, "OK@K · закрытый проект": {"ru": "OK@K · закрытый проект", "en": "OK@K · closed project", "ro": "OK@K · proiect închis"}, "Что я делал:": {"ru": "Что я делал:", "en": "What I did:", "ro": "Ce am făcut:"}, "▶ Видео": {"ru": "▶ Видео", "en": "▶ Video", "ro": "▶ Video"}, "▶ Открыть в Instagram": {"ru": "▶ Открыть в Instagram", "en": "▶ Open on Instagram", "ro": "▶ Deschide pe Instagram"}, "▶ Сайт": {"ru": "▶ Сайт", "en": "▶ Website", "ro": "▶ Site"}, "▶ Часть 1": {"ru": "▶ Часть 1", "en": "▶ Part 1", "ro": "▶ Partea 1"}, "▶ Часть 2": {"ru": "▶ Часть 2", "en": "▶ Part 2", "ro": "▶ Partea 2"}, "▶ okak.digital в Instagram": {"ru": "▶ okak.digital в Instagram", "en": "▶ okak.digital on Instagram", "ro": "▶ okak.digital pe Instagram"}, "▶ 38 роликов · Victor Musteata": {"ru": "▶ 38 роликов · Victor Musteata", "en": "▶ 38 videos · Victor Musteata", "ro": "▶ 38 clipuri · Victor Musteata"}, "Всё": {"ru": "Всё", "en": "Everything", "ro": "Tot"}, "анимации, композитинг в AR программе": {"ru": "анимации, композитинг в AR программе", "en": "animation, compositing in an AR app", "ro": "animație, compositing într-o aplicație AR"}, "практически всё; графика частично со стороннего референса, переработана": {"ru": "практически всё; графика частично со стороннего референса, переработана", "en": "almost everything; some graphics adapted from an external reference", "ro": "aproape tot; o parte din grafică adaptată după o referință externă"}, "автор задумки, актёр, монтаж": {"ru": "автор задумки, актёр, монтаж", "en": "concept author, actor, editing", "ro": "autor de concept, actor, montaj"}, "монтаж, графика": {"ru": "монтаж, графика", "en": "editing, graphics", "ro": "montaj, grafică"}, "всё, включая идею и съёмку": {"ru": "всё, включая идею и съёмку", "en": "everything, including the idea and the shoot", "ro": "tot, inclusiv ideea și filmarea"}, "пак-шот в конце": {"ru": "пак-шот в конце", "en": "the pack shot at the end", "ro": "pack shot-ul de la final"}, "всё (ещё не залито, но посмотреть можно)": {"ru": "всё (ещё не залито, но посмотреть можно)", "en": "everything (not published yet, but you can watch it)", "ro": "tot (încă nepublicat, dar poți viziona)"}, "леттеринг и анимация": {"ru": "леттеринг и анимация", "en": "lettering and animation", "ro": "lettering și animație"}, "графика, монтаж, саунд-дизайн": {"ru": "графика, монтаж, саунд-дизайн", "en": "graphics, editing, sound design", "ro": "grafică, montaj, sound design"}, "анимацию монстра и освещение": {"ru": "анимацию монстра и освещение", "en": "the monster animation and lighting", "ro": "animația monstrului și lumina"}, "Монтаж, саунд-дизайн": {"ru": "Монтаж, саунд-дизайн", "en": "Editing, sound design", "ro": "Montaj, sound design"}, "Физика и анимация футболки": {"ru": "Физика и анимация футболки", "en": "T-shirt physics and animation", "ro": "Fizica și animația tricoului"}, "Дизайн автомобиля": {"ru": "Дизайн автомобиля", "en": "Car design", "ro": "Design de mașină"}, "AR приглашение на MBR 2023 (сентябрь)": {"ru": "AR приглашение на MBR 2023 (сентябрь)", "en": "AR invitation for MBR 2023 (September)", "ro": "Invitație AR pentru MBR 2023 (septembrie)"}, "Промо-анимация диджей-проекта KVRT.DVIJ (KVARTIRA)": {"ru": "Промо-анимация диджей-проекта KVRT.DVIJ (KVARTIRA)", "en": "Promo animation for the DJ project KVRT.DVIJ (KVARTIRA)", "ro": "Animație promo pentru proiectul DJ KVRT.DVIJ (KVARTIRA)"}, "Промо-ролик Seeance x Kvartira под показ фильма «Сумерки» в Одеоне": {"ru": "Промо-ролик Seeance x Kvartira под показ фильма «Сумерки» в Одеоне", "en": "Promo video for Seeance x Kvartira, screening of «Twilight» at Odeon", "ro": "Clip promo pentru Seeance x Kvartira, difuzarea filmului «Amurg» la Odeon"}, "Промо-ролик Seeance x Kvartira под показ фильма «Мечтатели» в Одеоне": {"ru": "Промо-ролик Seeance x Kvartira под показ фильма «Мечтатели» в Одеоне", "en": "Promo video for Seeance x Kvartira, screening of «The Dreamers» at Odeon", "ro": "Clip promo pentru Seeance x Kvartira, difuzarea filmului «Visătorii» la Odeon"}, "Промо-ролик Seeance x Kvartira под показ фильма «Шрек» в Одеоне": {"ru": "Промо-ролик Seeance x Kvartira под показ фильма «Шрек» в Одеоне", "en": "Promo video for Seeance x Kvartira, screening of «Shrek» at Odeon", "ro": "Clip promo pentru Seeance x Kvartira, difuzarea filmului «Shrek» la Odeon"}, "Просто креативный видос для поддержания актива на аккаунте KVRT": {"ru": "Просто креативный видос для поддержания актива на аккаунте KVRT", "en": "Just a creative video to keep the KVRT account active", "ro": "Un clip creativ pentru a menține activ contul KVRT"}, "Промо-ролик диджей-сета KVRT в Amor Amar": {"ru": "Промо-ролик диджей-сета KVRT в Amor Amar", "en": "Promo video for the KVRT DJ set at Amor Amar", "ro": "Clip promo pentru setul DJ KVRT la Amor Amar"}, "Промо-ролик Seeance под новогодний показ фильма «Кто подставил кролика Роджера» в Одеоне": {"ru": "Промо-ролик Seeance под новогодний показ фильма «Кто подставил кролика Роджера» в Одеоне", "en": "Promo video for Seeance, New Year screening of «Who Framed Roger Rabbit» at Odeon", "ro": "Clip promo pentru Seeance, difuzarea de Anul Nou a filmului «Cine i-a înscenat lui Roger Rabbit» la Odeon"}, "Репортаж Ezym Mag про три новогодних вечеринки Кишинёва": {"ru": "Репортаж Ezym Mag про три новогодних вечеринки Кишинёва", "en": "Ezym Mag report on three New Year parties in Chișinău", "ro": "Reportaj Ezym Mag despre trei petreceri de Anul Nou din Chișinău"}, "Промо-ролик Magic Flowers x Mirror": {"ru": "Промо-ролик Magic Flowers x Mirror", "en": "Promo video Magic Flowers x Mirror", "ro": "Clip promo Magic Flowers x Mirror"}, "Промо-ролик Mirror x Oystersgeese": {"ru": "Промо-ролик Mirror x Oystersgeese", "en": "Promo video Mirror x Oystersgeese", "ro": "Clip promo Mirror x Oystersgeese"}, "Промо-серия сторис в стиле старого ВК для вечеринки TRAPEZA 2K17": {"ru": "Промо-серия сторис в стиле старого ВК для вечеринки TRAPEZA 2K17", "en": "Promo stories series in old VK style for the TRAPEZA 2K17 party", "ro": "Serie de stories promo în stil vechi VK pentru petrecerea TRAPEZA 2K17"}, "Промо-рилс для диджей-сета KVRT": {"ru": "Промо-рилс для диджей-сета KVRT", "en": "Promo reel for the KVRT DJ set", "ro": "Reel promo pentru setul DJ KVRT"}, "Пародийный промо-ролик в стиле «FACE: Я роняю запад» для вечеринки TRAPEZA 2K17": {"ru": "Пародийный промо-ролик в стиле «FACE: Я роняю запад» для вечеринки TRAPEZA 2K17", "en": "Parody promo video in the style of «FACE: Я роняю запад» for the TRAPEZA 2K17 party", "ro": "Clip promo parodie în stilul «FACE: Я роняю запад» pentru petrecerea TRAPEZA 2K17"}, "Промо-ролик для вечеринки KVRT в #norma": {"ru": "Промо-ролик для вечеринки KVRT в #norma", "en": "Promo video for the KVRT party at #norma", "ro": "Clip promo pentru petrecerea KVRT la #norma"}, "Промо-ролик Cinemai x Trapeza": {"ru": "Промо-ролик Cinemai x Trapeza", "en": "Promo video Cinemai x Trapeza", "ro": "Clip promo Cinemai x Trapeza"}, "Промо-ролик для вечеринки Trapeza Silencio": {"ru": "Промо-ролик для вечеринки Trapeza Silencio", "en": "Promo video for the Trapeza Silencio party", "ro": "Clip promo pentru petrecerea Trapeza Silencio"}, "Промо-ролик трека «OK» для P.S. ZARANEE": {"ru": "Промо-ролик трека «OK» для P.S. ZARANEE", "en": "Promo video for the track «OK» for P.S. ZARANEE", "ro": "Clip promo pentru piesa «OK» pentru P.S. ZARANEE"}, "Промо-ролик под мероприятие в музее истории, Cârturești x KVRT": {"ru": "Промо-ролик под мероприятие в музее истории, Cârturești x KVRT", "en": "Promo video for an event at the history museum, Cârturești x KVRT", "ro": "Clip promo pentru un eveniment la muzeul de istorie, Cârturești x KVRT"}, "Промо-ролик FLORILE: MADVILLA": {"ru": "Промо-ролик FLORILE: MADVILLA", "en": "Promo video FLORILE: MADVILLA", "ro": "Clip promo FLORILE: MADVILLA"}, "Промо-ролик FLORILE x Boardshop": {"ru": "Промо-ролик FLORILE x Boardshop", "en": "Promo video FLORILE x Boardshop", "ro": "Clip promo FLORILE x Boardshop"}, "Промо-ролик FLORILE Rooftop Party": {"ru": "Промо-ролик FLORILE Rooftop Party", "en": "Promo video FLORILE Rooftop Party", "ro": "Clip promo FLORILE Rooftop Party"}, "Промо-ролик FLORILE x Ivan Dorn": {"ru": "Промо-ролик FLORILE x Ivan Dorn", "en": "Promo video FLORILE x Ivan Dorn", "ro": "Clip promo FLORILE x Ivan Dorn"}, "Промо-ролик FLORILE Rooftop Session": {"ru": "Промо-ролик FLORILE Rooftop Session", "en": "Promo video FLORILE Rooftop Session", "ro": "Clip promo FLORILE Rooftop Session"}, "Промо-ролик Trapeza x Autohub": {"ru": "Промо-ролик Trapeza x Autohub", "en": "Promo video Trapeza x Autohub", "ro": "Clip promo Trapeza x Autohub"}, "Промо-ролик Trapeza Rooftob": {"ru": "Промо-ролик Trapeza Rooftob", "en": "Promo video Trapeza Rooftob", "ro": "Clip promo Trapeza Rooftob"}, "Промо-ролик Trapeza Pop-up market": {"ru": "Промо-ролик Trapeza Pop-up market", "en": "Promo video Trapeza Pop-up market", "ro": "Clip promo Trapeza Pop-up market"}, "Промо-ролик Mutant Avenue #8": {"ru": "Промо-ролик Mutant Avenue #8", "en": "Promo video Mutant Avenue #8", "ro": "Clip promo Mutant Avenue #8"}, "Промо-ролик Концерт NOUA UNSPE": {"ru": "Промо-ролик Концерт NOUA UNSPE", "en": "Promo video for the NOUA UNSPE concert", "ro": "Clip promo pentru concertul NOUA UNSPE"}, "Промо-ролик FLORILE: DISCO": {"ru": "Промо-ролик FLORILE: DISCO", "en": "Promo video FLORILE: DISCO", "ro": "Clip promo FLORILE: DISCO"}, "Промо-ролик Trapeza Glamour Pre-party": {"ru": "Промо-ролик Trapeza Glamour Pre-party", "en": "Promo video Trapeza Glamour Pre-party", "ro": "Clip promo Trapeza Glamour Pre-party"}, "Промо-карусель Trapeza Glamour": {"ru": "Промо-карусель Trapeza Glamour", "en": "Promo carousel Trapeza Glamour", "ro": "Carusel promo Trapeza Glamour"}, "Промо-ролик TudaSuda Bar": {"ru": "Промо-ролик TudaSuda Bar", "en": "Promo video TudaSuda Bar", "ro": "Clip promo TudaSuda Bar"}, "Промо-ролик OKAK x Bubblepop": {"ru": "Промо-ролик OKAK x Bubblepop", "en": "Promo video OKAK x Bubblepop", "ro": "Clip promo OKAK x Bubblepop"}, "Промо-ролик OKAK x Proslushka.md": {"ru": "Промо-ролик OKAK x Proslushka.md", "en": "Promo video OKAK x Proslushka.md", "ro": "Clip promo OKAK x Proslushka.md"}, "Промо-ролик OKAK x sijenesuispasla": {"ru": "Промо-ролик OKAK x sijenesuispasla", "en": "Promo video OKAK x sijenesuispasla", "ro": "Clip promo OKAK x sijenesuispasla"}, "Промо-ролик OKAK x Getman Car": {"ru": "Промо-ролик OKAK x Getman Car", "en": "Promo video OKAK x Getman Car", "ro": "Clip promo OKAK x Getman Car"}, "Постер к Румынскому туру Catalina Cara": {"ru": "Постер к Румынскому туру Catalina Cara", "en": "Poster for Catalina Cara's Romania tour", "ro": "Afiș pentru turneul din România al Catalinei Cara"}, "Постер TRPZ: Glamour - Ionel Istrati": {"ru": "Постер TRPZ: Glamour - Ionel Istrati", "en": "Poster TRPZ: Glamour - Ionel Istrati", "ro": "Afiș TRPZ: Glamour - Ionel Istrati"}, "Промо-пост TRPZ: Glamour": {"ru": "Промо-пост TRPZ: Glamour", "en": "Promo post TRPZ: Glamour", "ro": "Postare promo TRPZ: Glamour"}, "Постер TRPZ: Glamour": {"ru": "Постер TRPZ: Glamour", "en": "Poster TRPZ: Glamour", "ro": "Afiș TRPZ: Glamour"}, "Постер Trapeza Masquerade": {"ru": "Постер Trapeza Masquerade", "en": "Poster Trapeza Masquerade", "ro": "Afiș Trapeza Masquerade"}, "Постер Trapeza Rooftop Highway": {"ru": "Постер Trapeza Rooftop Highway", "en": "Poster Trapeza Rooftop Highway", "ro": "Afiș Trapeza Rooftop Highway"}, "Постер Trapeza Silencio": {"ru": "Постер Trapeza Silencio", "en": "Poster Trapeza Silencio", "ro": "Afiș Trapeza Silencio"}, "Постер Trapeza 2k17": {"ru": "Постер Trapeza 2k17", "en": "Poster Trapeza 2k17", "ro": "Afiș Trapeza 2k17"}, "Промо-пост в стиле ВКонтакте для вечеринки Trapeza 2k17": {"ru": "Промо-пост в стиле ВКонтакте для вечеринки Trapeza 2k17", "en": "VK-style promo post for the Trapeza 2k17 party", "ro": "Postare promo în stil VK pentru petrecerea Trapeza 2k17"}, "Промо-пост для мероприятия в баре TudaSuda": {"ru": "Промо-пост для мероприятия в баре TudaSuda", "en": "Promo post for an event at TudaSuda bar", "ro": "Postare promo pentru un eveniment la barul TudaSuda"}, "Постер FLORILE: MADVILLA": {"ru": "Постер FLORILE: MADVILLA", "en": "Poster FLORILE: MADVILLA", "ro": "Afiș FLORILE: MADVILLA"}, "Постер FLORILE x IVAN DORN": {"ru": "Постер FLORILE x IVAN DORN", "en": "Poster FLORILE x IVAN DORN", "ro": "Afiș FLORILE x IVAN DORN"}, "Промо-пост карусель для вечеринки Trapeza Rooftop": {"ru": "Промо-пост карусель для вечеринки Trapeza Rooftop", "en": "Promo carousel post for the Trapeza Rooftop party", "ro": "Postare carusel promo pentru petrecerea Trapeza Rooftop"}, "Промо-пост карусель для продвижения услуг UI/UX дизайна и разработки сайтов OKAK": {"ru": "Промо-пост карусель для продвижения услуг UI/UX дизайна и разработки сайтов OKAK", "en": "Promo carousel post for OKAK's UI/UX design and web development services", "ro": "Postare carusel promo pentru serviciile OKAK de design UI/UX și dezvoltare web"}, "14 работ · Victor Musteata": {"ru": "14 работ · Victor Musteata", "en": "14 works · Victor Musteata", "ro": "14 lucrări · Victor Musteata"}, "About myself": {"ru": "О себе", "en": "About myself", "ro": "Despre mine"}, "Work experience": {"ru": "Опыт работы", "en": "Work experience", "ro": "Experiență de muncă"}, "Education": {"ru": "Образование", "en": "Education", "ro": "Educație"}, "Languages": {"ru": "Языки", "en": "Languages", "ro": "Limbi"}, "Skills": {"ru": "Навыки", "en": "Skills", "ro": "Competențe"}, "Hobbies & interests": {"ru": "Хобби и интересы", "en": "Hobbies & interests", "ro": "Hobby-uri și interese"}, "Contact": {"ru": "Контакты", "en": "Contact", "ro": "Contact"}, "Selected clients:": {"ru": "Избранные клиенты:", "en": "Selected clients:", "ro": "Clienți selectați:"}, "Mother tongues:": {"ru": "Родные языки:", "en": "Mother tongues:", "ro": "Limbi materne:"}, "About": {"ru": "О себе", "en": "About", "ro": "Despre"}, "Work": {"ru": "Опыт", "en": "Work", "ro": "Experiență"}, "Hobbies": {"ru": "Хобби", "en": "Hobbies", "ro": "Hobby-uri"}, "Understanding": {"ru": "Понимание", "en": "Understanding", "ro": "Înțelegere"}, "Speaking": {"ru": "Речь", "en": "Speaking", "ro": "Vorbire"}, "Writing": {"ru": "Письмо", "en": "Writing", "ro": "Scriere"}, "English": {"ru": "Английский", "en": "English", "ro": "Engleză"}, "Russian": {"ru": "Русский", "en": "Russian", "ro": "Rusă"}, "Romanian": {"ru": "Румынский", "en": "Romanian", "ro": "Română"}, "Ukrainian": {"ru": "Украинский", "en": "Ukrainian", "ro": "Ucraineană"}, "Commercial Graphic Designer": {"ru": "Коммерческий графический дизайнер", "en": "Commercial Graphic Designer", "ro": "Designer grafic comercial"}, "Graphics Designer": {"ru": "Графический дизайнер", "en": "Graphics Designer", "ro": "Designer grafic"}, "Front Desk Receptionist": {"ru": "Администратор ресепшн", "en": "Front Desk Receptionist", "ro": "Recepționer"}, "Multidisciplinary Graphic Designer · 4+ years": {"ru": "Мультидисциплинарный графический дизайнер · 4+ года", "en": "Multidisciplinary Graphic Designer · 4+ years", "ro": "Designer grafic multidisciplinar · 4+ ani"}, "Basketball": {"ru": "Баскетбол", "en": "Basketball", "ro": "Baschet"}, "DJing": {"ru": "Диджеинг", "en": "DJing", "ro": "DJing"}, "Online": {"ru": "Онлайн", "en": "Online", "ro": "Online"}, "Listen to a set": {"ru": "Послушать сет", "en": "Listen to a set", "ro": "Ascultă un set"}, "Location: Chișinău, Moldova": {"ru": "Локация: Кишинёв, Молдова", "en": "Location: Chișinău, Moldova", "ro": "Locație: Chișinău, Moldova"}, ", Chișinău, Moldova": {"ru": ", Кишинёв, Молдова", "en": ", Chișinău, Moldova", "ro": ", Chișinău, Moldova"}, "reels · promo · animation": {"ru": "рилсы · промо · анимация", "en": "reels · promo · animation", "ro": "reels · promo · animație"}, "Production & Design agency": {"ru": "Продакшн- и дизайн-агентство", "en": "Production & Design agency", "ro": "Agenție de producție și design"}, "Social media content creation.": {"ru": "Контент для соцсетей.", "en": "Social media content creation.", "ro": "Conținut pentru social media."}, "Figma & UI/UX design; typography & layout.": {"ru": "Figma и UI/UX-дизайн; типографика и вёрстка.", "en": "Figma & UI/UX design; typography & layout.", "ro": "Figma și design UI/UX; tipografie și layout."}, "3D design (Blender); motion graphics & animation.": {"ru": "3D-дизайн (Blender); моушн-графика и анимация.", "en": "3D design (Blender); motion graphics & animation.", "ro": "Design 3D (Blender); motion graphics și animație."}, "Image retouching & manipulation; presentation design.": {"ru": "Ретушь и обработка изображений; дизайн презентаций.", "en": "Image retouching & manipulation; presentation design.", "ro": "Retuș și manipulare de imagini; design de prezentări."}, "AI tools: confident use of AI, plus AI video and image generation.": {"ru": "AI-инструменты: уверенное использование ИИ, плюс генерация видео и изображений.", "en": "AI tools: confident use of AI, plus AI video and image generation.", "ro": "Instrumente AI: utilizare sigură a AI, plus generare de video și imagini."}, "Microsoft Office, Google Workspace; fast adaptation to new software; multitasking.": {"ru": "Microsoft Office, Google Workspace; быстрая адаптация к новому софту; многозадачность.", "en": "Microsoft Office, Google Workspace; fast adaptation to new software; multitasking.", "ro": "Microsoft Office, Google Workspace; adaptare rapidă la software nou; multitasking."}, "Made in Chișinău, MD · © 2026 Victor Musteata": {"ru": "Сделано в Кишинёве, MD · © 2026 Victor Musteata", "en": "Made in Chișinău, MD · © 2026 Victor Musteata", "ro": "Făcut în Chișinău, MD · © 2026 Victor Musteata"}, "You are visitor No. 000137 · Best viewed in 800x600": {"ru": "Вы посетитель № 000137 · Лучше смотреть в 800x600", "en": "You are visitor No. 000137 · Best viewed in 800x600", "ro": "Ești vizitatorul nr. 000137 · Se vede cel mai bine la 800x600"}, "Multidisciplinary graphic designer with over 4 years of experience in branding, poster and flyer design, motion graphics and 3D. My work blends bold visuals with strategic thinking and storytelling so each project reads clearly and stays memorable.": {"ru": "Мультидисциплинарный графический дизайнер с опытом более 4 лет в брендинге, дизайне постеров и флаеров, моушн-графике и 3D. Моя работа сочетает смелый визуал со стратегическим мышлением и сторителлингом, чтобы каждый проект читался ясно и запоминался.", "en": "Multidisciplinary graphic designer with over 4 years of experience in branding, poster and flyer design, motion graphics and 3D. My work blends bold visuals with strategic thinking and storytelling so each project reads clearly and stays memorable.", "ro": "Designer grafic multidisciplinar cu peste 4 ani de experiență în branding, design de afișe și flyere, motion graphics și 3D. Munca mea îmbină vizualul îndrăzneț cu gândirea strategică și storytelling, astfel încât fiecare proiect să fie clar și memorabil."}, "Hands-on across visual identity, UI/UX, social media content, packaging and typography. Proficient in Adobe Creative Suite (Photoshop, Illustrator, After Effects, Premiere Pro), Figma and Blender. Quick learner, strong problem-solving, comfortable solo or in a team, and at home in fast-paced environments.": {"ru": "Работаю с фирменным стилем, UI/UX, контентом для соцсетей, упаковкой и типографикой. Уверенно владею Adobe Creative Suite (Photoshop, Illustrator, After Effects, Premiere Pro), Figma и Blender. Быстро учусь, хорошо решаю задачи, комфортно работаю один и в команде, в быстром темпе.", "en": "Hands-on across visual identity, UI/UX, social media content, packaging and typography. Proficient in Adobe Creative Suite (Photoshop, Illustrator, After Effects, Premiere Pro), Figma and Blender. Quick learner, strong problem-solving, comfortable solo or in a team, and at home in fast-paced environments.", "ro": "Lucrez cu identitate vizuală, UI/UX, conținut pentru social media, ambalaj și tipografie. Stăpânesc Adobe Creative Suite (Photoshop, Illustrator, After Effects, Premiere Pro), Figma și Blender. Învăț repede, rezolv bine problemele, lucrez confortabil singur sau în echipă, în ritm alert."}, "Promo materials (banners, posters, social graphics) for shows, events and campaigns.": {"ru": "Промо-материалы (баннеры, постеры, соцсети) для шоу, событий и кампаний.", "en": "Promo materials (banners, posters, social graphics) for shows, events and campaigns.", "ro": "Materiale promo (bannere, afișe, social media) pentru show-uri, evenimente și campanii."}, "Visual assets for digital platforms: websites, mobile apps, streaming services.": {"ru": "Визуалы для digital-платформ: сайты, мобильные приложения, стриминговые сервисы.", "en": "Visual assets for digital platforms: websites, mobile apps, streaming services.", "ro": "Vizual pentru platforme digitale: site-uri, aplicații mobile, servicii de streaming."}, "Branded content for merch, sponsorship decks and press materials.": {"ru": "Брендированный контент для мерча, спонсорских презентаций и пресс-материалов.", "en": "Branded content for merch, sponsorship decks and press materials.", "ro": "Conținut de brand pentru merch, prezentări de sponsorizare și materiale de presă."}, "On-screen graphics, signage and stage visuals for live events and concerts.": {"ru": "Экранная графика, вывески и сценические визуалы для лайв-событий и концертов.", "en": "On-screen graphics, signage and stage visuals for live events and concerts.", "ro": "Grafică pe ecran, semnalistică și vizual de scenă pentru evenimente live și concerte."}, "Logos, brand guidelines and complete visual identity systems.": {"ru": "Логотипы, брендбуки и цельные системы фирменного стиля.", "en": "Logos, brand guidelines and complete visual identity systems.", "ro": "Logo-uri, ghiduri de brand și sisteme complete de identitate vizuală."}, "Brand assets for print and digital: business cards, packaging, social visuals, presentations.": {"ru": "Брендовые ассеты для печати и digital: визитки, упаковка, соцсети, презентации.", "en": "Brand assets for print and digital: business cards, packaging, social visuals, presentations.", "ro": "Materiale de brand pentru print și digital: cărți de vizită, ambalaj, social media, prezentări."}, "Visual research and mood boards; production-ready files and quality control.": {"ru": "Визуальный ресёрч и мудборды; файлы, готовые к продакшену, и контроль качества.", "en": "Visual research and mood boards; production-ready files and quality control.", "ro": "Research vizual și mood-board-uri; fișiere gata de producție și control al calității."}, "Handling calls, guest requests and internal communications.": {"ru": "Приём звонков, запросов гостей и внутренних коммуникаций.", "en": "Handling calls, guest requests and internal communications.", "ro": "Preluarea apelurilor, a solicitărilor oaspeților și a comunicării interne."}, "Coordinating housekeeping, maintenance and front desk; tracking service requests.": {"ru": "Координация уборки, обслуживания и ресепшена; отслеживание заявок.", "en": "Coordinating housekeeping, maintenance and front desk; tracking service requests.", "ro": "Coordonarea curățeniei, mentenanței și recepției; urmărirea solicitărilor."}, "Keeping detailed records of calls and service reports.": {"ru": "Ведение подробных записей звонков и сервисных отчётов.", "en": "Keeping detailed records of calls and service reports.", "ro": "Ținerea evidențelor detaliate ale apelurilor și rapoartelor de serviciu."}, "- Bachelor in Interior Design (incomplete), 2021-2023.": {"ru": "- Бакалавр, дизайн интерьера (не окончено), 2021-2023.", "en": "- Bachelor in Interior Design (incomplete), 2021-2023.", "ro": "- Licență, design interior (neterminat), 2021-2023."}, "- Bachelor in Game Design (incomplete), 2023-2024.": {"ru": "- Бакалавр, гейм-дизайн (не окончено), 2023-2024.", "en": "- Bachelor in Game Design (incomplete), 2023-2024.", "ro": "- Licență, game design (neterminat), 2023-2024."}, ", Singera - High School 2018-2021, Gymnasium 2008-2018.": {"ru": ", Сынжера - лицей 2018-2021, гимназия 2008-2018.", "en": ", Singera - High School 2018-2021, Gymnasium 2008-2018.", "ro": ", Sîngera - liceu 2018-2021, gimnaziu 2008-2018."}, "- mixing genres, custom sets, occasional local events and private parties.": {"ru": "- микширую жанры, кастомные сеты, иногда локальные события и частные вечеринки.", "en": "- mixing genres, custom sets, occasional local events and private parties.", "ro": "- mixez genuri, seturi custom, ocazional evenimente locale și petreceri private."}, "- staying active, teamwork and focus under pressure.": {"ru": "- поддерживаю форму, командная работа и концентрация под давлением.", "en": "- staying active, teamwork and focus under pressure.", "ro": "- rămân activ, lucru în echipă și concentrare sub presiune."}};
     var nodes=[],attrs=[];
     var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null),n;
     while(n=w.nextNode()){ if(n.nodeValue&&n.nodeValue.trim()) nodes.push([n,n.nodeValue]); }
@@ -3937,6 +4091,25 @@
       ['title','aria-label','placeholder'].forEach(function(a){ if(el.hasAttribute(a)){ var v=el.getAttribute(a); if(v&&v.trim()) attrs.push([el,a,v]); } });
     });
     T["↑ Показать более старые сообщения"]={"ru":"↑ Показать более старые сообщения","en":"↑ Show older messages","ro":"↑ Arată mesaje mai vechi"};
+    T["Открыть приложение"]={"ru":"Открыть приложение","en":"Open application","ro":"Deschide aplicația"};
+    T["Упорядочить значки"]={"ru":"Упорядочить значки","en":"Arrange icons","ro":"Aranjează pictogramele"};
+    T["Закрыть все окна"]={"ru":"Закрыть все окна","en":"Close all windows","ro":"Închide toate ferestrele"};
+    T["новости кино · технологий · видеоигр"]={"ru": "новости кино · технологий · видеоигр", "en": "cinema · technology · video game news", "ro": "știri despre cinema · tehnologie · jocuri video"};
+    T["IYE (InYourEyes) это новостной телеграм-канал про кино, технологии и видеоигры. Последние два года я его главный дизайнер: делаю обложки постов, конкурсы и раздачи, айдентику и ежедневные новости."]={"ru": "IYE (InYourEyes) это новостной телеграм-канал про кино, технологии и видеоигры. Последние два года я его главный дизайнер: делаю обложки постов, конкурсы и раздачи, айдентику и ежедневные новости.", "en": "IYE (InYourEyes) is a news Telegram channel about cinema, technology and video games. For the last two years I have been its lead designer: post covers, contests and giveaways, identity and daily news.", "ro": "IYE (InYourEyes) este un canal de Telegram de știri despre cinema, tehnologie și jocuri video. În ultimii doi ani sunt designerul principal: coperți de postări, concursuri și giveaway-uri, identitate și știri zilnice."};
+    T["Посты и обложки"]={"ru": "Посты и обложки", "en": "Posts and covers", "ro": "Postări și coperți"};
+    T["▶ КИНО ▶ ТЕХНОЛОГИИ ▶ ВИДЕОИГРЫ ▶ РАЗДАЧИ ▶ КОНКУРСЫ ▶ НОВОСТИ ▶ КИНО ▶ ТЕХНОЛОГИИ ▶ ВИДЕОИГРЫ ▶"]={"ru": "▶ КИНО ▶ ТЕХНОЛОГИИ ▶ ВИДЕОИГРЫ ▶ РАЗДАЧИ ▶ КОНКУРСЫ ▶ НОВОСТИ ▶ КИНО ▶ ТЕХНОЛОГИИ ▶ ВИДЕОИГРЫ ▶", "en": "▶ CINEMA ▶ TECH ▶ VIDEO GAMES ▶ GIVEAWAYS ▶ CONTESTS ▶ NEWS ▶ CINEMA ▶ TECH ▶ VIDEO GAMES ▶", "ro": "▶ FILME ▶ TEHNOLOGIE ▶ JOCURI VIDEO ▶ GIVEAWAY ▶ CONCURSURI ▶ ȘTIRI ▶ FILME ▶ TEHNOLOGIE ▶ JOCURI VIDEO ▶"};
+    T["★ дизайн для InYourEyes · © 2026 ★"]={"ru": "★ дизайн для InYourEyes · © 2026 ★", "en": "★ design for InYourEyes · © 2026 ★", "ro": "★ design pentru InYourEyes · © 2026 ★"};
+    T["брендбуки, которые я делал"]={"ru": "брендбуки, которые я делал", "en": "brandbooks I've made", "ro": "brandbook-uri pe care le-am făcut"};
+    T["★ BRANDBOOKS ★ ЛОГОТИПЫ ★ ФИРМЕННЫЙ СТИЛЬ ★ ГАЙДЛАЙНЫ ★ НОСИТЕЛИ ★ BRANDBOOKS ★ ЛОГОТИПЫ ★"]={"ru": "★ BRANDBOOKS ★ ЛОГОТИПЫ ★ ФИРМЕННЫЙ СТИЛЬ ★ ГАЙДЛАЙНЫ ★ НОСИТЕЛИ ★ BRANDBOOKS ★ ЛОГОТИПЫ ★", "en": "★ BRANDBOOKS ★ LOGOS ★ VISUAL IDENTITY ★ GUIDELINES ★ MERCH ★ BRANDBOOKS ★ LOGOS ★", "ro": "★ BRANDBOOKS ★ LOGO-URI ★ IDENTITATE VIZUALĂ ★ GHIDURI ★ MATERIALE ★ BRANDBOOKS ★ LOGO-URI ★"};
+    T["Здесь несколько брендбуков из тех, что я собирал: логотипы, фирменные цвета, шрифты и носители. Каждый открывается как PDF."]={"ru": "Здесь несколько брендбуков из тех, что я собирал: логотипы, фирменные цвета, шрифты и носители. Каждый открывается как PDF.", "en": "A few of the brandbooks I've put together: logos, brand colors, fonts and merch. Each one opens as a PDF.", "ro": "Câteva dintre brandbook-urile pe care le-am realizat: logo-uri, culori de brand, fonturi și materiale. Fiecare se deschide ca PDF."};
+    T["★ PDF открываются в новой вкладке ★"]={"ru": "★ PDF открываются в новой вкладке ★", "en": "★ PDFs open in a new tab ★", "ro": "★ PDF-urile se deschid într-o filă nouă ★"};
+    T["▶ Открыть брендбук (PDF)"]={"ru": "▶ Открыть брендбук (PDF)", "en": "▶ Open brandbook (PDF)", "ro": "▶ Deschide brandbook (PDF)"};
+    T["Маркетинговое агентство"]={"ru": "Маркетинговое агентство", "en": "Marketing agency", "ro": "Agenție de marketing"};
+    T["Радиостанция"]={"ru": "Радиостанция", "en": "Radio station", "ro": "Post de radio"};
+    T["Мобильный бар и кейтеринг"]={"ru": "Мобильный бар и кейтеринг", "en": "Mobile bar & catering", "ro": "Bar mobil & catering"};
+    T["Инфлюенс-маркетинговое агентство. Логотип, синий и розовый фирменные цвета, фото-стиль и носители."]={"ru": "Инфлюенс-маркетинговое агентство. Логотип, синий и розовый фирменные цвета, фото-стиль и носители.", "en": "Influencer marketing agency. Logo, blue and pink brand colors, photo style and merch.", "ro": "Agenție de influencer marketing. Logo, culori albastru și roz, stil foto și materiale."};
+    T["Радиостанция с хитами 90-х и 2000-х. Логотип, бордовый стиль, гайдлайны и носители."]={"ru": "Радиостанция с хитами 90-х и 2000-х. Логотип, бордовый стиль, гайдлайны и носители.", "en": "A radio station playing 90s and 2000s hits. Logo, burgundy identity, guidelines and merch.", "ro": "Un post de radio cu hituri din anii 90 și 2000. Logo, identitate vișinie, ghiduri și materiale."};
+    T["Мобильный бар и кейтеринг. Логотип, сине-кремовая палитра, айдентика и носители."]={"ru": "Мобильный бар и кейтеринг. Логотип, сине-кремовая палитра, айдентика и носители.", "en": "Mobile bar and catering. Logo, blue-and-cream palette, identity and merch.", "ro": "Bar mobil și catering. Logo, paletă albastru-crem, identitate și materiale."};
     function conv(o,l){ var e=T[o.trim()]; if(!e) return o; var t=e[l]; if(t==null) return o; return o.match(/^\s*/)[0]+t+o.match(/\s*$/)[0]; }
     function apply(l){
       nodes.forEach(function(p){ p[0].nodeValue=conv(p[1],l); });
@@ -3947,8 +4120,10 @@
       document.documentElement.setAttribute('lang',l);
       try{ localStorage.setItem('vityaLang',l); }catch(e){}
       document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-lang')===l); });
+      var cyc=document.querySelector('.lang-cycle'); if(cyc) cyc.textContent=l.toUpperCase();
     }
     window.setLang=apply;
+    window.cycleLang=function(){ var o=['ru','en','ro'],i=o.indexOf(window.__lang); window.setLang(o[(i+1)%3]); };
     window.__t=function(str){ var e=T[str]; return (e&&e[window.__lang]!=null)?e[window.__lang]:str; };
     var sv='ru'; try{ sv=localStorage.getItem('vityaLang')||'ru'; }catch(e){}
     if(sv!=='ru'&&sv!=='en'&&sv!=='ro') sv='ru';
