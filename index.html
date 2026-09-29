@@ -1239,8 +1239,19 @@
     .browser-address input { flex: 1; border: none; outline: 0; background: transparent; font-size: 12px; color: #000; min-width: 0; }
     .browser-viewport { background: #fff; border: 2px solid; border-color: var(--border-inset); margin: 0 4px 4px; height: clamp(360px, calc(100vh - 215px), 560px); overflow: auto; -webkit-overflow-scrolling: touch; }
     @media (max-width: 768px) {
-      .browser-window { width: calc(100vw - 30px); }
-      .browser-viewport { height: 60vh; }
+      .browser-window {
+        position: fixed !important;
+        top: calc(6px + env(safe-area-inset-top, 0px)) !important;
+        left: 6px !important;
+        right: 6px !important;
+        bottom: calc(36px + env(safe-area-inset-bottom, 0px)) !important;
+        width: auto !important;
+        max-width: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+      .browser-window > .window-body { flex: 1 1 auto !important; min-height: 0 !important; }
+      .browser-viewport { flex: 1 1 auto !important; height: auto !important; min-height: 100px !important; }
       .browser-nav-btn .nav-label { display: none; }
     }
     /* ===== Ретро-сайт CV внутри окна-браузера ===== */
