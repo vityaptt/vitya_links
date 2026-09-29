@@ -1390,9 +1390,12 @@
     /* ===== Переключатель языка ===== */
     .lang-btn { font-family: inherit; font-size:11px; font-weight:700; padding:2px 7px; background:silver; color:#000; border:none; box-shadow:var(--bevel-raised); cursor:pointer; }
     .lang-btn.active { box-shadow:var(--bevel-pressed); }
-    .start-lang { display:flex; gap:5px; align-items:center; justify-content:center; margin-top:14px; font-size:11px; color:#000; }
-    .lang-tray { display:flex; gap:2px; align-items:center; margin-right:4px; }
+    .start-lang { display:flex; gap:4px; align-items:center; justify-content:center; margin-top:14px; font-size:11px; color:#000; }
+    .start-lang span { white-space:nowrap; }
+    .start-lang .lang-btn { font-size:10px; padding:1px 5px; }
+    .lang-tray { display:flex; gap:1px; align-items:center; margin-right:4px; }
     .lang-tray .lang-btn { font-size:10px; padding:1px 5px; }
+    .lang-tray .lang-btn[data-lang] { padding:1px 3px; }
     .lang-cycle { display: none; }
     .lang-tray .lang-cycle { min-width: 26px; text-align: center; }
     @media (max-width: 768px) { .lang-tray .lang-btn[data-lang] { display: none; } .lang-tray .lang-cycle { display: inline-block; } }
@@ -1439,6 +1442,14 @@
     .bb-link:active { box-shadow: var(--bevel-pressed); }
     .bb-foot { margin-top:6px; text-align:center; color:#666; font-size:11px; letter-spacing:1px; }
     @media (max-width:768px) { .bb-card { flex-direction:column; } .bb-cover { flex-basis:auto; border-right:none; border-bottom:2px solid var(--bb); } }
+    /* ===== Лайтбокс: просмотр фото на весь экран ===== */
+    .st-thumb.has-img, .iye-post { cursor:zoom-in; }
+    .st-thumb { overflow:hidden; }
+    .st-thumb.has-img img, .iye-post img { transition:transform .28s ease, filter .28s ease; }
+    .st-thumb.has-img:hover img, .iye-post:hover img { transform:scale(1.06); filter:brightness(1.12); }
+    .img-lightbox { display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:1000000; background:rgba(0,0,0,.86); align-items:center; justify-content:center; padding:24px; cursor:zoom-out; }
+    .img-lightbox.open { display:flex; }
+    .img-lightbox img { max-width:90vw; max-height:90vh; display:block; border:3px solid #fff; box-shadow:0 10px 50px rgba(0,0,0,.7); cursor:default; }
   </style>
 </head>
 
@@ -2146,7 +2157,7 @@
               </div>
               <div class="dx-holding">
                 <img src="assets/radio/dixi.png" alt="Dixi Media">
-                <div class="dx-h-txt">Три года работал фулл-тайм в Dixi Media, рекламно-радийном холдинге. Делал визуалы для самого холдинга и его четырёх радиостанций: афиши, контент для соцсетей, промо и айдентику эфиров. <a href="https://dixi.md/" target="_blank" rel="noopener">▶ dixi.md</a></div>
+                <div class="dx-h-txt">Три года работал фулл-тайм в Dixi Media, рекламно-радийном холдинге. Делал визуалы для самого холдинга и его четырёх радиостанций: афиши, контент для соцсетей, промо и айдентику эфиров. <a href="https://dixi.md/" target="_blank" rel="noopener">▶&nbsp;dixi.md</a></div>
               </div>
               <div class="dx-grid">
               <div class="dx-card dx-hit">
@@ -4182,6 +4193,25 @@
     var sv='ru'; try{ sv=localStorage.getItem('vityaLang')||'ru'; }catch(e){}
     if(sv!=='ru'&&sv!=='en'&&sv!=='ro') sv='ru';
     apply(sv);
+  })();
+  </script>
+  <div id="imgLightbox" class="img-lightbox" aria-hidden="true"><img id="imgLightboxImg" src="" alt=""></div>
+  <script>
+  (function(){
+    var lb=document.getElementById("imgLightbox"); if(!lb) return;
+    var img=lb.querySelector("img");
+    var sx=0, sy=0, moved=false;
+    function openLb(src){ img.src=src; lb.classList.add("open"); lb.setAttribute("aria-hidden","false"); }
+    function closeLb(){ lb.classList.remove("open"); lb.setAttribute("aria-hidden","true"); img.removeAttribute("src"); }
+    document.addEventListener("touchstart", function(e){ if(e.touches[0]){ sx=e.touches[0].clientX; sy=e.touches[0].clientY; } moved=false; }, {passive:true});
+    document.addEventListener("touchmove", function(e){ if(e.touches[0] && (Math.abs(e.touches[0].clientX-sx)>10 || Math.abs(e.touches[0].clientY-sy)>10)) moved=true; }, {passive:true});
+    document.addEventListener("click", function(e){
+      if(moved) return;
+      var t=e.target.closest(".st-thumb.has-img img, .iye-post img");
+      if(t) openLb(t.currentSrc||t.src);
+    });
+    lb.addEventListener("click", function(e){ if(e.target!==img) closeLb(); });
+    document.addEventListener("keydown", function(e){ if((e.key==="Escape"||e.key==="Esc") && lb.classList.contains("open")) closeLb(); });
   })();
   </script>
 </body>
