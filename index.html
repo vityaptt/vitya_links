@@ -1274,11 +1274,11 @@
     .cv-footer { border-top: 2px solid #808080; margin-top: 16px; padding: 12px 14px 16px; text-align: center; font-size: 11px; color: #333; background: #ececec; }
     .cv-counter { display: inline-block; background: #000; color: #33ff33; font-family: "Courier New", monospace; font-size: 13px; letter-spacing: 3px; padding: 2px 7px; border: 1px solid #808080; margin: 4px 0 8px; }
     /* ===== Вкладки браузера и галерея портфолио ===== */
-    .browser-tabs { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 3px; padding: 6px 8px 0; position: relative; z-index: 2; margin-bottom: -2px; }
+    .browser-tabs { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 3px; padding: 6px 8px 0; position: relative; z-index: 2; margin-bottom: 0; }
     @media (min-width: 769px) { .browser-tabs { flex-wrap: nowrap; } }
-    .browser-tab { padding: 5px 16px 7px; font-size: 12px; font-weight: 700; color: #565656; background: #b6b6b6; border: 2px solid; border-color: var(--border-outset); border-bottom: none; border-radius: 6px 6px 0 0; position: relative; top: 3px; cursor: pointer; }
+    .browser-tab { padding: 5px 16px 7px; font-size: 12px; font-weight: 700; color: #565656; background: #b6b6b6; border: 2px solid; border-color: var(--border-outset); border-bottom: none; border-radius: 6px 6px 0 0; position: relative; top: 0; cursor: pointer; }
     .browser-tab:hover { color: #000; background: #cfcfcf; }
-    .browser-tab.active { top: 0; padding: 7px 18px 9px; color: #000; background: silver; z-index: 3; }
+    .browser-tab.active { top: 0; padding: 7px 18px 9px; color: #000; background: silver; z-index: 3; margin-bottom: -2px; }
     .browser-tab:focus-visible { outline: 1px dotted #000; outline-offset: -5px; }
     .browser-pane[hidden] { display: none; }
     .pf-gallery { display: flex; flex-direction: column; background: #fff; }
@@ -1298,7 +1298,8 @@
     .mo-screen::before { content:""; position:absolute; inset:0; background:repeating-linear-gradient(0deg, rgba(255,255,255,.045) 0 1px, transparent 1px 3px); pointer-events:none; z-index:1; }
     .mo-screen.has-cover { background-size:cover; background-position:center; }
     .mo-screen.has-cover::after { content:""; position:absolute; inset:0; background:rgba(0,0,0,.2); z-index:1; }
-    .mo-play { position:relative; z-index:2; font-size:34px; color:rgba(255,255,255,.9); text-shadow:0 0 12px rgba(0,0,0,.9); }
+    .mo-play { position:relative; z-index:2; display:inline-flex; align-items:center; justify-content:center; width:56px; height:56px; font-size:34px; color:rgba(255,255,255,.9); text-shadow:0 0 12px rgba(0,0,0,.9); text-decoration:none; cursor:pointer; border-radius:50%; transition:transform .15s ease, color .15s ease, background .15s ease; }
+    .mo-play:hover { color:#fff; background:rgba(0,0,0,.4); transform:scale(1.12); }
     .mo-tc { position:absolute; z-index:2; top:5px; left:6px; font-family:"Courier New", monospace; font-size:10px; color:#33ff88; text-shadow:0 0 4px #000; }
     .mo-rec { position:absolute; z-index:2; top:5px; right:6px; font-family:"Courier New", monospace; font-size:10px; color:#ff3b3b; text-shadow:0 0 4px #000; }
     .mo-meta { padding:8px 9px; display:flex; flex-direction:column; gap:4px; }
@@ -1324,10 +1325,10 @@
     .st-carousel { overflow:hidden; }
     .st-track { display:flex; height:100%; transition:transform .25s ease; }
     .st-track img { flex:0 0 100%; }
-    .st-nav { position:absolute; top:50%; transform:translateY(-50%); z-index:3; width:22px; height:32px; padding:0; border:none; background:rgba(212,212,212,.9); box-shadow:var(--bevel-raised); color:#000; font-size:11px; line-height:1; text-align:center; cursor:pointer; }
+    .st-nav { position:absolute; top:50%; transform:translateY(-50%); z-index:3; width:15px; height:22px; padding:0; border:none; background:rgba(220,220,220,.5); box-shadow:var(--bevel-raised); color:#000; font-size:9px; line-height:1; text-align:center; cursor:pointer; opacity:.85; }
     .st-nav:active { box-shadow:var(--bevel-pressed); }
-    .st-prev { left:4px; }
-    .st-next { right:4px; }
+    .st-prev { left:3px; }
+    .st-next { right:3px; }
     .st-dots { position:absolute; bottom:6px; left:0; right:0; z-index:3; display:flex; gap:5px; justify-content:center; }
     .st-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.5); box-shadow:0 0 2px rgba(0,0,0,.7); }
     .st-dot.active { background:#fff; }
@@ -1697,7 +1698,7 @@
               <div class="mo-marquee"><span>&#9654; MOTION &#9654; ANIMATION &#9654; COMPOSITING &#9654; AR &#9654; PROMO REELS &#9654; EVENT VIDEO &#9654; EDIT &#9654; MOTION GRAPHICS &#9654;</span></div>
               <div class="mo-grid">
               <div class="mo-card">
-                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-01.jpg')"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-01.jpg')"><a class="mo-play" href="https://drive.google.com/file/d/1RDGZj0ibtRx2O_kxtL3veM-TkZv1g_ey/view?usp=drive_link" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">AR приглашение на MBR 2023 (сентябрь)</div>
                   <div class="mo-did"><b>Что я делал:</b> анимации, композитинг в AR программе</div>
@@ -1705,7 +1706,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-02.jpg')"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-02.jpg')"><a class="mo-play" href="https://drive.google.com/file/d/1DsN9ZtB-Zg4JOqI8h2EbatTs9lnolvP4/view?usp=drive_link" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-анимация диджей-проекта KVRT.DVIJ (KVARTIRA)</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1713,7 +1714,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/C_pkk8st1hv/?igsh=MTY1M3Y4YmJqYjZkYQ==" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Seeance x Kvartira под показ фильма «Сумерки» в Одеоне</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1721,7 +1722,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DAV8KgFNO_p/?igsh=eDVpbDc1ZGpldmY=" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик диджей-сета KVRT в Amor Amar</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1729,7 +1730,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DAixCRXNOBw/?igsh=MTh0eG9lZDJ3cWI2dQ==" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Seeance x Kvartira под показ фильма «Мечтатели» в Одеоне</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1737,7 +1738,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DBLld1BtT8p/?igsh=MXV3MG9iOTViemhpeg==" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Seeance x Kvartira под показ фильма «Шрек» в Одеоне</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1745,7 +1746,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DCB01BjtbKb/?igsh=MTlnc2FyMzI5bmY1dQ==" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Просто креативный видос для поддержания актива на аккаунте KVRT</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1753,7 +1754,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DCoLH5HI3HU/?igsh=NXozdTIxcmVwc3B6" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик диджей-сета KVRT в Amor Amar</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1761,7 +1762,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DE2J8sUtPgF/?igsh=dTdzNTM4N2lvMDUw" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Seeance под новогодний показ фильма «Кто подставил кролика Роджера» в Одеоне</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1769,7 +1770,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-10.jpg')"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-10.jpg')"><a class="mo-play" href="https://youtu.be/BcDEOqdpLI8?si=_gTLGs-5SOLm77TQ" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Репортаж Ezym Mag про три новогодних вечеринки Кишинёва</div>
                   <div class="mo-did"><b>Что я делал:</b> автор задумки, актёр, монтаж</div>
@@ -1777,7 +1778,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DFGUgEHNs1x/?igsh=YXdoZXdmbGJud3Y5" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Magic Flowers x Mirror</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1785,7 +1786,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DFvZ5d2NgHE/?igsh=eW5qZ212a3I4Ym1n" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Mirror x Oystersgeese</div>
                   <div class="mo-did"><b>Что я делал:</b> практически всё; графика частично со стороннего референса, переработана</div>
@@ -1793,7 +1794,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-13.jpg')"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-13.jpg')"><a class="mo-play" href="https://drive.google.com/file/d/1uhrbUqkodEh6kj1TB2WTmkpKTTnfy58W/view?usp=drive_link" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-серия сторис в стиле старого ВК для вечеринки TRAPEZA 2K17</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1801,7 +1802,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DGSSGImNxqZ/?igsh=NjA2eTB4N3RzMXQ4" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-рилс для диджей-сета KVRT</div>
                   <div class="mo-did"><b>Что я делал:</b> монтаж, графика</div>
@@ -1809,7 +1810,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DGgYgMhtYO4/?igsh=MWJ4bDVna2diNjM0cQ==" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Пародийный промо-ролик в стиле «FACE: Я роняю запад» для вечеринки TRAPEZA 2K17</div>
                   <div class="mo-did"><b>Что я делал:</b> всё, включая идею и съёмку</div>
@@ -1817,7 +1818,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DHGuMQ4Noy3/?igsh=MTNnbTM3OWFwdmpraw==" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик для вечеринки KVRT в #norma</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1825,7 +1826,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DI6gWxYtAgz/?igsh=aTU4aDJ5eXMzYnVm" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Cinemai x Trapeza</div>
                   <div class="mo-did"><b>Что я делал:</b> пак-шот в конце</div>
@@ -1833,7 +1834,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/p/DI6gsSXteME/?igsh=MWpleDc4aXRicW1jYg==" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик для вечеринки Trapeza Silencio</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1841,7 +1842,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-19.jpg')"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen has-cover" style="background-image:url('assets/motion/mo-19.jpg')"><a class="mo-play" href="https://drive.google.com/file/d/1qhlo9lENOukS3dfh2oDANWHWKkqczqdF/view?usp=drive_link" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик трека «OK» для P.S. ZARANEE</div>
                   <div class="mo-did"><b>Что я делал:</b> всё (ещё не залито, но посмотреть можно)</div>
@@ -1849,7 +1850,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DIvzyeqtkIE/?igsh=MWJsYm1xbXVsMzMzcA==" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик под мероприятие в музее истории, Cârturești x KVRT</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1857,7 +1858,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DU2x3jwDPjc/?stkn=MXhqcDlvY3JkN3M5" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик FLORILE: MADVILLA</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1865,7 +1866,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DN0uF3V0GIl/?stkn=Z3ZmMjRiNzJvbTE1" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик FLORILE x Boardshop</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1873,7 +1874,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DNGRGz0NaP0/?stkn=M2phZXJjcnZoYTln" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик FLORILE Rooftop Party</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1881,7 +1882,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DMLIp0otuXv/?stkn=ajdjeWJ1NmNsMHll" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик FLORILE x Ivan Dorn</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1889,7 +1890,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DLH--H9NfdA/?stkn=NGh4MWhlNmE1MmEw" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик FLORILE Rooftop Session</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1897,7 +1898,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DXv-66DCJ_b/?stkn=MWxzeW5oYTh6a2dnYQ%3D%3D" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Trapeza x Autohub</div>
                   <div class="mo-did"><b>Что я делал:</b> леттеринг и анимация</div>
@@ -1905,7 +1906,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DLmkePtNp6i/?stkn=Mm9na2E3ZnhpaHdn" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Trapeza Rooftob</div>
                   <div class="mo-did"><b>Что я делал:</b> графика, монтаж, саунд-дизайн</div>
@@ -1913,7 +1914,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DLCwCiBtKhN/?stkn=MXJ4ZDFzem91emF3bw%3D%3D" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Trapeza Pop-up market</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1921,7 +1922,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DNYSPa4Ma1X/?stkn=cGR4MHNocmJ3Z3Vh" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Mutant Avenue #8</div>
                   <div class="mo-did"><b>Что я делал:</b> анимацию монстра и освещение</div>
@@ -1929,7 +1930,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DVJiLBtDFtW/?stkn=MWMyZzVudjZhbGJqYQ%3D%3D" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Концерт NOUA UNSPE</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1937,7 +1938,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DV9Db25jGqM/?stkn=ZGJkNXB3Ynp1ejNy" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик FLORILE: DISCO</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1945,7 +1946,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DRjxSqHDJ5w/?stkn=OTN3ZjMzZHJsMGVt" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик Trapeza Glamour Pre-party</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1953,7 +1954,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/p/DRfkuxRjEAn/?img_index=1&amp;stkn=NWJ5aG5tOHM3Zzk0" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-карусель Trapeza Glamour</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1961,7 +1962,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/Dc0lP-dMYjm/?stkn=MTNsdGc1OHh3MmpiaQ%3D%3D" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик TudaSuda Bar</div>
                   <div class="mo-did"><b>Что я делал:</b> Всё</div>
@@ -1969,7 +1970,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DKW7Jubomjd/?stkn=MXJ5NTVtcDFrYzJibQ%3D%3D" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик OKAK x Bubblepop</div>
                   <div class="mo-did"><b>Что я делал:</b> Монтаж, саунд-дизайн</div>
@@ -1977,7 +1978,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DLsJjZzIqQo/?stkn=MW5wZXo0YzZzdnh0ag%3D%3D" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик OKAK x Proslushka.md</div>
                   <div class="mo-did"><b>Что я делал:</b> Монтаж, саунд-дизайн</div>
@@ -1985,7 +1986,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DKmG2o9sbQ1/?stkn=eWpydTdoY3FnZ2Y0" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик OKAK x sijenesuispasla</div>
                   <div class="mo-did"><b>Что я делал:</b> Физика и анимация футболки</div>
@@ -1993,7 +1994,7 @@
                 </div>
               </div>
               <div class="mo-card">
-                <div class="mo-screen"><span class="mo-play">&#9654;</span><span class="mo-rec">REC &#9679;</span></div>
+                <div class="mo-screen"><a class="mo-play" href="https://www.instagram.com/reel/DLsRju6oa5C/?stkn=MTVwNzhqZ2xmMzg3MQ%3D%3D" target="_blank" rel="noopener" aria-label="Смотреть видео">&#9654;</a><span class="mo-rec">REC &#9679;</span></div>
                 <div class="mo-meta">
                   <div class="mo-name">Промо-ролик OKAK x Getman Car</div>
                   <div class="mo-did"><b>Что я делал:</b> Дизайн автомобиля</div>
